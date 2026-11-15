@@ -9,6 +9,7 @@ import { SpringCurve } from '../components/spring-curve';
 import { coats, motions, springChoices } from '../lib/build';
 import { demos, newDemos } from '../lib/demo-toasts';
 import { defaultDrawerConfig } from '../lib/config';
+import { LLMS_URL } from '../lib/site';
 import { worlds } from '../lib/worlds';
 import { releaseSteps, vsSonner, vsVaul } from './comparisons';
 import { drawerParts, drawerRootProps, selectors, toastFunctions, toastOptions, toasterGroups, tokens } from './api';
@@ -438,14 +439,13 @@ toast('Saved', { className: 'ring-2 ring-emerald-500/40' });`}
   ),
 };
 
-const origin = () => (typeof window === 'undefined' ? '' : window.location.origin);
 
 const recipes: ReadonlyArray<{ id: string; title: string; when: string; prompt: () => string }> = [
   {
     id: 'recipe-toasts',
     title: 'Add toasts',
     when: 'A new app, or one with no notification system yet.',
-    prompt: () => `Add Halo toasts to this React app. Read ${origin()}/llms.txt first.
+    prompt: () => `Add Halo toasts to this React app. Read ${LLMS_URL} first.
 1. npm i @halo-ui/react, and import '@halo-ui/react/styles.css' once in the root layout or entry file.
 2. Render <Toaster /> once near the root, inside providers and outside the router outlet.
 3. Use toast.success / toast.error / toast.info / toast.warning for outcomes, toast.promise for async work, and toast.update(id, ...) to change a toast in place instead of stacking another.
@@ -456,7 +456,7 @@ Keep messages short: a title, plus a description only when it adds something.`,
     id: 'recipe-sonner',
     title: 'Migrate from Sonner',
     when: 'The app imports from "sonner".',
-    prompt: () => `Replace Sonner with Halo in this app. Read ${origin()}/llms.txt first.
+    prompt: () => `Replace Sonner with Halo in this app. Read ${LLMS_URL} first.
 - Change imports from 'sonner' to '@halo-ui/react/toast', and add import '@halo-ui/react/styles.css' once.
 - toast(), toast.success/error/warning/info/loading, toast.promise, and toast.dismiss keep the same call shapes.
 - <Toaster> props: position, expand, visibleToasts, and closeButton carry over unchanged.
@@ -468,7 +468,7 @@ Do not change message text. Run the app and confirm toasts appear, stack, and di
     id: 'recipe-drawer',
     title: 'Add a drawer',
     when: 'A mobile sheet, a share sheet, or a side panel.',
-    prompt: () => `Add a Halo drawer. Read ${origin()}/llms.txt first.
+    prompt: () => `Add a Halo drawer. Read ${LLMS_URL} first.
 Use Drawer.Root > Drawer.Trigger + Drawer.Content > Drawer.Handle, Drawer.Title (required), Drawer.Description, Drawer.Scroll around long content, and Drawer.Close.
 Snap points are viewport fractions or '320px' strings, smallest first. For side panels use side="right" with no snap points.
 Do not add a portal or an overlay component: Drawer.Content is a native <dialog> and handles both.`,
@@ -477,7 +477,7 @@ Do not add a portal or an overlay component: Drawer.Content is a native <dialog>
     id: 'recipe-vaul',
     title: 'Migrate from Vaul',
     when: 'The app imports from "vaul".',
-    prompt: () => `Replace Vaul with Halo's Drawer. Read ${origin()}/llms.txt first.
+    prompt: () => `Replace Vaul with Halo's Drawer. Read ${LLMS_URL} first.
 - Change imports from 'vaul' to '@halo-ui/react/drawer'.
 - Delete Drawer.Portal and Drawer.Overlay wrappers. Drawer.Content is a native dialog with its own overlay.
 - snapPoints carries over. activeSnapPoint + setActiveSnapPoint become activeSnapPoint + onActiveSnapPointChange.

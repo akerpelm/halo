@@ -5,7 +5,8 @@ import { DemoDrawer } from '../components/demo-drawer';
 import { MaterialSample } from '../components/material-sample';
 import { Section } from '../components/section';
 import { type BuildConfig, PLAIN, builderPrompt } from '../lib/build';
-import { type DrawerConfig, PRINCIPLES, defaultDrawerConfig, drawerPrompt, llmsUrl } from '../lib/config';
+import { type DrawerConfig, PRINCIPLES, defaultDrawerConfig, drawerPrompt } from '../lib/config';
+import { LLMS_URL } from '../lib/site';
 import { navigate } from '../lib/router';
 import { useSettings } from '../lib/settings';
 import { worldName, worlds } from '../lib/worlds';
@@ -117,7 +118,7 @@ export function Directions({ onOpenToast }: DirectionsProps) {
                 >
                   Open in playground
                 </Button>
-                <CopyButton text={builderPrompt(d.config, PRINCIPLES, llmsUrl())} label="Copy prompt" />
+                <CopyButton text={builderPrompt(d.config, PRINCIPLES, LLMS_URL)} label="Copy prompt" />
               </>
             }
           />

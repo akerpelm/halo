@@ -23,7 +23,8 @@ import {
   toToasterProps,
 } from '../lib/build';
 import { cn } from '../lib/cn';
-import { PRINCIPLES, llmsUrl } from '../lib/config';
+import { LLMS_URL } from '../lib/site';
+import { PRINCIPLES } from '../lib/config';
 import { playgroundDemos } from '../lib/demo-toasts';
 import { useSettings } from '../lib/settings';
 import { customWorlds, worldName, worlds } from '../lib/worlds';
@@ -475,7 +476,7 @@ export function ToastBuilder({ config, onChange, output, onOutput }: ToastBuilde
           />
           <CodeBlock
             className="-mx-5 -mb-5 rounded-none bg-transparent shadow-[inset_0_1px_0_var(--line)]"
-            code={output === 'code' ? builderCode(config) : builderPrompt(config, PRINCIPLES, llmsUrl())}
+            code={output === 'code' ? builderCode(config) : builderPrompt(config, PRINCIPLES, LLMS_URL)}
             label={output === 'code' ? 'toaster.tsx' : 'prompt.md'}
             copyLabel={output === 'code' ? 'Copy code' : 'Copy prompt'}
             wrap={output === 'prompt'}

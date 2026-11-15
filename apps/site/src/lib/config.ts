@@ -1,3 +1,4 @@
+import { LLMS_URL } from './site';
 import type { DrawerSide, HaloDensity, HaloWorldName } from '@halo-ui/react';
 
 export type RadiusPreset = 'square' | 'soft' | 'round' | 'pill';
@@ -63,7 +64,6 @@ import '@halo-ui/react/styles.css';
 </Drawer.Root>`;
 }
 
-export const llmsUrl = () => `${window.location.origin}/llms.txt`;
 
 export const PRINCIPLES = `Rules that keep Halo correct:
 - Import '@halo-ui/react/styles.css' once. Don't restyle animation with CSS transitions; motion is driven by springs in JS.
@@ -85,5 +85,5 @@ ${drawerCode(config, world)}
 
 ${PRINCIPLES}
 
-Full reference for agents: ${llmsUrl()}`;
+Full reference for agents: ${LLMS_URL}`;
 }

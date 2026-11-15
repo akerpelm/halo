@@ -6,6 +6,7 @@ import { SpringPreview } from '../components/spring-preview';
 import { demos } from '../lib/demo-toasts';
 import { useSettings } from '../lib/settings';
 import { worldName } from '../lib/worlds';
+import { LLMS_URL } from '../lib/site';
 
 /** Each docs page opens with its component hung on the site's rigging, live. */
 function Specimen({ children, world, label }: { children: ReactNode; world?: string; label: string }) {
@@ -91,7 +92,7 @@ export const specimens: Record<string, () => ReactNode> = {
     <Specimen label="A prompt">
       <Line title="Hand it to your agent">One line, and it reads the whole API from llms.txt.</Line>
       <div className="mt-3">
-        <CopyButton text={`Read ${typeof window === 'undefined' ? '' : window.location.origin}/llms.txt, then replace this app's notifications with Halo toasts. Keep every existing message and its meaning.`} label="Copy prompt" />
+        <CopyButton text={`Read ${LLMS_URL}, then replace this app's notifications with Halo toasts. Keep every existing message and its meaning.`} label="Copy prompt" />
       </div>
     </Specimen>
   ),
