@@ -1,14 +1,3 @@
-/*
- * Halo material.
- * Token selectors are wrapped in :where() so they carry zero specificity: any selector you write,
- * such as [data-halo-world='yours'], overrides them without !important or load-order tricks.
- *
- * Two worlds share one structure:
- *   dichroic  – clear frosted pane, coated edge that shifts hue with motion, colored cast light
- *   partition – acid-etched pane, aluminium hairline, neutral silhouette shadow
- * Every value is a custom property so you can retune it from your own CSS.
- */
-
 :where(.halo) {
   --halo-radius: 18px;
   --halo-blur: 22px;
@@ -31,7 +20,6 @@
   --halo-warning: light-dark(oklch(60% 0.14 70), oklch(84% 0.14 80));
   --halo-info: light-dark(oklch(52% 0.16 255), oklch(78% 0.12 240));
 
-  /* Dichroic coating: cyan → magenta → amber. The angle follows --halo-shift, set per frame from the pane's motion. */
   --halo-coat-a: oklch(78% 0.15 200);
   --halo-coat-b: oklch(68% 0.24 330);
   --halo-coat-c: oklch(84% 0.15 80);
@@ -49,7 +37,6 @@
   -webkit-font-smoothing: antialiased;
 }
 
-/* Dichroic uses the coat; reset so a dichroic pane nested in another world doesn't inherit its edge. */
 :where(.halo[data-halo-world='dichroic']) {
   --halo-world-edge: initial;
 }
@@ -74,7 +61,6 @@
     0 22px 44px -24px light-dark(oklch(25% 0.005 250 / 0.32), oklch(0% 0 0 / 0.8));
 }
 
-/* Smoked: bronze-tinted glass. Always reads dark, whatever the page theme. */
 :where(.halo[data-halo-world='smoked']) {
   --halo-world-edge: linear-gradient(to bottom, oklch(88% 0.06 75 / 0.42), oklch(80% 0.05 65 / 0.2));
   color-scheme: dark;
@@ -93,7 +79,6 @@
     0 24px 48px -22px oklch(25% 0.06 50 / 0.55);
 }
 
-/* Vapor: breath on cold glass. Very diffuse, barely-there tint, no hard edge. */
 :where(.halo[data-halo-world='vapor']) {
   --halo-world-edge: light-dark(oklch(100% 0 0 / 0.75), oklch(100% 0 0 / 0.12));
   --halo-radius: 22px;
@@ -107,7 +92,6 @@
     0 30px 60px -28px light-dark(oklch(45% 0.06 230 / 0.3), oklch(0% 0 0 / 0.65));
 }
 
-/* Crystal: clear, thick, bevelled. Less blur, so the page stays visible behind it. */
 :where(.halo[data-halo-world='crystal']) {
   --halo-blur: 10px;
   --halo-saturate: 1.9;
@@ -121,21 +105,18 @@
     0 18px 38px -20px light-dark(oklch(30% 0.04 262 / 0.32), oklch(0% 0 0 / 0.75));
 }
 
-/* Ink: solid and crisp. No blur at all, for dense tools and low-power devices. */
 :where(.halo[data-halo-world='ink']) {
   --halo-world-edge: light-dark(oklch(88% 0.004 262), oklch(33% 0.01 262));
   --halo-radius: 14px;
   --halo-blur: 0px;
   --halo-saturate: 1;
   --halo-surface: light-dark(oklch(100% 0 0), oklch(21% 0.008 262));
-  /* Spelled out, not var(--halo-surface): an override of the surface built from the solid would otherwise be a cycle. */
   --halo-surface-solid: light-dark(oklch(100% 0 0), oklch(21% 0.008 262));
   --halo-shadow:
     0 1px 2px light-dark(oklch(25% 0.01 262 / 0.08), oklch(0% 0 0 / 0.5)),
     0 10px 24px -14px light-dark(oklch(25% 0.01 262 / 0.28), oklch(0% 0 0 / 0.7));
 }
 
-/* Opal: a milky pane whose whole surface turns iridescent as it moves. */
 :where(.halo[data-halo-world='opal']) {
   --halo-blur: 20px;
   --halo-saturate: 1.5;
@@ -147,7 +128,6 @@
     0 18px 40px -20px light-dark(oklch(40% 0.06 300 / 0.3), oklch(0% 0 0 / 0.7));
 }
 
-/* Mercury: liquid metal. A chrome edge that catches the light as the pane moves. */
 :where(.halo[data-halo-world='mercury']) {
   --halo-blur: 16px;
   --halo-saturate: 1.1;
@@ -160,7 +140,6 @@
     0 20px 40px -20px light-dark(oklch(30% 0.01 250 / 0.35), oklch(0% 0 0 / 0.75));
 }
 
-/* Vellum: matte drafting film. Barely diffused, very crisp, with a printed rule inset from the edge. */
 :where(.halo[data-halo-world='vellum']) {
   --halo-radius: 6px;
   --halo-blur: 3px;
@@ -174,12 +153,7 @@
     0 8px 18px -12px light-dark(oklch(30% 0.01 230 / 0.25), oklch(0% 0 0 / 0.6));
 }
 
-/*
- * The edge is resolved on the pane, so --halo-shift (written per frame on the pane) can move it.
- * A world sets --halo-world-edge on its own selector; worlds that don't get the dichroic coat.
- */
 .halo-surface {
-  /* Every stop has similar weight, so the ring reads as one even line all the way round. */
   --halo-edge: var(
     --halo-world-edge,
     conic-gradient(
@@ -192,9 +166,6 @@
   );
 }
 
-
-
-/* A prismatic bevel: the hues stay pale and equally bright, so the line weight never wavers. */
 .halo[data-halo-world='crystal'] .halo-surface,
 .halo-surface[data-halo-world='crystal'] {
   --halo-edge: linear-gradient(
@@ -206,10 +177,8 @@
   );
 }
 
-
 .halo[data-halo-world='opal'] .halo-surface,
 .halo-surface[data-halo-world='opal'] {
-  /* Iridescence across the whole pane, turning with --halo-shift as it moves. */
   background-image: linear-gradient(
     calc(115deg + var(--halo-shift, 0) * 140deg),
     light-dark(oklch(92% 0.06 200 / 0.55), oklch(45% 0.08 200 / 0.4)),
@@ -221,7 +190,6 @@
 
 .halo[data-halo-world='mercury'] .halo-surface,
 .halo-surface[data-halo-world='mercury'] {
-  /* Chrome: neutral bands at similar weight, the bright band sliding with --halo-shift. */
   --halo-edge: linear-gradient(
     calc(100deg + var(--halo-shift, 0) * 200deg),
     light-dark(oklch(62% 0.008 250), oklch(55% 0.008 250)),
@@ -232,7 +200,6 @@
   );
 }
 
-/* The pane itself. */
 .halo-surface {
   position: relative;
   background: var(--halo-surface);
@@ -242,10 +209,6 @@
   border-radius: var(--halo-radius);
 }
 
-/*
- * The coated edge. A transparent border plus a padding-box mask keeps the ring the same width
- * through the corners: the padding box follows the inner radius, a content box would not.
- */
 .halo-surface::before {
   content: '';
   position: absolute;
@@ -300,8 +263,6 @@
   border: 0;
 }
 
-/* ── Density ───────────────────────────────────────────
-   Padding, gaps, and type size move together so every density stays balanced. */
 :where(.halo) {
   --halo-pad-y: 14px;
   --halo-pad-x: 16px;
@@ -322,8 +283,6 @@
   --halo-inner-gap: 14px;
   --halo-font-size: 15px;
 }
-
-/* ── Toaster ─────────────────────────────────────────── */
 
 .halo-toaster {
   position: fixed;
@@ -409,7 +368,6 @@
   pointer-events: none;
 }
 
-/* Intent: the toast's type in colour, for when icons are off or not enough. */
 .halo-toast[data-type='success'] {
   --halo-intent: var(--halo-success);
 }
@@ -422,16 +380,12 @@
 .halo-toast[data-type='info'] {
   --halo-intent: var(--halo-info);
 }
-/* Wash the glass in the type colour. */
 .halo-toast[data-intent='tint']:is([data-type='success'], [data-type='error'], [data-type='warning'], [data-type='info']) {
-  /* Mixed in oklab: oklch would interpolate hue from a white surface's 0° and drift pink. */
   background: color-mix(in oklab, var(--halo-intent) 15%, var(--halo-surface));
 }
-/* Colour the edge ring itself: same width, same mask, so it stays one clean line. */
 .halo-toast[data-intent='edge']:is([data-type='success'], [data-type='error'], [data-type='warning'], [data-type='info']) {
   --halo-edge: var(--halo-intent);
 }
-/* Cast light in the type colour, the way a dichroic pane throws its coat onto the wall. */
 .halo-toast[data-intent='glow']:is([data-type='success'], [data-type='error'], [data-type='warning'], [data-type='info']) {
   box-shadow:
     var(--halo-shadow),
@@ -440,7 +394,6 @@
 
 .halo-toast-body {
   display: flex;
-  /* One-line toasts sit on the true centre line; with a description, the icon aligns to the title. */
   align-items: center;
   gap: var(--halo-inner-gap);
   padding: var(--halo-pad-y) var(--halo-pad-end) var(--halo-pad-y) var(--halo-pad-x);
@@ -456,7 +409,6 @@
   flex: none;
   place-items: center;
   height: 20px;
-  /* Sampled from fromDuration(0.42, 0.22), the same solver the JS springs use. */
   animation: halo-pop 620ms var(--halo-spring-ease) both;
 }
 .halo-toast[data-type='success'] .halo-toast-icon {
@@ -541,7 +493,6 @@
 .halo-toast:focus-within .halo-toast-close {
   opacity: 1;
 }
-/* Present but quiet at rest, so the row's right edge never shows a phantom gap. */
 .halo-toast-close:not([data-timer]) {
   opacity: 0.5;
 }
@@ -555,7 +506,6 @@
   }
 }
 
-/* Touch: grow the hit area past the visible button so it reaches 44px, without changing the look. */
 @media (pointer: coarse) {
   .halo-toast-action,
   .halo-toast-close {
@@ -580,8 +530,6 @@
 }
 
 .halo-toast-timeline {
-  /* Time left is drawn on the edge itself: the ring keeps its coat where time remains and dims
-     back toward the pane where it has passed, sweeping clockwise from the top. No extra line. */
   position: absolute;
   inset: 0;
   box-sizing: border-box;
@@ -611,7 +559,6 @@
   animation-play-state: paused;
 }
 
-/* Grouped repeats: the count springs in each time it changes. */
 .halo-toast-count {
   display: inline-grid;
   place-items: center;
@@ -627,7 +574,6 @@
   animation: halo-pop 620ms var(--halo-spring-ease) both;
 }
 
-/* Streaming: a caret rides the end of the text while it is still arriving. */
 .halo-toast[data-streaming] .halo-toast-description::after {
   content: '';
   display: inline-block;
@@ -644,7 +590,6 @@
   }
 }
 
-/* Undo: the countdown sits on the button, so the time left is the undo window. */
 .halo-toast-action[data-timer] {
   display: inline-flex;
   align-items: center;
@@ -660,7 +605,6 @@
   stroke: color-mix(in oklch, var(--halo-control-fg) 25%, transparent);
 }
 
-/* ── Timer ring ── */
 .halo-timer-ring {
   position: absolute;
   inset: 0;
@@ -681,7 +625,6 @@
   stroke: currentColor;
   stroke-linecap: round;
   stroke-dasharray: 1;
-  /* Start at twelve o'clock; the tail retreats anticlockwise as time runs out. */
   transform: rotate(-90deg);
   transform-origin: 50% 50%;
   animation: halo-ring-empty linear forwards;
@@ -692,7 +635,6 @@
   }
 }
 
-/* Close ring: the × sits inside the countdown, so it reads as "closes by itself". Always visible. */
 .halo-toast-close[data-timer] {
   position: relative;
   width: 26px;
@@ -705,7 +647,6 @@
   color: var(--halo-fg);
 }
 
-/* Icon ring: the status icon becomes the face of the timer, in its own colour. */
 .halo-toast-icon[data-timer] {
   position: relative;
   width: 26px;
@@ -715,8 +656,6 @@
 .halo-toast-icon[data-timer] {
   display: block;
 }
-/* The ring takes the place of the icon's own outline, so the badge itself is what empties.
-   Scaled so the glyph sits where it would inside its original circle. */
 .halo-toast-icon[data-timer] > svg:not(.halo-timer-ring) {
   position: absolute;
   top: 50%;
@@ -728,7 +667,6 @@
 .halo-toast-icon[data-timer] > svg:not(.halo-timer-ring) circle[r='8.25'] {
   display: none;
 }
-/* Glyphs with no circle of their own (the error triangle, custom icons) sit inside the ring instead. */
 .halo-toast-icon[data-timer] > svg:not(.halo-timer-ring):not(:has(circle[r='8.25'])) {
   width: 15px;
   height: 15px;
@@ -762,8 +700,6 @@
     transform: scale(0.4);
   }
 }
-
-/* ── Drawer ──────────────────────────────────────────── */
 
 dialog.halo-drawer {
   position: fixed;
@@ -801,7 +737,6 @@ dialog.halo-drawer::backdrop {
   will-change: transform;
 }
 
-/* A strip of the same pane past the edge, so rubber-banding never shows a gap. */
 .halo-drawer-panel::after {
   content: '';
   position: absolute;

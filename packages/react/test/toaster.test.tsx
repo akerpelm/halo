@@ -1,7 +1,7 @@
 import { act, cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
-import { toast, toastStore } from '../src/toast/store';
-import { Toaster } from '../src/toast/toaster';
+import { Toaster, toast } from '../src/toast';
+import { toastStore } from '../src/toast/store/toast-store';
 
 beforeAll(() => {
   globalThis.ResizeObserver = class {
@@ -141,7 +141,6 @@ describe('hidden toasts', () => {
       toast('two');
       toast('three');
     });
-    // Newest first: 'one' is now third and out of view.
     expect(screen.getByText('one').closest('li')?.hasAttribute('data-hidden')).toBe(true);
     expect(screen.getByText('three').closest('li')?.hasAttribute('data-hidden')).toBe(false);
   });
@@ -164,5 +163,21 @@ describe('contained', () => {
   it('marks a contained toaster so it positions inside its parent', () => {
     render(<Toaster id="stage" contained />);
     expect(screen.getByRole('region').hasAttribute('data-contained')).toBe(true);
+  });
+
+  it('removes a dismissed toast from the store once its exit has played', async () => {
+    const realFrame = globalThis.requestAnimationFrame;
+    globalThis.requestAnimationFrame = (callback) => window.setTimeout(() => callback(performance.now()), 16);
+    render(<Toaster />);
+    let id: string | number = 0;
+    act(() => {
+      id = toast('Leaving');
+    });
+    act(() => toast.dismiss(id));
+    expect(toastStore.getSnapshot().some((t) => t.id === id)).toBe(true);
+    await act(() => new Promise((resolve) => setTimeout(resolve, 1000)));
+    expect(toastStore.getSnapshot().some((t) => t.id === id)).toBe(false);
+    expect(document.querySelector('[data-halo-toast]')).toBeNull();
+    globalThis.requestAnimationFrame = realFrame;
   });
 });

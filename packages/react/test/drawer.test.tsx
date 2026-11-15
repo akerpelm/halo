@@ -1,9 +1,7 @@
 import { act, cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
-import { Drawer, type DrawerRootProps, type SnapPoint } from '../src/drawer/drawer';
+import { Drawer, type DrawerRootProps, type SnapPoint } from '../src/drawer';
 
-// jsdom has no layout, top layer, or pointer capture. Reduced motion makes every spring settle
-// at once, so each test sees the final state without waiting on animation frames.
 const PANEL_SIZE = 700;
 
 beforeAll(() => {
@@ -43,12 +41,15 @@ function Sheet(props: Partial<DrawerRootProps>) {
 const panel = () => document.querySelector('.halo-drawer-panel') as HTMLElement;
 const dialog = () => document.querySelector('dialog');
 
-/** A vertical drag on the panel, in screen pixels (positive is down). */
-function dragBy(dy: number) {
+const pause = (ms: number) => act(() => new Promise((resolve) => setTimeout(resolve, ms)));
+
+/** A slow vertical drag in screen pixels (positive is down), held still before release so only position counts. */
+async function dragBy(dy: number) {
   const target = panel();
   fireEvent.pointerDown(target, { pointerId: 1, clientX: 100, clientY: 300, button: 0 });
   fireEvent.pointerMove(target, { pointerId: 1, clientX: 100, clientY: 300 + dy / 2 });
   fireEvent.pointerMove(target, { pointerId: 1, clientX: 100, clientY: 300 + dy });
+  await pause(60);
   fireEvent.pointerUp(target, { pointerId: 1, clientX: 100, clientY: 300 + dy });
 }
 
@@ -125,8 +126,7 @@ describe('<Drawer />', () => {
 
   it('drags down past the nearest detent to close', async () => {
     render(<Sheet defaultOpen snapPoints={[0.3, 0.6]} defaultSnapPoint={0.6} />);
-    // 0.6 of the 768px jsdom viewport is about 461px open; 400px down lands nearest to closed.
-    dragBy(400);
+    await dragBy(400);
     await settle();
     expect(dialog()).toBeNull();
   });
@@ -134,7 +134,7 @@ describe('<Drawer />', () => {
   it('settles a short drag at the nearest detent instead of closing', async () => {
     const onSnap = vi.fn<(snap: SnapPoint) => void>();
     render(<Sheet defaultOpen snapPoints={[0.3, 0.6]} defaultSnapPoint={0.6} onActiveSnapPointChange={onSnap} />);
-    dragBy(200);
+    await dragBy(200);
     await settle();
     expect(dialog()?.hasAttribute('open')).toBe(true);
     expect(onSnap).toHaveBeenLastCalledWith(0.3);
@@ -142,7 +142,7 @@ describe('<Drawer />', () => {
 
   it('never drags a non-dismissible drawer closed', async () => {
     render(<Sheet defaultOpen dismissible={false} snapPoints={[0.3, 0.6]} />);
-    dragBy(700);
+    await dragBy(700);
     await settle();
     expect(dialog()?.hasAttribute('open')).toBe(true);
   });
@@ -152,7 +152,6 @@ describe('<Drawer />', () => {
     render(<Sheet defaultOpen snapPoints={[0.3, 0.6]} defaultSnapPoint={0.6} onActiveSnapPointChange={onSnap} />);
     const target = panel();
     fireEvent.pointerDown(target, { pointerId: 1, clientX: 100, clientY: 300, button: 0 });
-    // Far enough down that, if it counted as a drag, it would settle at the smaller detent.
     fireEvent.pointerMove(target, { pointerId: 1, clientX: 400, clientY: 480 });
     fireEvent.pointerUp(target, { pointerId: 1, clientX: 400, clientY: 480 });
     await settle();

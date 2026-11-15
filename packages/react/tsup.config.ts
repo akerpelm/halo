@@ -5,7 +5,7 @@ export default defineConfig({
     index: 'src/index.ts',
     toast: 'src/toast/index.ts',
     drawer: 'src/drawer/index.ts',
-    spring: 'src/core/index.ts',
+    spring: 'src/spring/index.ts',
   },
   format: ['esm', 'cjs'],
   dts: true,

@@ -1,25 +1,11 @@
-import { type SpringConfig, isAtRest, solveSpring } from './spring';
+import { onFrame } from './frame-loop';
+import type { SpringConfig } from './spring-config';
+import { isAtRest, solveSpring } from './solve-spring';
 
-type FrameCallback = (now: number) => void;
+type Precision = { restDelta: number; restSpeed: number };
 
-/** One requestAnimationFrame loop shared by every spring on the page. */
-const frameCallbacks = new Set<FrameCallback>();
-let frameId = 0;
-
-function tick(now: number) {
-  for (const callback of frameCallbacks) callback(now);
-  frameId = frameCallbacks.size > 0 ? requestAnimationFrame(tick) : 0;
-}
-
-function onFrame(callback: FrameCallback): () => void {
-  frameCallbacks.add(callback);
-  if (frameId === 0 && typeof requestAnimationFrame !== 'undefined') frameId = requestAnimationFrame(tick);
-  return () => {
-    frameCallbacks.delete(callback);
-  };
-}
-
-export const PIXEL_PRECISION = { restDelta: 0.4, restSpeed: 8 };
+/** Rest thresholds for values measured in pixels: half a pixel is close enough. */
+export const PIXEL_PRECISION: Precision = { restDelta: 0.4, restSpeed: 8 };
 
 export type SpringValue = {
   get: () => number;
@@ -35,26 +21,18 @@ export type SpringValue = {
 };
 
 /**
- * A single animated number. `onChange` runs inside the shared frame loop,
+ * A single animated number. `onChange` runs inside one frame loop shared by every spring,
  * so write to the DOM there directly instead of setting React state.
  */
-export function createSpringValue(
-  initial: number,
-  config: SpringConfig,
-  onChange: (value: number) => void,
-  /** Rest thresholds in this value's units. Pixels can stop at half a pixel; opacity can't. */
-  precision?: { restDelta: number; restSpeed: number },
-): SpringValue {
+export function createSpringValue(initial: number, config: SpringConfig, onChange: (value: number) => void, precision?: Precision): SpringValue {
+  const withPrecision = (next: SpringConfig) => (precision ? { ...next, ...precision } : next);
+  let activeConfig = withPrecision(config);
   let position = initial;
   let velocity = 0;
   let target = initial;
   let from = initial;
   let startVelocity = 0;
   let startTime = 0;
-  const withPrecision = (next: SpringConfig) => (precision ? { ...next, ...precision } : next);
-  let activeConfig = withPrecision(config);
-  // When `position` and `velocity` were last computed. A retarget restarts from that instant,
-  // so a spring chased every frame (e.g. light following a pane) still advances.
   let stateTime = 0;
   let unsubscribe: (() => void) | null = null;
   let resolvers: Array<() => void> = [];
@@ -69,8 +47,7 @@ export function createSpringValue(
 
   const step = (now: number) => {
     if (startTime === 0) startTime = now;
-    const elapsed = (now - startTime) / 1000;
-    const state = solveSpring(activeConfig, from, target, startVelocity, elapsed);
+    const state = solveSpring(activeConfig, from, target, startVelocity, (now - startTime) / 1000);
     stateTime = now;
     if (isAtRest(activeConfig, state, target)) {
       position = target;

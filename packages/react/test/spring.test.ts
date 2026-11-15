@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { fromDuration, resolveSpring, settlingTime, solveSpring } from '../src/core/spring';
+import { fromDuration, resolveSpring, settlingTime, solveSpring } from '../src/spring';
 
 const configs = {
   underdamped: { stiffness: 400, damping: 18, mass: 1 },
@@ -55,7 +55,7 @@ describe('fromDuration', () => {
 
 describe('createSpringValue', () => {
   it('advances when retargeted every frame', async () => {
-    const { createSpringValue } = await import('../src/core/animator');
+    const { createSpringValue } = await import('../src/spring/spring-value');
     let now = 0;
     const queue: FrameRequestCallback[] = [];
     globalThis.requestAnimationFrame = (cb) => {

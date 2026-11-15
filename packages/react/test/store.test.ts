@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { toast, toastStore } from '../src/toast/store';
+import { toast } from '../src/toast';
+import { toastStore } from '../src/toast/store/toast-store';
 
 beforeEach(() => {
   for (const t of toastStore.getSnapshot()) toastStore.remove(t.id);
