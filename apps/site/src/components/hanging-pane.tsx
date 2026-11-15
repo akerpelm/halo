@@ -7,7 +7,7 @@ import {
   rubberband,
   useReducedMotion,
 } from '@halo-ui/react/spring';
-import { type KeyboardEvent, type PointerEvent, type ReactNode, useEffect, useRef, useState } from 'react';
+import { type KeyboardEvent, type PointerEvent, type ReactNode, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { cn } from '../lib/cn';
 import { useSettings } from '../lib/settings';
 
@@ -129,7 +129,8 @@ export function HangingPane({
     return { x: value('x'), y: value('y'), tilt: value('tilt'), lightX, lightY };
   });
 
-  useEffect(() => {
+  // A layout effect, so the wires are drawn before a page transition snapshots the new page.
+  useLayoutEffect(() => {
     const anchor = anchorRef.current;
     const stage = stageRef.current;
     if (!anchor || !stage) return;
