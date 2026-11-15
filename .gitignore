@@ -3,7 +3,7 @@ dist
 .DS_Store
 *.log
 .env*
-.impeccable/questions
-.impeccable/review
-.impeccable/mocks
-.impeccable/config.local.json
+
+.wrangler
+.impeccable
+apps/site/.impeccable

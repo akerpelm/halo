@@ -1,21 +1,99 @@
 {
   "name": "@halo-ui/react",
   "version": "0.1.0",
-  "homepage": "https://haloui.dev",
-  "description": "Spring-physics toast and drawer for React. Frosted glass, fully accessible, agent-ready.",
+  "description": "Spring-physics toast and drawer for React. Frosted glass, accessible by default, built for agents.",
   "license": "MIT",
+  "author": "Alex Kerpelman",
+  "homepage": "https://haloui.dev",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/akerpelm/halo.git",
+    "directory": "packages/react"
+  },
+  "bugs": "https://github.com/akerpelm/halo/issues",
+  "keywords": [
+    "react",
+    "toast",
+    "drawer",
+    "sheet",
+    "spring",
+    "animation",
+    "glass",
+    "accessible",
+    "sonner",
+    "vaul"
+  ],
   "type": "module",
-  "sideEffects": ["**/*.css"],
-  "files": ["dist", "README.md"],
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "typesVersions": {
+    "*": {
+      "toast": [
+        "./dist/toast.d.ts"
+      ],
+      "drawer": [
+        "./dist/drawer.d.ts"
+      ],
+      "spring": [
+        "./dist/spring.d.ts"
+      ]
+    }
+  },
   "exports": {
-    ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js", "require": "./dist/index.cjs" },
-    "./toast": { "types": "./dist/toast.d.ts", "import": "./dist/toast.js", "require": "./dist/toast.cjs" },
-    "./drawer": { "types": "./dist/drawer.d.ts", "import": "./dist/drawer.js", "require": "./dist/drawer.cjs" },
-    "./spring": { "types": "./dist/spring.d.ts", "import": "./dist/spring.js", "require": "./dist/spring.cjs" },
-    "./styles.css": "./dist/styles.css"
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    },
+    "./toast": {
+      "import": {
+        "types": "./dist/toast.d.ts",
+        "default": "./dist/toast.js"
+      },
+      "require": {
+        "types": "./dist/toast.d.cts",
+        "default": "./dist/toast.cjs"
+      }
+    },
+    "./drawer": {
+      "import": {
+        "types": "./dist/drawer.d.ts",
+        "default": "./dist/drawer.js"
+      },
+      "require": {
+        "types": "./dist/drawer.d.cts",
+        "default": "./dist/drawer.cjs"
+      }
+    },
+    "./spring": {
+      "import": {
+        "types": "./dist/spring.d.ts",
+        "default": "./dist/spring.js"
+      },
+      "require": {
+        "types": "./dist/spring.d.cts",
+        "default": "./dist/spring.cjs"
+      }
+    },
+    "./styles.css": "./dist/styles.css",
+    "./package.json": "./package.json"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "scripts": {
     "build": "tsup && cp src/styles.css dist/styles.css",
@@ -37,6 +115,5 @@
     "tsup": "9.0.0",
     "typescript": "6.0.3",
     "vitest": "5.1.0"
-  },
-  "keywords": ["react", "toast", "drawer", "sheet", "spring", "animation", "glass", "accessible", "sonner", "vaul"]
+  }
 }

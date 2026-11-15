@@ -2,6 +2,8 @@
 
 A spring-physics **Toast** and **Drawer** for React. Frosted glass, accessible by default, no dependencies besides React.
 
+**[Docs and playground →](https://haloui.dev)**
+
 ```sh
 npm i @halo-ui/react
 ```
@@ -36,15 +38,15 @@ toast.success('Invite sent', { description: 'They will get an email shortly' });
 - **Six entrances and exits, all on springs:** `motion="rise | fade | drop | hinge | focus | bloom"`.
 - **Colour presets:** `coat={[a, b, c]}` recolours the dichroic edge; `intent="tint | edge | glow"` shows each toast's type in colour, even with icons off.
 - **Density and radius as props.** `density="compact | comfortable | spacious"`, `radius="square | soft | round | pill"` or px.
-- **Time left drawn on the edge.** A brighter arc unwinds around the pane and freezes while you read. No progress bar.
+- **Time left you can see.** The status icon empties like a timer, or a ring circles the close button, or the edge drains. It freezes while you read.
 - **A page that moves with the drawer.** `recess` pushes your app back on its own bouncier spring.
 
 | Entry | Min + gzip |
 | --- | --- |
-| `@halo-ui/react/toast` | 5.7 kB (includes springs) |
-| `@halo-ui/react/drawer` | 4.8 kB (includes springs) |
-| `@halo-ui/react/spring` | 1.6 kB |
-| `styles.css` | 2.9 kB |
+| `@halo-ui/react/toast` | 8.4 kB (includes springs) |
+| `@halo-ui/react/drawer` | 5.9 kB (includes springs) |
+| `@halo-ui/react/spring` | 1.9 kB |
+| `styles.css` | 4.6 kB |
 
 ## Make it yours
 
@@ -64,4 +66,8 @@ Halo's token selectors use `:where()`, so they have zero specificity and any sel
 
 Extend a built-in world with the same selector (`[data-halo-world='dichroic'] { --halo-radius: 12px }`). With Tailwind, import the stylesheet into a layer (`@import '@halo-ui/react/styles.css' layer(components);`) and use `classNames` for each part, or arbitrary properties like `className="[--halo-blur:8px]"`.
 
-The full API, written for both people and AI agents, lives in [`apps/site/public/llms.txt`](../../apps/site/public/llms.txt).
+The full API, written for both people and AI agents, is at [haloui.dev/llms.txt](https://haloui.dev/llms.txt).
+
+## License
+
+MIT
