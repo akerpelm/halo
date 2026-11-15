@@ -420,9 +420,10 @@
   display: grid;
   flex: none;
   place-items: center;
+  align-self: center;
   width: 24px;
   height: 24px;
-  margin: -2px -4px 0 0;
+  margin: 0 -4px 0 0;
   padding: 0;
   border: 0;
   border-radius: 999px;
@@ -437,6 +438,10 @@
 .halo-toast:hover .halo-toast-close,
 .halo-toast:focus-within .halo-toast-close {
   opacity: 1;
+}
+/* Present but quiet at rest, so the row's right edge never shows a phantom gap. */
+.halo-toast-close:not([data-timer]) {
+  opacity: 0.5;
 }
 .halo-toast-close:hover {
   background: color-mix(in oklch, var(--halo-fg) 9%, transparent);
@@ -554,6 +559,11 @@
 }
 .halo-toast-icon[data-timer] > svg:not(.halo-timer-ring) circle[r='8.25'] {
   display: none;
+}
+/* Glyphs with no circle of their own (the error triangle, custom icons) sit inside the ring instead. */
+.halo-toast-icon[data-timer] > svg:not(.halo-timer-ring):not(:has(circle[r='8.25'])) {
+  width: 15px;
+  height: 15px;
 }
 
 .halo-spinner {

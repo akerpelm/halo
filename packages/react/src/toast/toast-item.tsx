@@ -280,10 +280,11 @@ export function ToastItem({
     go(spring, 0, velocity);
   };
 
-  // Which timer to draw, if any. Untimed toasts (loading, Infinity) never show one.
-  const ring = timed ? timer : false;
   const typeLabel = TYPE_LABEL[t.type];
   const icon = t.icon ?? (t.type === 'default' ? null : <TypeIcon type={t.type} />);
+  // Which timer to draw, if any. Untimed toasts (loading, Infinity) never show one, and a toast
+  // with no icon moves its ring to the close button rather than drawing an empty circle.
+  const ring = !timed ? false : timer === 'icon' && !icon ? 'close' : timer;
 
   return (
     <li

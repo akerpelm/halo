@@ -1,5 +1,5 @@
 import { act, cleanup, fireEvent, render, screen } from '@testing-library/react';
-import { afterEach, beforeAll, describe, expect, it } from 'vitest';
+import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 import { toast, toastStore } from '../src/toast/store';
 import { Toaster } from '../src/toast/toaster';
 
@@ -64,5 +64,20 @@ describe('<Toaster />', () => {
     });
     expect(screen.queryByText('Elsewhere')).toBeNull();
     expect(screen.getByText('Here')).toBeTruthy();
+  });
+});
+
+describe('timers', () => {
+  it('still auto-dismisses when the stack is always expanded', async () => {
+    vi.useFakeTimers();
+    render(<Toaster expand duration={1000} />);
+    act(() => {
+      toast('Saved');
+    });
+    act(() => {
+      vi.advanceTimersByTime(1100);
+    });
+    expect(toastStore.getSnapshot()[0]?.dismissed).toBe(true);
+    vi.useRealTimers();
   });
 });

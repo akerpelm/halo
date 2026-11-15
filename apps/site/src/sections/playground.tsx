@@ -6,6 +6,7 @@ import { CodeBlock } from '../components/code-block';
 import { DemoDrawer } from '../components/demo-drawer';
 import { Section } from '../components/section';
 import { Segmented } from '../components/segmented';
+import { Select } from '../components/select';
 import { Slider } from '../components/slider';
 import { SpringCurve } from '../components/spring-curve';
 import { Toggle } from '../components/toggle';
@@ -72,7 +73,7 @@ export function Playground({ toastConfig, onToastConfig }: PlaygroundProps) {
         </p>
       }
     >
-      <div className="grid overflow-hidden rounded-[24px] shadow-[inset_0_0_0_1px_var(--line)] lg:grid-cols-[300px_1fr]">
+      <div className="grid overflow-hidden rounded-[24px] shadow-[inset_0_0_0_1px_var(--line)] lg:grid-cols-[320px_1fr]">
         <form className="grid content-start gap-6 border-line p-6 max-lg:border-b lg:border-r" onSubmit={(event) => event.preventDefault()} aria-label="Playground settings">
           <Segmented
             label="Component"
@@ -84,20 +85,13 @@ export function Playground({ toastConfig, onToastConfig }: PlaygroundProps) {
             ]}
           />
 
-          <label className="grid gap-2 text-[13px] text-ink-soft">
-            World
-            <select
-              value={world}
-              onChange={(event) => setWorld(event.target.value as HaloWorld)}
-              className="h-10 cursor-pointer rounded-xl border-0 bg-ink/[0.06] px-3 text-[14px] text-ink"
-            >
-              {worlds.map((w) => (
-                <option key={w.value} value={w.value}>
-                  {w.name}
-                </option>
-              ))}
-            </select>
-          </label>
+          <Select label="World" value={world} onChange={(event) => setWorld(event.target.value as HaloWorld)}>
+            {worlds.map((w) => (
+              <option key={w.value} value={w.value}>
+                {w.name}
+              </option>
+            ))}
+          </Select>
           <Segmented
             label="Theme"
             value={theme}
@@ -110,27 +104,20 @@ export function Playground({ toastConfig, onToastConfig }: PlaygroundProps) {
 
           {component === 'toast' ? (
             <>
-              <label className="grid gap-2 text-[13px] text-ink-soft">
-                Position
-                <select
-                  value={toastConfig.position}
-                  onChange={(event) => setToast({ position: event.target.value as ToastPosition })}
-                  className="h-10 cursor-pointer rounded-xl border-0 bg-ink/[0.06] px-3 text-[14px] text-ink"
-                >
-                  {positions.map((p) => (
-                    <option key={p.value} value={p.value}>
-                      {p.label}
-                    </option>
-                  ))}
-                </select>
-              </label>
+              <Select label="Position" value={toastConfig.position} onChange={(event) => setToast({ position: event.target.value as ToastPosition })}>
+                {positions.map((p) => (
+                  <option key={p.value} value={p.value}>
+                    {p.label}
+                  </option>
+                ))}
+              </Select>
               <Segmented
                 label="Density"
                 value={toastConfig.density}
                 onChange={(density) => setToast({ density })}
                 options={[
                   { value: 'compact', label: 'Compact' },
-                  { value: 'comfortable', label: 'Comfortable' },
+                  { value: 'comfortable', label: 'Regular' },
                   { value: 'spacious', label: 'Spacious' },
                 ]}
               />
@@ -150,8 +137,8 @@ export function Playground({ toastConfig, onToastConfig }: PlaygroundProps) {
                 value={toastConfig.timer || 'off'}
                 onChange={(value) => setToast({ timer: value === 'off' ? false : value })}
                 options={[
-                  { value: 'close', label: 'Close ring' },
-                  { value: 'icon', label: 'Icon ring' },
+                  { value: 'icon', label: 'Icon' },
+                  { value: 'close', label: 'Close' },
                   { value: 'edge', label: 'Edge' },
                   { value: 'off', label: 'Off' },
                 ]}
@@ -202,7 +189,7 @@ export function Playground({ toastConfig, onToastConfig }: PlaygroundProps) {
                 onChange={(density) => setDrawer({ density })}
                 options={[
                   { value: 'compact', label: 'Compact' },
-                  { value: 'comfortable', label: 'Comfortable' },
+                  { value: 'comfortable', label: 'Regular' },
                   { value: 'spacious', label: 'Spacious' },
                 ]}
               />

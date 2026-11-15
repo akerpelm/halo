@@ -281,7 +281,13 @@ The `.halo-surface` material that toasts, drawers, the hero pane, and samples al
 The hero's live pane, hung from two 1px steel wires drawn from fixed ceiling anchors to the pane's rotated top corners. Drag it and it rubber-bands; release it and the release velocity feeds the same spring the toast and drawer use, while three light pools trail it on a softer spring. Arrow keys nudge it. On load it holds at the top of its swing for 700ms, then is released. A mono readout reports the last release speed in px/s.
 
 ### Time-left Indicator
-On by default through the Toaster's `timeline` prop. It is drawn on the edge itself, never as a separate bar: an overlay with the same border width and padding-box mask as the edge ring, filled by a conic gradient whose dimmed sweep is `(1 − --halo-remaining) × 360°` (a registered `@property` animated from 1 to 0). The ring keeps its coat where time remains and dims toward the pane colour (`--halo-timer-dim`, the solid surface at 82%) where it has passed, sweeping clockwise from the top, and freezes while the stack is hovered or focused. Nothing brighter than the ring is ever added.
+
+Set by the Toaster's `timer` prop and drawn as a countdown ring that empties anticlockwise from twelve o'clock (SVG `stroke-dashoffset` with `pathLength=1`, 1.6px stroke, a track at 13% foreground). It freezes while the stack is hovered, focused, or touched.
+- `icon` (default): the ring replaces the status icon's own outline, in the type's colour, so the badge itself is the timer. Glyphs without a circle (the error triangle, custom icons) sit inside the ring at 15px. Toasts with no icon fall back to `close`.
+- `close`: the ring surrounds the × and is always visible on timed toasts.
+- `edge`: the edge ring dims toward the pane colour as time passes. It is quiet, but the least obviously a timer.
+- `false`: no indicator.
+Never draw time left as a separate bar or line along the pane. Users read it as a second border.
 
 ### Motion
 All movement in response to gesture or state runs on the library's analytic spring solver (`resolveSpring`, `createSpringValue`), carrying the user's release velocity. CSS-only animations use `--ease-spring` (site) or `--halo-spring-ease` (library), the same `linear()` curve sampled from that solver, typically over 620ms. Fixed-duration `ease` transitions are reserved for hover, focus, and colour changes (140 to 300ms). Transform and opacity only; nothing animates height. Under reduced motion springs settle instantly, the icon pop is removed, and smooth scrolling is off.
@@ -296,7 +302,7 @@ All movement in response to gesture or state runs on the library's analytic spri
 - **Do** express world and theme differences as token overrides under `[data-world]` and `[data-theme]`, never as separate markup.
 - **Do** separate wall-level containers with tone and 1px inset hairline rings, not shadows.
 - **Do** write specs as object labels (title, medium, dimensions) and lists of options as hairline-ruled rows.
-- **Do** draw time left on the edge ring itself, at ring width. **Don't** add a bar or line inside or along the pane: users read it as a second border.
+- **Do** show time left as a countdown ring, the status icon by default. **Don't** add a bar or line inside or along the pane: users read it as a second border.
 - **Do** provide the solid surface fallback for reduced transparency, higher contrast, and missing `backdrop-filter`.
 
 ### Don't:

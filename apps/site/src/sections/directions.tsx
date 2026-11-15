@@ -13,7 +13,7 @@ type ToastDirection = { name: string; line: string; config: ToastConfig };
 type DrawerDirection = { name: string; line: string; config: DrawerConfig };
 
 const toastDirections: ToastDirection[] = [
-  { name: 'Deck', line: 'The default. A collapsed stack that fans out on hover, with a countdown ring around the close button.', config: defaultToastConfig },
+  { name: 'Deck', line: 'The default. A collapsed stack that fans out on hover, and each status icon empties like a timer.', config: defaultToastConfig },
   {
     name: 'Fan',
     line: 'Always expanded, from the top center. For dashboards where several updates matter at once.',
@@ -26,8 +26,8 @@ const toastDirections: ToastDirection[] = [
   },
   {
     name: 'Spring-loaded',
-    line: 'More bounce, a quicker clock, and the status icon as the timer. For playful products.',
-    config: { ...defaultToastConfig, position: 'top-right', duration: 3500, timer: 'icon', spring: { duration: 0.5, bounce: 0.32 } },
+    line: 'More bounce, a quicker clock, and the countdown around the close button. For playful products.',
+    config: { ...defaultToastConfig, position: 'top-right', duration: 3500, timer: 'close', spring: { duration: 0.5, bounce: 0.32 } },
   },
 ];
 

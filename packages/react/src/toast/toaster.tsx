@@ -35,8 +35,8 @@ export type ToasterProps = {
   label?: string;
   closeButton?: boolean;
   /**
-   * How time left is shown. `close`: a ring around the close button empties (default).
-   * `icon`: the ring sits around the status icon. `edge`: the pane's edge drains. `false`: hidden.
+   * How time left is shown. `icon`: the status icon's outline empties like a timer (default;
+   * toasts without an icon use `close`). `close`: a ring around the close button. `edge`: the pane's edge drains. `false`: hidden.
    * Every style freezes while the stack is hovered, focused, or touched.
    */
   timer?: ToastTimer;
@@ -63,7 +63,7 @@ export function Toaster({
   hotkey = ['altKey', 'KeyT'],
   label = 'Notifications',
   closeButton = true,
-  timer = 'close',
+  timer = 'icon',
   offset = 24,
   className,
   style,
@@ -93,7 +93,8 @@ export function Toaster({
   const edge = vertical === 'bottom' ? 1 : -1;
   const live = toasts.filter((t) => !t.dismissed);
   const expanded = expand || hovered || focusWithin || interacting;
-  const paused = expanded || documentHidden;
+  // Pause for the reader (hover, focus, touch, hidden tab), never just because `expand` keeps it fanned.
+  const paused = hovered || focusWithin || interacting || documentHidden;
 
   const heightOf = (key: string | number) => heights[String(key)] ?? 0;
   const frontHeight = live[0] ? heightOf(live[0].id) : 0;

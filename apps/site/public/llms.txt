@@ -58,7 +58,7 @@ Toast options:
 - hotkey: string[] (default ['altKey', 'KeyT']). Focuses the stack.
 - label: string (default 'Notifications'). Landmark name.
 - closeButton: boolean (default true)
-- timer: 'close' | 'icon' | 'edge' | false (default 'close'). How time left is shown: a ring around the close button that empties, a ring that replaces the status icon's outline, or the pane edge draining. All freeze while paused.
+- timer: 'icon' | 'close' | 'edge' | false (default 'icon'). How time left is shown: the status icon's outline empties like a timer (toasts with no icon use 'close'), a ring around the close button, or the pane edge draining. All freeze while paused.
 - offset: number in px from the viewport edge (default 24)
 - id, className, style
 
