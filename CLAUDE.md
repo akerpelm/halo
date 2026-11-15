@@ -38,11 +38,14 @@ pnpm test        # 50 tests
 pnpm typecheck
 pnpm build
 pnpm --filter haloui-site test:e2e   # Playwright browser checks against a preview build
+pnpm --filter halo-ui-react size     # after a library build: rewrite sizes.json and the README size table
 ```
 
 pnpm 10, Node 22 (`.node-version`). Run builds one after another: a stale `tsup --watch` from an earlier `pnpm dev` can empty `dist` mid-build. Restart `pnpm dev` after changing `tsup.config.ts`.
 
 ## Rules
+
+- Never type a bundle size, the version or the React peer range by hand. Read them from `packages/react/sizes.json` and `package.json` (`apps/site/src/lib/package-facts.ts`). CI fails when `sizes.json` is stale.
 
 - No comments in code. The only exception is JSDoc on the library's public API.
 - TypeScript strict. `type` over `interface`, named exports, one component per file, kebab-case file names. No `any`, no non-null `!`.
@@ -88,4 +91,4 @@ Bring a library change's behaviour under test: break the code on purpose and con
 4. Document the `view-transition-name` trap in the Toast docs and `apps/site/public/llms.txt`.
 5. Confirm how `Drawer.Root` and the other parts behave when used from a Next.js server component, and document it.
 6. Add Open Graph tags and a share image for haloui.dev.
-7. Consider trimming the toast bundle (8.4 kB min+gzip).
+7. Consider trimming the toast bundle (see `packages/react/sizes.json`).

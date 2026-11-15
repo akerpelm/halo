@@ -100,7 +100,9 @@
     "dev": "tsup --watch --onSuccess 'cp src/styles.css dist/styles.css'",
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
-    "prepublishOnly": "pnpm build && pnpm test"
+    "prepublishOnly": "pnpm build && pnpm test",
+    "size": "node scripts/size.mjs",
+    "size:check": "node scripts/size.mjs --check"
   },
   "peerDependencies": {
     "react": ">=18.2",
@@ -110,6 +112,7 @@
     "@testing-library/react": "16.3.3",
     "@types/react": "19.3.0",
     "@types/react-dom": "19.3.0",
+    "esbuild": "0.28.2",
     "jsdom": "31.0.1",
     "react": "19.3.1",
     "react-dom": "19.3.1",

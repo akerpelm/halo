@@ -9,6 +9,7 @@ import { SpringCurve } from '../components/spring-curve';
 import { coats, motions, springChoices } from '../lib/build';
 import { demos, newDemos } from '../lib/demo-toasts';
 import { defaultDrawerConfig } from '../lib/config';
+import { sizes } from '../lib/package-facts';
 import { LLMS_URL } from '../lib/site';
 import { worlds } from '../lib/worlds';
 import { releaseSteps, vsSonner, vsVaul } from './comparisons';
@@ -98,7 +99,7 @@ toast.success('Invite sent', { description: 'They will get an email shortly' });
         items={[
           'React 18.2 or newer. No other dependencies.',
           'Every module starts with "use client", so it works in the Next.js App Router.',
-          'Toast is 5.7 kB and Drawer 4.8 kB, minified and gzipped, springs included. Styles are 2.9 kB.',
+          `Toast is ${sizes.toast} kB and Drawer ${sizes.drawer} kB, minified and gzipped, springs included. Styles are ${sizes.styles} kB.`,
         ]}
       />
     </>
@@ -347,7 +348,7 @@ const motionPage: DocPage = {
         With <C>prefers-reduced-motion</C>, toasts fade instead of moving and the drawer jumps to its detents. Nothing is lost: every state change still happens.
       </P>
       <H2 id="engine">Using the engine</H2>
-      <P>The spring solver is exported on its own, at 1.6 kB.</P>
+      <P>The spring solver is exported on its own, at {sizes.spring} kB.</P>
       <CodeBlock
         label="pane.ts"
         code={`import { createSpringValue, createVelocityTracker, resolveSpring } from 'halo-ui-react/spring';

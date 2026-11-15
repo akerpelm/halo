@@ -25,6 +25,7 @@ jobs:
       - run: pnpm typecheck
       - run: pnpm test
       - run: pnpm build
+      - run: pnpm --filter halo-ui-react size:check
 
   e2e:
     runs-on: ubuntu-latest
