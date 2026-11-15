@@ -1,14 +1,16 @@
 import type { HaloWorld } from '@halo-ui/react';
 import { useSettings } from '../lib/settings';
+import { usePath } from '../lib/router';
 import { worlds } from '../lib/worlds';
+import { Link } from './link';
 
 const links = [
-  ['Toast', '#toast'],
-  ['Drawer', '#drawer'],
-  ['Worlds', '#directions'],
-  ['Playground', '#playground'],
-  ['Customize', '#customize'],
-  ['Agents', '#agents'],
+  ['Docs', '/docs/getting-started'],
+  ['Toast', '/#toast'],
+  ['Drawer', '/#drawer'],
+  ['Worlds', '/#directions'],
+  ['Playground', '/#playground'],
+  ['Customize', '/#customize'],
 ] as const;
 
 export function Mark({ className }: { className?: string }) {
@@ -22,19 +24,24 @@ export function Mark({ className }: { className?: string }) {
 
 export function Nav() {
   const { world, theme, setWorld, setTheme } = useSettings();
+  const path = usePath();
   return (
     <header className="sticky top-0 z-40 bg-wall/72 backdrop-blur-xl backdrop-saturate-150">
       <nav aria-label="Main" className="mx-auto flex h-16 max-w-[1240px] items-center gap-6 px-4 sm:px-8">
-        <a href="#top" className="flex items-center gap-2 rounded-md text-ink no-underline pointer-coarse:min-h-11">
+        <Link href="/" className="flex items-center gap-2 rounded-md text-ink no-underline pointer-coarse:min-h-11">
           <Mark className="h-5 w-7" />
           <span className="font-display text-title font-semibold tracking-[-0.02em]">halo</span>
-        </a>
+        </Link>
         <ul className="m-0 hidden list-none gap-1 p-0 md:flex">
           {links.map(([label, href]) => (
             <li key={href}>
-              <a href={href} className="rounded-full px-3 py-1.5 text-ui text-ink-soft no-underline transition-colors duration-150 hover:text-ink">
+              <Link
+                href={href}
+                aria-current={href.startsWith('/docs') && path.startsWith('/docs') ? 'page' : undefined}
+                className="rounded-full px-3 py-1.5 text-ui text-ink-soft no-underline transition-colors duration-150 hover:text-ink aria-[current=page]:font-medium aria-[current=page]:text-ink"
+              >
                 {label}
-              </a>
+              </Link>
             </li>
           ))}
         </ul>
@@ -79,14 +86,15 @@ export function Nav() {
           </button>
         </div>
       </nav>
-      {/* Phones: the same sections as a scrolling row, so a long page is never a dead end. */}
-      <nav aria-label="Sections" className="md:hidden">
+      {/* Phones: the same sections as a scrolling row, so a long page is never a dead end.
+          Docs pages have their own row of pages instead, so only one row ever shows. */}
+      <nav aria-label="Sections" className={path.startsWith('/docs') ? 'hidden' : 'md:hidden'}>
         <ul className="m-0 flex list-none gap-1.5 overflow-x-auto px-4 pb-2.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {links.map(([label, href]) => (
             <li key={href} className="flex-none">
-              <a href={href} className="inline-flex min-h-11 items-center rounded-full bg-ink/[0.06] px-4 text-label text-ink no-underline dark:bg-ink/[0.09]">
+              <Link href={href} className="inline-flex min-h-11 items-center rounded-full bg-ink/[0.06] px-4 text-label text-ink no-underline dark:bg-ink/[0.09]">
                 {label}
-              </a>
+              </Link>
             </li>
           ))}
         </ul>

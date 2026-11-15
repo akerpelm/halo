@@ -4,6 +4,7 @@ import { Button } from '../components/button';
 import { CodeBlock } from '../components/code-block';
 import { CompareTable } from '../components/compare-table';
 import { FlickTest } from '../components/flick-test';
+import { Link } from '../components/link';
 import { Section } from '../components/section';
 import { CountUp } from '../components/count-up';
 import { HungLabel } from '../components/hung-label';
@@ -116,6 +117,14 @@ export function ToastSection() {
       </div>
 
       <CodeBlock className="mt-8" label="app.tsx" code={usage} />
+
+      <p className="mt-8 mb-0 text-body text-ink-soft">
+        Every function, option, and prop is in the{' '}
+        <Link href="/docs/toast" className="text-ink underline decoration-line underline-offset-4 hover:decoration-ink">
+          Toast docs
+        </Link>
+        .
+      </p>
 
       <div className="mt-16">
         <CompareTable

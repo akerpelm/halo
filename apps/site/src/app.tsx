@@ -1,6 +1,8 @@
 import { Toaster } from '@halo-ui/react/toast';
 import { useState } from 'react';
 import { Nav } from './components/nav';
+import { DocsLayout } from './docs/docs-layout';
+import { usePath } from './lib/router';
 import { type BuildConfig, PLAIN } from './lib/build';
 import { useSettings } from './lib/settings';
 import { Agents } from './sections/agents';
@@ -16,25 +18,33 @@ export function App() {
   const { world, theme } = useSettings();
   // The playground's toast, lifted so Directions can load setups into it.
   const [build, setBuild] = useState<BuildConfig>(PLAIN);
+  const path = usePath();
+  const docsSlug = path.startsWith('/docs') ? (path.split('/')[2] ?? 'getting-started') : null;
 
   return (
     <>
       <a
-        href="#toast"
+        href="#main"
         className="fixed top-3 left-3 z-50 -translate-y-20 rounded-full bg-ink px-4 py-2 text-ui text-wall no-underline focus-visible:translate-y-0"
       >
-        Skip to the docs
+        Skip to content
       </a>
       <div data-halo-recess className="mullions min-h-dvh">
         <Nav />
-        <main>
-          <Hero />
-          <ToastSection />
-          <DrawerSection />
-          <Directions onOpenToast={setBuild} />
-          <Playground build={build} onBuild={setBuild} />
-          <MakeItYours />
-          <Agents />
+        <main id="main">
+          {docsSlug !== null ? (
+            <DocsLayout slug={docsSlug || 'getting-started'} />
+          ) : (
+            <>
+              <Hero />
+              <ToastSection />
+              <DrawerSection />
+              <Directions onOpenToast={setBuild} />
+              <Playground build={build} onBuild={setBuild} />
+              <MakeItYours />
+              <Agents />
+            </>
+          )}
         </main>
         <Footer />
       </div>

@@ -1,6 +1,7 @@
 import { CodeBlock } from '../components/code-block';
 import { CompareTable } from '../components/compare-table';
 import { DemoDrawer } from '../components/demo-drawer';
+import { Link } from '../components/link';
 import { Section } from '../components/section';
 import { CountUp } from '../components/count-up';
 import { HungLabel } from '../components/hung-label';
@@ -58,6 +59,14 @@ export function DrawerSection() {
       </ol>
 
       <CodeBlock className="mt-12" label="share-sheet.tsx" code={drawerCode(defaultDrawerConfig, world)} />
+
+      <p className="mt-8 mb-0 text-body text-ink-soft">
+        Parts, props, and detents are in the{' '}
+        <Link href="/docs/drawer" className="text-ink underline decoration-line underline-offset-4 hover:decoration-ink">
+          Drawer docs
+        </Link>
+        .
+      </p>
 
       <div className="mt-16">
         <CompareTable
