@@ -25,6 +25,16 @@ export type ToastOptions = {
   /** Target a specific `<Toaster id>`. */
   toasterId?: string;
   className?: string;
+  /**
+   * Launch the toast from the element that caused it: it flies out of this element and lands in
+   * the stack on a spring. Pass an element or a ref.
+   */
+  from?: Element | { current: Element | null } | null;
+  /**
+   * Collapse repeats: a toast sent with the same group while one is showing updates that toast
+   * and bumps a springing counter instead of stacking a new one.
+   */
+  group?: string;
   onDismiss?: (toast: ToastRecord) => void;
   onAutoClose?: (toast: ToastRecord) => void;
 };
@@ -36,6 +46,12 @@ export type ToastRecord = Omit<ToastOptions, 'id' | 'type'> & {
   /** Bumps on every update so the toast can restart its timer and announce again. */
   revision: number;
   dismissed: boolean;
+  /** How many times this toast's group has fired while it was showing. */
+  count: number;
+  /** Text is still streaming in; intermediate updates are not announced. */
+  streaming?: boolean;
+  /** The action is an undo: its button carries the countdown ring. */
+  undo?: boolean;
 };
 
 type Listener = () => void;
@@ -64,16 +80,22 @@ export const toastStore = {
   },
 };
 
-function upsert(title: ReactNode, options: ToastOptions = {}): ToastRecord['id'] {
+type InternalOptions = ToastOptions & Partial<Pick<ToastRecord, 'streaming' | 'undo'>>;
+
+function upsert(title: ReactNode, options: InternalOptions = {}): ToastRecord['id'] {
   const { id: requestedId, type: requestedType, ...rest } = options;
-  const existing = requestedId === undefined ? undefined : toasts.find((t) => t.id === requestedId);
+  const grouped =
+    requestedId === undefined && options.group !== undefined
+      ? toasts.find((t) => t.group === options.group && t.toasterId === options.toasterId && !t.dismissed)
+      : undefined;
+  const existing = grouped ?? (requestedId === undefined ? undefined : toasts.find((t) => t.id === requestedId));
   const type = requestedType ?? existing?.type ?? 'default';
 
   if (existing) {
     emit(
       toasts.map((t) =>
         t.id === existing.id
-          ? { ...t, ...rest, type, title, revision: t.revision + 1, dismissed: false }
+          ? { ...t, ...rest, type, title, revision: t.revision + 1, dismissed: false, count: grouped ? t.count + 1 : t.count }
           : t,
       ),
     );
@@ -82,7 +104,7 @@ function upsert(title: ReactNode, options: ToastOptions = {}): ToastRecord['id']
 
   counter += 1;
   const id = requestedId ?? counter;
-  const record: ToastRecord = { ...rest, id, type, title, revision: 0, dismissed: false };
+  const record: ToastRecord = { ...rest, id, type, title, revision: 0, dismissed: false, count: 1 };
   emit([record, ...toasts]);
   return id;
 }
@@ -116,6 +138,58 @@ function promise<T>(input: Promise<T> | (() => Promise<T>), messages: PromiseMes
   return run;
 }
 
+type StreamMessages = {
+  /** Title while text streams in. */
+  title: ReactNode;
+  /** Title once the stream ends. Defaults to `title`. */
+  success?: ReactNode;
+  error?: ReactNode | ((error: unknown) => ReactNode);
+};
+
+async function* chunks(source: AsyncIterable<string> | ReadableStream<string>): AsyncIterable<string> {
+  if (Symbol.asyncIterator in source) {
+    yield* source as AsyncIterable<string>;
+    return;
+  }
+  const reader = (source as ReadableStream<string>).getReader();
+  for (;;) {
+    const { done, value } = await reader.read();
+    if (done) return;
+    yield value;
+  }
+}
+
+/** Stream text into a toast as it arrives (an AI reply, a log), then settle into success. */
+function stream(source: AsyncIterable<string> | ReadableStream<string>, messages: StreamMessages, options: TypedOptions = {}) {
+  const id = upsert(messages.title, { ...options, type: 'loading', duration: Infinity, description: '', streaming: true });
+  const run = (async () => {
+    let text = '';
+    try {
+      for await (const chunk of chunks(source)) {
+        text += chunk;
+        upsert(messages.title, { ...options, id, type: 'loading', duration: Infinity, description: text, streaming: true });
+      }
+      upsert(messages.success ?? messages.title, { ...options, id, type: 'success', description: text, streaming: false });
+    } catch (error) {
+      const title = typeof messages.error === 'function' ? messages.error(error) : (messages.error ?? 'Something went wrong');
+      upsert(title, { ...options, id, type: 'error', streaming: false });
+    }
+    return text;
+  })();
+  return Object.assign(run, { id });
+}
+
+type UndoOptions = Omit<TypedOptions, 'action'> & {
+  onUndo: () => void;
+  /** Button text. Defaults to "Undo". */
+  label?: ReactNode;
+};
+
+/** An undoable action. The countdown ring sits on the Undo button: the timer is the undo window. */
+function undo(title: ReactNode, { onUndo, label = 'Undo', ...options }: UndoOptions) {
+  return upsert(title, { duration: 6000, ...options, undo: true, action: { label, onClick: () => onUndo() } });
+}
+
 /**
  * Show a toast. Works anywhere: inside React, in event handlers, in plain modules.
  *
@@ -132,6 +206,8 @@ export const toast = Object.assign((title: ReactNode, options?: ToastOptions) =>
   loading: (title: ReactNode, options?: TypedOptions) =>
     upsert(title, { duration: Infinity, ...options, type: 'loading' }),
   promise,
+  stream,
+  undo,
   /** Update a toast in place. It morphs instead of stacking a new one. */
   update: (id: ToastRecord['id'], title: ReactNode, options?: ToastOptions) => upsert(title, { ...options, id }),
   dismiss,

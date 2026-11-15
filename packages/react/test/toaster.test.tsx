@@ -159,3 +159,10 @@ describe('several toasters on one page', () => {
     expect(screen.getByRole('region', { name: 'Notifications: side' })).toBeTruthy();
   });
 });
+
+describe('contained', () => {
+  it('marks a contained toaster so it positions inside its parent', () => {
+    render(<Toaster id="stage" contained />);
+    expect(screen.getByRole('region').hasAttribute('data-contained')).toBe(true);
+  });
+});

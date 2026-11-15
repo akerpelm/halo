@@ -134,6 +134,45 @@
     0 10px 24px -14px light-dark(oklch(25% 0.01 262 / 0.28), oklch(0% 0 0 / 0.7));
 }
 
+/* Opal: a milky pane whose whole surface turns iridescent as it moves. */
+:where(.halo[data-halo-world='opal']) {
+  --halo-blur: 20px;
+  --halo-saturate: 1.5;
+  --halo-surface: light-dark(oklch(97% 0.012 300 / 0.62), oklch(28% 0.03 300 / 0.6));
+  --halo-surface-solid: light-dark(oklch(96% 0.01 300), oklch(25% 0.025 300));
+  --halo-world-edge: light-dark(oklch(100% 0 0 / 0.85), oklch(100% 0 0 / 0.18));
+  --halo-shadow:
+    inset 0 1px 0 light-dark(oklch(100% 0 0 / 0.8), oklch(100% 0 0 / 0.1)),
+    0 18px 40px -20px light-dark(oklch(40% 0.06 300 / 0.3), oklch(0% 0 0 / 0.7));
+}
+
+/* Mercury: liquid metal. A chrome edge that catches the light as the pane moves. */
+:where(.halo[data-halo-world='mercury']) {
+  --halo-blur: 16px;
+  --halo-saturate: 1.1;
+  --halo-edge-width: 2px;
+  --halo-surface: light-dark(oklch(95% 0.004 250 / 0.72), oklch(27% 0.006 250 / 0.72));
+  --halo-surface-solid: light-dark(oklch(94% 0.004 250), oklch(25% 0.006 250));
+  --halo-shadow:
+    inset 0 1px 0 light-dark(oklch(100% 0 0 / 0.9), oklch(100% 0 0 / 0.16)),
+    0 2px 3px light-dark(oklch(30% 0.01 250 / 0.12), oklch(0% 0 0 / 0.5)),
+    0 20px 40px -20px light-dark(oklch(30% 0.01 250 / 0.35), oklch(0% 0 0 / 0.75));
+}
+
+/* Vellum: matte drafting film. Barely diffused, very crisp, with a printed rule inset from the edge. */
+:where(.halo[data-halo-world='vellum']) {
+  --halo-radius: 6px;
+  --halo-blur: 3px;
+  --halo-saturate: 1;
+  --halo-surface: light-dark(oklch(97% 0.004 220 / 0.86), oklch(24% 0.006 230 / 0.86));
+  --halo-surface-solid: light-dark(oklch(96.5% 0.004 220), oklch(23% 0.006 230));
+  --halo-world-edge: light-dark(oklch(70% 0.01 230 / 0.55), oklch(100% 0 0 / 0.16));
+  --halo-shadow:
+    inset 0 0 0 4px light-dark(oklch(97% 0.004 220 / 0.9), oklch(24% 0.006 230 / 0.9)),
+    inset 0 0 0 5px light-dark(oklch(70% 0.01 230 / 0.32), oklch(100% 0 0 / 0.08)),
+    0 8px 18px -12px light-dark(oklch(30% 0.01 230 / 0.25), oklch(0% 0 0 / 0.6));
+}
+
 /*
  * The edge is resolved on the pane, so --halo-shift (written per frame on the pane) can move it.
  * A world sets --halo-world-edge on its own selector; worlds that don't get the dichroic coat.
@@ -166,6 +205,31 @@
   );
 }
 
+
+.halo[data-halo-world='opal'] .halo-surface,
+.halo-surface[data-halo-world='opal'] {
+  /* Iridescence across the whole pane, turning with --halo-shift as it moves. */
+  background-image: linear-gradient(
+    calc(115deg + var(--halo-shift, 0) * 140deg),
+    light-dark(oklch(92% 0.06 200 / 0.55), oklch(45% 0.08 200 / 0.4)),
+    light-dark(oklch(93% 0.07 320 / 0.5), oklch(42% 0.1 320 / 0.38)),
+    light-dark(oklch(95% 0.07 90 / 0.5), oklch(48% 0.08 90 / 0.36)),
+    light-dark(oklch(92% 0.06 200 / 0.55), oklch(45% 0.08 200 / 0.4))
+  );
+}
+
+.halo[data-halo-world='mercury'] .halo-surface,
+.halo-surface[data-halo-world='mercury'] {
+  /* Chrome: neutral bands at similar weight, the bright band sliding with --halo-shift. */
+  --halo-edge: linear-gradient(
+    calc(100deg + var(--halo-shift, 0) * 200deg),
+    light-dark(oklch(62% 0.008 250), oklch(55% 0.008 250)),
+    light-dark(oklch(97% 0.004 250), oklch(92% 0.004 250)),
+    light-dark(oklch(58% 0.008 250), oklch(48% 0.008 250)),
+    light-dark(oklch(88% 0.006 250), oklch(80% 0.006 250)),
+    light-dark(oklch(62% 0.008 250), oklch(55% 0.008 250))
+  );
+}
 
 /* The pane itself. */
 .halo-surface {
@@ -267,6 +331,10 @@
   max-width: calc(100vw - 2 * var(--halo-offset));
   pointer-events: none;
   outline: none;
+}
+.halo-toaster[data-contained] {
+  position: absolute;
+  z-index: 10;
 }
 .halo-toaster[data-y='bottom'] {
   bottom: max(var(--halo-offset), env(safe-area-inset-bottom));
@@ -540,6 +608,55 @@
 .halo-toast[data-timer-paused] .halo-toast-timeline,
 .halo-toast[data-timer-paused] .halo-timer-progress {
   animation-play-state: paused;
+}
+
+/* Grouped repeats: the count springs in each time it changes. */
+.halo-toast-count {
+  display: inline-grid;
+  place-items: center;
+  min-width: 20px;
+  height: 20px;
+  margin-left: 8px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: color-mix(in oklch, var(--halo-fg) 10%, transparent);
+  font-size: 0.85em;
+  font-variant-numeric: tabular-nums;
+  vertical-align: 1px;
+  animation: halo-pop 620ms var(--halo-spring-ease) both;
+}
+
+/* Streaming: a caret rides the end of the text while it is still arriving. */
+.halo-toast[data-streaming] .halo-toast-description::after {
+  content: '';
+  display: inline-block;
+  width: 2px;
+  height: 1em;
+  margin-left: 2px;
+  vertical-align: -2px;
+  background: currentColor;
+  animation: halo-caret 1s steps(2, jump-none) infinite;
+}
+@keyframes halo-caret {
+  50% {
+    opacity: 0;
+  }
+}
+
+/* Undo: the countdown sits on the button, so the time left is the undo window. */
+.halo-toast-action[data-timer] {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding-left: 6px;
+}
+.halo-action-ring {
+  position: relative;
+  width: 18px;
+  height: 18px;
+}
+.halo-action-ring .halo-timer-track {
+  stroke: color-mix(in oklch, var(--halo-control-fg) 25%, transparent);
 }
 
 /* ── Timer ring ── */
@@ -841,7 +958,11 @@ dialog.halo-drawer::backdrop {
   .halo-spinner {
     animation-duration: 2.4s;
   }
-  .halo-toast-icon {
+  .halo-toast-icon,
+  .halo-toast-count {
+    animation: none;
+  }
+  .halo-toast[data-streaming] .halo-toast-description::after {
     animation: none;
   }
 }

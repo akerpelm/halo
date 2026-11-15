@@ -196,6 +196,8 @@ export function ToastItem({
     const li = ref.current;
     const body = bodyRef.current;
     if (!li || !body) return;
+    // Measured before any spring writes a transform: this is where the toast rests.
+    const rest = li.getBoundingClientRect();
     width.current = li.offsetWidth;
     naturalHeight.current = body.offsetHeight;
     onHeight(t.id, naturalHeight.current);
@@ -211,6 +213,18 @@ export function ToastItem({
     motion.reveal.set(0);
     if (reducedMotion) motion.reveal.to(1, { config: FADE });
     else motion.reveal.to(1, { config: quicken(config, 0.75) });
+
+    // Launch from the trigger: start where the element that caused this toast is, then let the
+    // stack springs carry it home. The rest position is measured before any transform applies.
+    const origin = t.from && 'current' in t.from ? t.from.current : t.from;
+    if (origin && !reducedMotion) {
+      const from = origin.getBoundingClientRect();
+      motion.x.set(from.left + from.width / 2 - (rest.left + rest.width / 2));
+      motion.y.set(from.top + from.height / 2 - (rest.top + rest.height / 2));
+      motion.scale.set(Math.max(0.25, Math.min(1, from.width / rest.width)));
+      motion.reveal.set(1);
+      go(motion.x, 0);
+    }
     return () => observer.disconnect();
   }, []);
 
@@ -245,7 +259,8 @@ export function ToastItem({
   }, [hidden]);
 
   useEffect(() => {
-    if (t.dismissed || !bodyRef.current) return;
+    // Streaming text is announced once, when it finishes, not on every chunk.
+    if (t.dismissed || t.streaming || !bodyRef.current) return;
     const parts = bodyRef.current.querySelectorAll('.halo-sr-only, .halo-toast-title, .halo-toast-description');
     const text = Array.from(parts, (node) => node.textContent?.trim().replace(/:$/, '') ?? '')
       .filter(Boolean)
@@ -363,7 +378,7 @@ export function ToastItem({
   const icon = t.icon ?? (t.type === 'default' || !icons ? null : <TypeIcon type={t.type} />);
   // Which timer to draw, if any. Untimed toasts (loading, Infinity) never show one, and a toast
   // with no icon moves its ring to the close button rather than drawing an empty circle.
-  const ring = !timed ? false : timer === 'icon' && !icon ? 'close' : timer;
+  const ring = !timed ? false : t.undo && t.action ? 'action' : timer === 'icon' && !icon ? 'close' : timer;
 
   return (
     <li
@@ -377,6 +392,7 @@ export function ToastItem({
       data-hidden={hidden || undefined}
       data-timer-paused={!running || undefined}
       data-intent={intent || undefined}
+      data-streaming={t.streaming || undefined}
       className={cx('halo-toast halo-surface', classNames?.toast, t.className)}
       style={{ height: clamped ? frontHeight : undefined, zIndex: 1000 - lastIndex.current }}
       onPointerDown={onPointerDown}
@@ -403,18 +419,33 @@ export function ToastItem({
         )}
         <div className="halo-toast-text">
           {typeLabel && <span className="halo-sr-only">{typeLabel} </span>}
-          <div className={cx('halo-toast-title', classNames?.title)}>{t.title}</div>
+          <div className={cx('halo-toast-title', classNames?.title)}>
+            {t.title}
+            {t.count > 1 && (
+              <span key={t.count} className="halo-toast-count">
+                <span className="halo-sr-only">, </span>
+                {t.count}
+                <span className="halo-sr-only"> times</span>
+              </span>
+            )}
+          </div>
           {t.description && <div className={cx('halo-toast-description', classNames?.description)}>{t.description}</div>}
         </div>
         {t.action && (
           <button
             type="button"
             className={cx('halo-toast-action', classNames?.action)}
+            data-timer={ring === 'action' || undefined}
             onClick={(event) => {
               t.action?.onClick(event);
               if (!event.defaultPrevented) userDismiss();
             }}
           >
+            {ring === 'action' && (
+              <span aria-hidden className="halo-action-ring">
+                <TimerRing duration={duration} restartKey={t.revision} />
+              </span>
+            )}
             {t.action.label}
           </button>
         )}

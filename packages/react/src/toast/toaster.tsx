@@ -7,14 +7,14 @@ import type { ToastIntent, ToastMotion, ToastTimer } from './icons';
 import { ToastItem } from './toast-item';
 
 export type ToastPosition = 'top-left' | 'top-center' | 'top-right' | 'bottom-left' | 'bottom-center' | 'bottom-right';
-export type HaloWorld = 'dichroic' | 'partition' | 'smoked' | 'vapor' | 'crystal' | 'ink';
+export type HaloWorld = 'dichroic' | 'partition' | 'smoked' | 'vapor' | 'crystal' | 'ink' | 'opal' | 'mercury' | 'vellum';
 /** A built-in world, or the name of one you define in CSS with [data-halo-world='your-name']. */
 export type HaloWorldName = HaloWorld | (string & {});
 
 /** Extra classes for each part of every toast, e.g. Tailwind utilities. */
 export type ToastClassNames = Partial<Record<'toast' | 'body' | 'icon' | 'title' | 'description' | 'action' | 'close', string>>;
 
-export const haloWorlds: readonly HaloWorld[] = ['dichroic', 'partition', 'smoked', 'vapor', 'crystal', 'ink'];
+export const haloWorlds: readonly HaloWorld[] = ['dichroic', 'partition', 'smoked', 'vapor', 'crystal', 'ink', 'opal', 'mercury', 'vellum'];
 export type HaloTheme = 'light' | 'dark' | 'system';
 
 export type ToasterProps = {
@@ -60,6 +60,8 @@ export type ToasterProps = {
   coat?: readonly [string, string, string];
   /** Distance from the viewport edge in px. */
   offset?: number;
+  /** Position inside the nearest positioned ancestor instead of the viewport: for demos, previews, and panels. */
+  contained?: boolean;
   className?: string;
   style?: CSSProperties;
 };
@@ -95,6 +97,7 @@ export function Toaster({
   intent = false,
   coat,
   offset = 24,
+  contained = false,
   className,
   style,
 }: ToasterProps) {
@@ -193,6 +196,7 @@ export function Toaster({
       data-halo-world={world}
       data-theme={theme}
       data-density={density}
+      data-contained={contained || undefined}
       data-y={vertical}
       data-x={horizontal}
       style={{ '--halo-offset': `${offset}px`, '--halo-gap': `${gap}px`, ...appearanceStyle('--halo-radius', radius), ...coatStyle(coat), ...style } as CSSProperties}

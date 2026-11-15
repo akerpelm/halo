@@ -1,6 +1,6 @@
 # Halo (@halo-ui/react)
 
-> A spring-physics Toast and Drawer for React 18.2+. Frosted-glass material, accessible by default, no dependencies besides React. Six visual worlds: "dichroic" (default), "partition", "smoked", "vapor", "crystal", "ink".
+> A spring-physics Toast and Drawer for React 18.2+. Frosted-glass material, accessible by default, no dependencies besides React. Nine visual worlds: "dichroic" (default), "partition", "smoked", "vapor", "crystal", "ink", "opal", "mercury", "vellum", plus any you define in CSS.
 
 Install: `npm i @halo-ui/react`
 Styles: import `@halo-ui/react/styles.css` once (e.g. in your root layout or main entry).
@@ -26,6 +26,11 @@ const id = toast.loading('Exporting…');          // never auto-dismisses
 toast.update(id, 'Export ready', { type: 'success' }); // morphs in place
 toast.promise(save(), { loading: 'Saving…', success: 'Saved', error: 'Could not save' });
 toast.dismiss(id);   // or toast.dismiss() for all
+toast.undo('Archived', { onUndo: restore });   // the countdown ring sits on the Undo button
+await toast.stream(aiReply, { title: 'Summarising…', success: 'Summary ready' }); // AsyncIterable<string> or ReadableStream<string>
+toast('Saved', { from: buttonRef });            // flies out of the trigger and lands in the stack
+toast.success('File uploaded', { group: 'uploads' }); // repeats collapse into one toast with a springing count
+toast.isActive(id);
 ```
 
 toast(title, options) returns the toast id. `title` and `description` accept any ReactNode.
@@ -41,6 +46,8 @@ Toast options:
 - important: boolean. Announce assertively. Defaults to true for errors only.
 - toasterId: string. Target a specific <Toaster id="...">.
 - className: string
+- from: Element | Ref<Element>. Launch the toast out of the element that caused it.
+- group: string. Repeats with the same group update one toast and bump its count.
 - onDismiss(toast): user dismissed it (swipe, close button, keyboard, action).
 - onAutoClose(toast): its timer ran out.
 
@@ -55,7 +62,7 @@ Toast options:
 - icons: boolean (default true). Show the type icons.
 - intent: 'tint' | 'edge' | 'glow' | false (default false). Show each toast's type in colour, so success and error read apart even with icons off. tint washes the glass, edge colours the edge ring, glow casts light in the type colour.
 - coat: [string, string, string]. Override the three dichroic coat colours.
-- world: 'dichroic' | 'partition' | 'smoked' | 'vapor' | 'crystal' | 'ink' (default 'dichroic'). dichroic: clear with a coated, hue-shifting edge. partition: etched, neutral. smoked: bronze-tinted, always dark. vapor: most diffuse. crystal: clear and bevelled, little blur. ink: solid, no blur (cheapest to render).
+- world: 'dichroic' | 'partition' | 'smoked' | 'vapor' | 'crystal' | 'ink' | 'opal' | 'mercury' | 'vellum', or any custom world name (default 'dichroic'). opal: the whole surface turns iridescent as it moves. mercury: a chrome edge whose highlight slides with motion. vellum: matte drafting film with a printed rule. dichroic: clear with a coated, hue-shifting edge. partition: etched, neutral. smoked: bronze-tinted, always dark. vapor: most diffuse. crystal: clear and bevelled, little blur. ink: solid, no blur (cheapest to render).
 - theme: 'light' | 'dark' | 'system' (default 'system')
 - density: 'compact' | 'comfortable' | 'spacious' (default 'comfortable'). Padding, gaps, and type size move together.
 - radius: 'square' | 'soft' | 'round' | 'pill' | number in px (default 'round', 18px). 'pill' gives capsule toasts.
@@ -64,6 +71,7 @@ Toast options:
 - closeButton: boolean (default true)
 - timer: 'icon' | 'close' | 'edge' | false (default 'icon'). How time left is shown: the status icon's outline empties like a timer (toasts with no icon use 'close'), a ring around the close button, or the pane edge draining. All freeze while paused.
 - offset: number in px from the viewport edge (default 24)
+- contained: boolean. Position inside the nearest positioned ancestor instead of the viewport.
 - id, className, style
 
 Behavior worth knowing:

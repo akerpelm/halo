@@ -38,3 +38,39 @@ describe('toast store', () => {
     expect(record?.title).toBe('Done 3');
   });
 });
+
+describe('new toast types', () => {
+  it('groups repeats into one toast with a count', () => {
+    toast.success('Uploaded', { group: 'uploads' });
+    toast.success('Uploaded', { group: 'uploads' });
+    toast.success('Uploaded', { group: 'uploads' });
+    const live = toastStore.getSnapshot().filter((t) => !t.dismissed);
+    expect(live).toHaveLength(1);
+    expect(live[0]?.count).toBe(3);
+  });
+
+  it('streams text into the description, then settles into success', async () => {
+    async function* words() {
+      yield 'Three ';
+      yield 'bugs ';
+      yield 'fixed.';
+    }
+    const run = toast.stream(words(), { title: 'Summarising…', success: 'Summary ready' });
+    expect(toastStore.getSnapshot()[0]?.type).toBe('loading');
+    const text = await run;
+    const [record] = toastStore.getSnapshot();
+    expect(text).toBe('Three bugs fixed.');
+    expect(record?.type).toBe('success');
+    expect(record?.description).toBe('Three bugs fixed.');
+    expect(record?.streaming).toBe(false);
+  });
+
+  it('makes an undo toast whose action calls onUndo', () => {
+    let undone = false;
+    toast.undo('Archived', { onUndo: () => (undone = true) });
+    const [record] = toastStore.getSnapshot();
+    expect(record?.undo).toBe(true);
+    record?.action?.onClick({} as never);
+    expect(undone).toBe(true);
+  });
+});
