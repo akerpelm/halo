@@ -1,5 +1,5 @@
 import { useSyncExternalStore } from 'react';
-import type { HaloWorldName } from 'haloui';
+import type { HaloWorldName } from 'halo-ui-react';
 import { allWorlds } from './worlds';
 
 export type SiteTheme = 'light' | 'dark';

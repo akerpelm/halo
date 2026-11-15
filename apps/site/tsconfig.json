@@ -4,10 +4,10 @@
     "types": ["vite/client", "node"],
     "paths": {
       "@/*": ["./src/*"],
-      "haloui": ["../../packages/react/src/index.ts"],
-      "haloui/spring": ["../../packages/react/src/core/index.ts"],
-      "haloui/toast": ["../../packages/react/src/toast/index.ts"],
-      "haloui/drawer": ["../../packages/react/src/drawer/index.ts"]
+      "halo-ui-react": ["../../packages/react/src/index.ts"],
+      "halo-ui-react/spring": ["../../packages/react/src/core/index.ts"],
+      "halo-ui-react/toast": ["../../packages/react/src/toast/index.ts"],
+      "halo-ui-react/drawer": ["../../packages/react/src/drawer/index.ts"]
     }
   },
   "include": ["src", "vite.config.ts"]

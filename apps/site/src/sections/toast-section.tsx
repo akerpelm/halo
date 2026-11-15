@@ -27,7 +27,7 @@ export function ToastSection() {
           date="2026"
           medium="Frosted pane, spring steel, two live regions"
           rows={[
-            ['Import', <code key="i">haloui/toast</code>],
+            ['Import', <code key="i">halo-ui-react/toast</code>],
             ['Weight', <span key="w"><CountUp value={5.7} decimals={1} suffix=" kB" /> min+gzip, with springs</span>],
             ['Styles', <span key="s"><CountUp value={2.9} decimals={1} suffix=" kB" />, shared with Drawer</span>],
             ['Peers', 'React 18.2 or newer'],

@@ -1,5 +1,5 @@
-import { type ToastPosition, resolveSpring, sampleSpring } from 'haloui';
-import { Toaster, toast } from 'haloui/toast';
+import { type ToastPosition, resolveSpring, sampleSpring } from 'halo-ui-react';
+import { Toaster, toast } from 'halo-ui-react/toast';
 import { type ReactNode, useEffect, useRef, useState } from 'react';
 import { Button } from '../components/button';
 import { CodeBlock } from '../components/code-block';

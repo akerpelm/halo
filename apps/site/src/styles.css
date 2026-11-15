@@ -1,5 +1,5 @@
 @import 'tailwindcss';
-@import 'haloui/styles.css' layer(components);
+@import 'halo-ui-react/styles.css' layer(components);
 
 @custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
 @custom-variant partition (&:where([data-world='partition'], [data-world='partition'] *));

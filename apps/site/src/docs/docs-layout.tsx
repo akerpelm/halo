@@ -1,5 +1,5 @@
 import type { CSSProperties } from 'react';
-import { Toaster } from 'haloui/toast';
+import { Toaster } from 'halo-ui-react/toast';
 import { Link } from '../components/link';
 import { PageTransition } from '../components/page-transition';
 import { cn } from '../lib/cn';

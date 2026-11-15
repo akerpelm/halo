@@ -1,4 +1,4 @@
-import { toast } from 'haloui/toast';
+import { toast } from 'halo-ui-react/toast';
 import type { ReactNode } from 'react';
 import { Button } from '../components/button';
 import { CodeBlock } from '../components/code-block';
@@ -43,12 +43,12 @@ const gettingStarted: DocPage = {
   body: () => (
     <>
       <H2 id="install">Install</H2>
-      <CodeBlock label="terminal" code="npm i haloui" />
+      <CodeBlock label="terminal" code="npm i halo-ui-react" />
       <H2 id="styles">Add the styles</H2>
       <P>Import the stylesheet once, in your root layout or entry file.</P>
-      <CodeBlock label="main.tsx" code={`import 'haloui/styles.css';`} />
+      <CodeBlock label="main.tsx" code={`import 'halo-ui-react/styles.css';`} />
       <Note title="Using Tailwind?">
-        Import it into a cascade layer so your utilities win over the material: <C>@import 'haloui/styles.css' layer(components);</C>
+        Import it into a cascade layer so your utilities win over the material: <C>@import 'halo-ui-react/styles.css' layer(components);</C>
       </Note>
       <H2 id="first-toast">Your first toast</H2>
       <P>
@@ -56,7 +56,7 @@ const gettingStarted: DocPage = {
       </P>
       <CodeBlock
         label="app.tsx"
-        code={`import { Toaster, toast } from 'haloui/toast';
+        code={`import { Toaster, toast } from 'halo-ui-react/toast';
 
 export function App() {
   return (
@@ -350,7 +350,7 @@ const motionPage: DocPage = {
       <P>The spring solver is exported on its own, at 1.6 kB.</P>
       <CodeBlock
         label="pane.ts"
-        code={`import { createSpringValue, createVelocityTracker, resolveSpring } from 'haloui/spring';
+        code={`import { createSpringValue, createVelocityTracker, resolveSpring } from 'halo-ui-react/spring';
 
 const x = createSpringValue(0, resolveSpring('pop'), (v) => {
   el.style.transform = \`translateX(\${v}px)\`;
@@ -414,7 +414,7 @@ const customizePage: DocPage = {
       <CodeBlock
         label="app.css"
         code={`@import 'tailwindcss';
-@import 'haloui/styles.css' layer(components);`}
+@import 'halo-ui-react/styles.css' layer(components);`}
       />
       <CodeBlock
         label="app.tsx"
@@ -445,7 +445,7 @@ const recipes: ReadonlyArray<{ id: string; title: string; when: string; prompt: 
     title: 'Add toasts',
     when: 'A new app, or one with no notification system yet.',
     prompt: () => `Add Halo toasts to this React app. Read ${LLMS_URL} first.
-1. npm i haloui, and import 'haloui/styles.css' once in the root layout or entry file.
+1. npm i halo-ui-react, and import 'halo-ui-react/styles.css' once in the root layout or entry file.
 2. Render <Toaster /> once near the root, inside providers and outside the router outlet.
 3. Use toast.success / toast.error / toast.info / toast.warning for outcomes, toast.promise for async work, and toast.update(id, ...) to change a toast in place instead of stacking another.
 4. Give actions as { action: { label, onClick } }.
@@ -456,7 +456,7 @@ Keep messages short: a title, plus a description only when it adds something.`,
     title: 'Migrate from Sonner',
     when: 'The app imports from "sonner".',
     prompt: () => `Replace Sonner with Halo in this app. Read ${LLMS_URL} first.
-- Change imports from 'sonner' to 'haloui/toast', and add import 'haloui/styles.css' once.
+- Change imports from 'sonner' to 'halo-ui-react/toast', and add import 'halo-ui-react/styles.css' once.
 - toast(), toast.success/error/warning/info/loading, toast.promise, and toast.dismiss keep the same call shapes.
 - <Toaster> props: position, expand, visibleToasts, and closeButton carry over unchanged.
 - richColors becomes intent="tint". toastOptions.classNames becomes classNames on <Toaster>.
@@ -477,7 +477,7 @@ Do not add a portal or an overlay component: Drawer.Content is a native <dialog>
     title: 'Migrate from Vaul',
     when: 'The app imports from "vaul".',
     prompt: () => `Replace Vaul with Halo's Drawer. Read ${LLMS_URL} first.
-- Change imports from 'vaul' to 'haloui/drawer'.
+- Change imports from 'vaul' to 'halo-ui-react/drawer'.
 - Delete Drawer.Portal and Drawer.Overlay wrappers. Drawer.Content is a native dialog with its own overlay.
 - snapPoints carries over. activeSnapPoint + setActiveSnapPoint become activeSnapPoint + onActiveSnapPointChange.
 - direction becomes side.
@@ -538,7 +538,7 @@ const agentsPage: DocPage = {
             Every Halo module starts with <C>'use client'</C>, so you can import it from server components. Halo renders on the client.
           </>,
           <>
-            Import <C>haloui/styles.css</C> in <C>app/layout.tsx</C> and put <C>{'<Toaster />'}</C> in the root layout's body.
+            Import <C>halo-ui-react/styles.css</C> in <C>app/layout.tsx</C> and put <C>{'<Toaster />'}</C> in the root layout's body.
           </>,
           <>
             Call <C>toast()</C> from client code, such as event handlers, or after a server action resolves on the client.

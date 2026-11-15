@@ -1,4 +1,4 @@
-import type { HaloDensity, HaloWorldName, SpringPresetName, ToastIntent, ToastMotion, ToastPosition, ToastTimer } from 'haloui';
+import type { HaloDensity, HaloWorldName, SpringPresetName, ToastIntent, ToastMotion, ToastPosition, ToastTimer } from 'halo-ui-react';
 import type { RadiusPreset } from './config';
 
 export type SpringChoice = SpringPresetName | { duration: number; bounce: number };
@@ -138,8 +138,8 @@ export function builderCode(config: BuildConfig) {
   if (config.expand) attrs.push('expand');
   if (config.duration !== d.duration) attrs.push(`duration={${config.duration}}`);
   const jsx = attrs.length ? `<Toaster\n  ${attrs.join('\n  ')}\n/>` : '<Toaster />';
-  return `import { Toaster, toast } from 'haloui/toast';
-import 'haloui/styles.css';
+  return `import { Toaster, toast } from 'halo-ui-react/toast';
+import 'halo-ui-react/styles.css';
 
 // Once, at the root of your app:
 ${jsx}
@@ -151,7 +151,7 @@ toast.success('Changes saved');`;
 export function builderPrompt(config: BuildConfig, principles: string, llmsUrl: string) {
   return `Add Halo toasts to this React app.
 
-1. Install: npm i haloui
+1. Install: npm i halo-ui-react
 2. Render this once near the root (inside providers, outside routes):
 
 ${builderCode(config)}

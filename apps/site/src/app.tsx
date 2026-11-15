@@ -1,4 +1,4 @@
-import { Toaster } from 'haloui/toast';
+import { Toaster } from 'halo-ui-react/toast';
 import { type CSSProperties, useLayoutEffect, useState } from 'react';
 import { Nav } from './components/nav';
 import { SurfaceTransition } from './components/page-transition';

@@ -1,4 +1,4 @@
-import type { HaloWorld, HaloWorldName } from 'haloui';
+import type { HaloWorld, HaloWorldName } from 'halo-ui-react';
 
 export const worlds: ReadonlyArray<{ value: HaloWorld; name: string; line: string }> = [
   { value: 'dichroic', name: 'Dichroic', line: 'A clear pane with a coated edge whose hue shifts as it moves. It throws cyan, magenta, and amber light on what sits behind it.' },

@@ -1,4 +1,4 @@
-import { type SpringInput, createSpringValue, resolveSpring, useReducedMotion } from 'haloui/spring';
+import { type SpringInput, createSpringValue, resolveSpring, useReducedMotion } from 'halo-ui-react/spring';
 import { useEffect, useRef, useState } from 'react';
 
 export function SpringPreview({ spring }: { spring: SpringInput }) {

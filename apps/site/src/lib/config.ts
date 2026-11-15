@@ -1,5 +1,5 @@
 import { LLMS_URL } from './site';
-import type { DrawerSide, HaloDensity, HaloWorldName } from 'haloui';
+import type { DrawerSide, HaloDensity, HaloWorldName } from 'halo-ui-react';
 
 export type RadiusPreset = 'square' | 'soft' | 'round' | 'pill';
 
@@ -49,8 +49,8 @@ export function drawerCode(config: DrawerConfig, world: HaloWorldName) {
   if (!sameSpring(config.spring, defaultDrawerConfig.spring)) attrs.push(`spring={${springLiteral(config.spring)}}`);
   const rootProps = attrs.length ? ` ${attrs.join(' ')}` : '';
   const scroll = snaps ? '\n    <Drawer.Scroll>{/* long content */}</Drawer.Scroll>' : '';
-  return `import { Drawer } from 'haloui/drawer';
-import 'haloui/styles.css';
+  return `import { Drawer } from 'halo-ui-react/drawer';
+import 'halo-ui-react/styles.css';
 
 <Drawer.Root${rootProps}>
   <Drawer.Trigger>Share</Drawer.Trigger>
@@ -64,7 +64,7 @@ import 'haloui/styles.css';
 }
 
 export const PRINCIPLES = `Rules that keep Halo correct:
-- Import 'haloui/styles.css' once. Don't restyle animation with CSS transitions; motion is driven by springs in JS.
+- Import 'halo-ui-react/styles.css' once. Don't restyle animation with CSS transitions; motion is driven by springs in JS.
 - Customize looks through CSS custom properties (--halo-surface, --halo-fg, --halo-radius, --halo-blur, --halo-coat-a/b/c) or className, never by overriding transform or opacity.
 - Keep accessibility intact: don't remove Drawer.Title (it labels the dialog). Use Drawer.Description when there is supporting text. Don't put the only copy of important information in a toast.
 - Errors announce assertively by default. Pass { important: true } only for messages that must interrupt.
@@ -73,7 +73,7 @@ export const PRINCIPLES = `Rules that keep Halo correct:
 export function drawerPrompt(config: DrawerConfig, world: HaloWorldName) {
   return `Add a Halo drawer to this React app.
 
-1. Install: npm i haloui
+1. Install: npm i halo-ui-react
 2. Use this structure:
 
 ${drawerCode(config, world)}

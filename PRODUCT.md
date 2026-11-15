@@ -12,7 +12,7 @@ pnpm monorepo. Library: React + TypeScript, built with tsup, zero runtime depend
 
 ## What it is
 
-Halo (`haloui`) is an opinionated, physically-animated component library for two well-defined primitives: a **Toast** (a Sonner alternative) and a **Drawer** (a Vaul alternative). Both share one spring engine and one frosted-glass material.
+Halo (`halo-ui-react`) is an opinionated, physically-animated component library for two well-defined primitives: a **Toast** (a Sonner alternative) and a **Drawer** (a Vaul alternative). Both share one spring engine and one frosted-glass material.
 
 ## Users and job
 
@@ -41,5 +41,5 @@ Halo (`haloui`) is an opinionated, physically-animated component library for two
 
 ## Open decisions
 
-- Published on npm as the unscoped package `haloui`; the `halo-ui` and `haloui` scopes were taken.
+- Published on npm as `halo-ui-react`. The `halo-ui` and `haloui` scopes were taken, and npm blocks `haloui` as too similar to the existing `halo-ui` package.
 - License: not decided (MIT assumed for the scaffold, user to confirm).

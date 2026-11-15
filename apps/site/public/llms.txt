@@ -1,12 +1,12 @@
-# Halo (haloui)
+# Halo (halo-ui-react)
 
 > A spring-physics Toast and Drawer for React 18.2+. Frosted-glass material, accessible by default, no dependencies besides React. Nine visual worlds: "dichroic" (default), "partition", "smoked", "vapor", "crystal", "ink", "opal", "mercury", "vellum", plus any you define in CSS.
 
-Install: `npm i haloui`
-Styles: import `haloui/styles.css` once (e.g. in your root layout or main entry).
+Install: `npm i halo-ui-react`
+Styles: import `halo-ui-react/styles.css` once (e.g. in your root layout or main entry).
 Human docs: https://haloui.dev/docs (getting started, toast, drawer, worlds, motion, customize, agents). Agent recipes: https://haloui.dev/docs/agents.
 Source: https://github.com/akerpelm/halo (MIT).
-Entry points: `haloui/toast`, `haloui/drawer`, `haloui/spring`, or everything from `haloui`.
+Entry points: `halo-ui-react/toast`, `halo-ui-react/drawer`, `halo-ui-react/spring`, or everything from `halo-ui-react`.
 All components are client components (the bundle starts with 'use client').
 
 ## Toast
@@ -14,8 +14,8 @@ All components are client components (the bundle starts with 'use client').
 Render `<Toaster />` once near the app root. Call `toast()` from anywhere, including outside React.
 
 ```tsx
-import { Toaster, toast } from 'haloui/toast';
-import 'haloui/styles.css';
+import { Toaster, toast } from 'halo-ui-react/toast';
+import 'halo-ui-react/styles.css';
 
 <Toaster />
 
@@ -88,8 +88,8 @@ Behavior worth knowing:
 Compound components on the native <dialog> element (top layer, focus trap, Esc). No portal is needed.
 
 ```tsx
-import { Drawer } from 'haloui/drawer';
-import 'haloui/styles.css';
+import { Drawer } from 'halo-ui-react/drawer';
+import 'halo-ui-react/styles.css';
 
 <Drawer.Root snapPoints={[0.45, 0.92]} recess>
   <Drawer.Trigger>Share</Drawer.Trigger>
@@ -151,7 +151,7 @@ State hooks for CSS: `[data-type]`, `[data-front]`, `[data-tint]`, `[data-swipin
 
 Everything is CSS custom properties on `.halo` and `.halo-surface`:
 --halo-surface, --halo-surface-solid, --halo-fg, --halo-fg-muted, --halo-radius, --halo-blur, --halo-saturate, --halo-coat-a, --halo-coat-b, --halo-coat-c, --halo-edge, --halo-shadow, --halo-focus, --halo-success, --halo-error, --halo-warning, --halo-info, --halo-toast-width, --halo-drawer-width.
-Add `className` for layout tweaks. With Tailwind, import the stylesheet into a layer so utilities win: `@import 'haloui/styles.css' layer(components);`
+Add `className` for layout tweaks. With Tailwind, import the stylesheet into a layer so utilities win: `@import 'halo-ui-react/styles.css' layer(components);`
 
 Do not:
 - Override `transform`, `opacity`, or `transition` on toasts or drawer panels. Motion is driven by springs in JavaScript.
@@ -159,7 +159,7 @@ Do not:
 - Put information that exists nowhere else in a toast. Toasts disappear.
 - Disable prefers-reduced-motion, prefers-reduced-transparency, or prefers-contrast handling. It is built in.
 
-## Spring engine (haloui/spring)
+## Spring engine (halo-ui-react/spring)
 
 - resolveSpring(input) → { stiffness, damping, mass }
 - fromDuration(duration, bounce) → config

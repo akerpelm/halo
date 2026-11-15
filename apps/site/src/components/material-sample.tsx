@@ -1,4 +1,4 @@
-import type { HaloWorld } from 'haloui';
+import type { HaloWorld } from 'halo-ui-react';
 import { useSettings } from '../lib/settings';
 import { Spotlight } from './spotlight';
 
