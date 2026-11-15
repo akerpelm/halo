@@ -47,12 +47,15 @@ const table = [
 ].join('\n');
 
 const json = `${JSON.stringify(sizes, null, 2)}\n`;
-const readme = read('README.md');
-const nextReadme = readme.replace(/<!-- sizes:start -->[\s\S]*<!-- sizes:end -->/, table);
-if (nextReadme === readme && !readme.includes(table)) throw new Error('README.md is missing the sizes markers');
+const readmes = ['README.md', '../../README.md'].map((path) => {
+  const before = read(path);
+  const after = before.replace(/<!-- sizes:start -->[\s\S]*<!-- sizes:end -->/, table);
+  if (!before.includes('<!-- sizes:start -->')) throw new Error(`${path} is missing the sizes markers`);
+  return { path, before, after };
+});
 
 if (process.argv.includes('--check')) {
-  const stale = [read('sizes.json') !== json && 'sizes.json', readme !== nextReadme && 'README.md'].filter(Boolean);
+  const stale = [read('sizes.json') !== json && 'sizes.json', ...readmes.filter((r) => r.before !== r.after).map((r) => r.path)].filter(Boolean);
   if (stale.length > 0) {
     console.error(`Bundle sizes changed. Run \`pnpm --filter halo-ui-react size\` and commit ${stale.join(' and ')}.\n${json}`);
     process.exit(1);
@@ -60,6 +63,6 @@ if (process.argv.includes('--check')) {
   console.log('Bundle sizes are up to date.');
 } else {
   writeFileSync(new URL('sizes.json', root), json);
-  writeFileSync(new URL('README.md', root), nextReadme);
+  for (const { path, after } of readmes) writeFileSync(new URL(path, root), after);
   console.log(json);
 }
