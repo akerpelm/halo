@@ -232,7 +232,7 @@ export function ToastBuilder({ config, onChange, output, onOutput }: ToastBuilde
             </li>
           ))}
         </ul>
-        <div className="ml-auto flex gap-1.5">
+        <div className="ml-auto flex flex-wrap gap-1.5">
           <Button size="sm" tone="outline" onClick={() => onChange(PLAIN)} disabled={added.length === 0}>
             Back to plain
           </Button>

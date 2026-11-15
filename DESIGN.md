@@ -222,7 +222,7 @@ Rhythm inside sections: 48px between major blocks, 64px before comparison tables
 
 Partition adds **mullions**: two 1px aluminium lines down the page, set in the gutters at 8px (phones), 16px (640px up), and tracking the container edge at calc(50% - 632px) from 1304px. Section borders become the transoms between bays. Mullions never cross text.
 
-Breakpoints in use: 600px (toasts go full width), 640px, 768px (nav links appear), 1024px (12 columns, hero pane joins the headline), 1304px (mullions follow the container).
+Breakpoints in use: 360px (`xs`, header wordmark), 600px (toasts go full width), 640px, 768px (nav links appear), 1024px (12 columns, hero pane joins the headline), 1304px (mullions follow the container).
 
 ## Elevation & Depth
 
@@ -278,7 +278,7 @@ Character: quiet controls on the wall, physical glass for the components themsel
 - **Select:** 40px, 12px radius, ink at 6% fill, no border.
 
 ### Navigation
-Sticky 64px bar on 72% wall with backdrop blur. Left: the mark (a rounded pane hung from two wire strokes) and the lowercase "halo" wordmark in 19px display semibold. Centre-left: section links as 14px soft-ink text that darkens to ink on hover, hidden below 768px. Right: the world segmented control and a 36px round theme button with a stroked sun or moon. A skip link slides in on focus.
+Sticky 64px bar on 72% wall with backdrop blur. Left: the mark (a rounded pane hung from two wire strokes) and the lowercase "halo" wordmark in 19px display semibold; below 360px the wordmark hides and the section links tighten so the header fits at 320px. Centre-left: section links as 14px soft-ink text that darkens to ink on hover, hidden below 768px. Right: the world segmented control and a 36px round theme button with a stroked sun or moon. A skip link slides in on focus.
 
 ### Halo Pane (signature)
 The `.halo-surface` material that toasts, drawers, the hero pane, and samples all share: translucent pane fill, backdrop blur and saturation, the shadow stack, and the coated edge ring whose conic gradient rotates with `--halo-shift` as the pane moves. In Partition the ring becomes one even aluminium hairline and the pane is etched: frosted everywhere except an 84px clear disc that follows the pointer. Toast panes are 368px wide with 14/16px padding, 14px text, a 580-weight title, and a muted description at 0.93em. Drawer sheets are 28px radius, max 640px wide from top or bottom (420px from the sides), with a 40 by 5px grabber inside a 120 by 32px real button.

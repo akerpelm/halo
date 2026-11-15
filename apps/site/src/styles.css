@@ -103,6 +103,7 @@
   --text-lead: 17px;
   --text-title: 20px;
   --text-heading: 24px;
+  --breakpoint-xs: 22.5rem;
 }
 
 @theme inline {
