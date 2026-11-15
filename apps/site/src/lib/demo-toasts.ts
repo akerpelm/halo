@@ -6,24 +6,25 @@ const wait = (ms: number) => new Promise((resolve) => window.setTimeout(resolve,
 export function createDemos(toasterId?: string) {
   const on = { toasterId };
   const demos = {
-  default: () => toast('Draft saved', { ...on, description: 'Last edit 2 seconds ago' }),
-  success: () => toast.success('Invite sent', { ...on, description: 'mara@studio.example will get an email shortly' }),
-  error: () =>
+  default: (from?: Element) => toast('Draft saved', { ...on, from, description: 'Last edit 2 seconds ago' }),
+  success: (from?: Element) => toast.success('Invite sent', { ...on, from, description: 'mara@studio.example will get an email shortly' }),
+  error: (from?: Element) =>
     toast.error('Upload failed', {
       ...on,
+      from,
       description: 'The file is over the 20 MB limit',
       action: { label: 'Retry', onClick: () => demos.promise() },
     }),
-  warning: () => toast.warning('Storage almost full', { ...on, description: '92% of 10 GB used' }),
-  info: () => toast.info('New version available', { ...on, action: { label: 'Reload', onClick: () => undefined } }),
-  promise: () =>
+  warning: (from?: Element) => toast.warning('Storage almost full', { ...on, from, description: '92% of 10 GB used' }),
+  info: (from?: Element) => toast.info('New version available', { ...on, from, action: { label: 'Reload', onClick: () => undefined } }),
+  promise: (from?: Element) =>
     toast.promise(wait(1800), {
       loading: 'Publishing changes…',
       success: 'Published',
       error: 'Could not publish',
-    }, on),
-  update: () => {
-    const id = toast.loading('Exporting 0 of 3 files', on);
+    }, { ...on, from }),
+  update: (from?: Element) => {
+    const id = toast.loading('Exporting 0 of 3 files', { ...on, from });
     let done = 0;
     const tick = window.setInterval(() => {
       done += 1;
@@ -32,12 +33,13 @@ export function createDemos(toasterId?: string) {
         return;
       }
       window.clearInterval(tick);
-      toast.update(id, 'Export ready', { ...on, type: 'success', duration: 5000, description: 'project-assets.zip · 14.2 MB' });
+      toast.update(id, 'Export ready', { ...on, from, type: 'success', duration: 5000, description: 'project-assets.zip · 14.2 MB' });
     }, 900);
   },
-  long: () =>
+  long: (from?: Element) =>
     toast('Comment from Ines', {
       ...on,
+      from,
       description:
         'I moved the onboarding copy into the shared doc and left notes on the two screens that still use the old pricing table. Can you take a look before Thursday?',
     }),
@@ -56,9 +58,28 @@ export const playgroundDemos = createDemos('playground');
 const sequence = [demos.success, demos.promise, demos.error, demos.default, demos.update, demos.info];
 let next = 0;
 
-/** The hero button walks through the toast types so repeated presses show the range. */
-export function fireNextDemo() {
+/** The hero button walks through the toast types, launching each one out of the button itself. */
+export function fireNextDemo(from?: Element) {
   const demo = sequence[next % sequence.length];
   next += 1;
-  demo?.();
+  demo?.(from);
 }
+
+const sleep = (ms: number) => new Promise((resolve) => window.setTimeout(resolve, ms));
+
+/** A stand-in for a model streaming a reply, word by word. */
+async function* reply() {
+  const text = 'Ines moved the onboarding copy into the shared doc and flagged two screens that still use the old pricing table.';
+  for (const word of text.split(' ')) {
+    await sleep(55 + Math.random() * 70);
+    yield `${word} `;
+  }
+}
+
+/** The toast types only Halo has. */
+export const newDemos = {
+  launch: (from: Element) => toast.success('Saved', { from, description: 'It flew out of the button you pressed.' }),
+  stream: () => toast.stream(reply(), { title: 'Summarising the thread…', success: 'Thread summary' }),
+  undo: () => toast.undo('Conversation archived', { onUndo: () => toast('Conversation restored') }),
+  group: () => toast.success('File uploaded', { group: 'uploads', description: 'Press again: repeats count up instead of stacking.' }),
+};

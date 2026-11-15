@@ -31,7 +31,7 @@ export function Agents() {
       </dl>
       <CodeBlock className="mt-12" label="Paste into your agent" code={oneLiner()} copyLabel="Copy prompt" wrap />
       <p className="mt-4 mb-0 text-ui text-ink-faint">
-        <a href="/llms.txt" className="inline-flex min-h-6 items-center text-ink-soft hover:text-ink pointer-coarse:min-h-11">
+        <a href="/llms.txt" className="inline-flex min-h-6 items-center text-ink underline decoration-line underline-offset-4 hover:decoration-ink pointer-coarse:min-h-11">
           Open llms.txt
         </a>
       </p>

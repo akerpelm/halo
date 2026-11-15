@@ -5,7 +5,7 @@ import { worlds } from '../lib/worlds';
 const links = [
   ['Toast', '#toast'],
   ['Drawer', '#drawer'],
-  ['Directions', '#directions'],
+  ['Worlds', '#directions'],
   ['Playground', '#playground'],
   ['Customize', '#customize'],
   ['Agents', '#agents'],
@@ -78,6 +78,18 @@ export function Nav() {
             </svg>
           </button>
         </div>
+      </nav>
+      {/* Phones: the same sections as a scrolling row, so a long page is never a dead end. */}
+      <nav aria-label="Sections" className="md:hidden">
+        <ul className="m-0 flex list-none gap-1.5 overflow-x-auto px-4 pb-2.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          {links.map(([label, href]) => (
+            <li key={href} className="flex-none">
+              <a href={href} className="inline-flex min-h-11 items-center rounded-full bg-ink/[0.06] px-4 text-label text-ink no-underline dark:bg-ink/[0.09]">
+                {label}
+              </a>
+            </li>
+          ))}
+        </ul>
       </nav>
     </header>
   );

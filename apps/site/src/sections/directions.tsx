@@ -72,17 +72,17 @@ export function Directions({ onOpenToast }: DirectionsProps) {
   return (
     <Section
       id="directions"
-      title="Directions"
+      title="Worlds"
       lede={
         <>
-          <p className="m-0">Six materials and a handful of tuned setups. Each one is a starting point you can paste, or hand to your agent as a prompt.</p>
+          <p className="m-0">Nine worlds and a handful of tuned setups. Each one is a starting point you can paste, or hand to your agent as a prompt.</p>
           <p className="m-0 mt-4">
             You are looking at <strong className="font-semibold text-ink">{worldName(world)}</strong>.
           </p>
         </>
       }
     >
-      <ul className="m-0 grid list-none gap-x-8 gap-y-12 p-0 sm:grid-cols-2">
+      <ul className="m-0 grid list-none gap-x-8 gap-y-12 p-0 sm:grid-cols-2 xl:grid-cols-3">
         {worlds.map(({ value, name, line }) => (
           <li key={value} className="flex flex-col gap-4">
             <MaterialSample world={value} />

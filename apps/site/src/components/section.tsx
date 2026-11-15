@@ -15,7 +15,7 @@ type SectionProps = {
 export function Section({ id, title, lede, aside, children, className, wide = false }: SectionProps) {
   const headingId = `${id}-heading`;
   return (
-    <section id={id} aria-labelledby={headingId} className={cn('scroll-mt-16 border-t border-line', className)}>
+    <section id={id} aria-labelledby={headingId} className={cn('scroll-mt-28 border-t border-line md:scroll-mt-16', className)}>
       <div className="mx-auto grid max-w-[1240px] gap-x-12 gap-y-10 px-4 pt-24 pb-24 sm:px-8 lg:grid-cols-12 lg:pt-32">
         <div className={wide ? 'grid gap-x-12 gap-y-6 lg:col-span-12 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end' : 'lg:col-span-4'}>
           <h2 id={headingId} className="m-0 text-[clamp(2.25rem,4.4vw,3.5rem)] leading-[1] font-semibold tracking-[-0.03em]">

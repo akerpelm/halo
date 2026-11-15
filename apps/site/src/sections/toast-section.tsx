@@ -1,12 +1,13 @@
 import { toast } from '@halo-ui/react/toast';
+import type { MouseEvent } from 'react';
 import { Button } from '../components/button';
 import { CodeBlock } from '../components/code-block';
 import { CompareTable } from '../components/compare-table';
 import { FlickTest } from '../components/flick-test';
 import { Section } from '../components/section';
 import { CountUp } from '../components/count-up';
-import { WallLabel } from '../components/wall-label';
-import { demos } from '../lib/demo-toasts';
+import { HungLabel } from '../components/hung-label';
+import { demos, newDemos } from '../lib/demo-toasts';
 
 const usage = `import { Toaster, toast } from '@halo-ui/react/toast';
 import '@halo-ui/react/styles.css';
@@ -57,7 +58,7 @@ export function ToastSection() {
         </>
       }
       aside={
-        <WallLabel
+        <HungLabel
           title="Toast"
           date="2026"
           medium="Frosted pane, spring steel, two live regions"
@@ -77,6 +78,30 @@ export function ToastSection() {
         input.
       </p>
       <FlickTest />
+
+      <h3 className="mt-16 mb-2 text-heading font-semibold tracking-[-0.02em]">Only in Halo</h3>
+      <p className="mt-0 mb-6 max-w-[60ch] text-body leading-[1.55] text-ink-soft">Four kinds of toast no other library ships.</p>
+      <dl className="m-0 grid gap-x-8 gap-y-6 sm:grid-cols-2">
+        {(
+          [
+            ['Launch from the trigger', 'toast(title, { from })', 'The toast flies out of the button that caused it.', (event: MouseEvent<HTMLButtonElement>) => newDemos.launch(event.currentTarget), 'Launch one'],
+            ['Streaming text', 'toast.stream(reply)', 'Words arrive live, like a model replying, then it settles.', () => newDemos.stream(), 'Stream a reply'],
+            ['Undo with a countdown', 'toast.undo(title, { onUndo })', 'The countdown sits on the Undo button: the timer is the window.', () => newDemos.undo(), 'Archive something'],
+            ['Grouped repeats', 'toast(title, { group })', 'Repeats collapse into one toast with a springing count.', () => newDemos.group(), 'Upload a file'],
+          ] as const
+        ).map(([term, code, detail, fire, action]) => (
+          <div key={term} className="grid content-start gap-2 border-t border-line pt-4">
+            <dt className="font-display text-title font-semibold tracking-[-0.015em]">{term}</dt>
+            <dd className="m-0 grid gap-3">
+              <code className="text-label text-ink-faint">{code}</code>
+              <span className="text-body leading-[1.5] text-ink-soft">{detail}</span>
+              <Button size="sm" className="justify-self-start" onClick={fire}>
+                {action}
+              </Button>
+            </dd>
+          </div>
+        ))}
+      </dl>
 
       <h3 className="mt-16 mb-6 text-heading font-semibold tracking-[-0.02em]">Try every type</h3>
       <div className="flex flex-wrap gap-2" role="group" aria-label="Show an example toast">

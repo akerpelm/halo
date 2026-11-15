@@ -168,6 +168,7 @@ export function ToastItem({
   const renderedHeight = useRef<number | null>(null);
   const lastIndex = useRef(index);
   const exiting = useRef(false);
+  const launched = useRef(false);
   const dismissedRef = useRef(t.dismissed);
   const drag = useRef<{ x: number; y: number; axis: Axis | null; pointerId: number; armed: boolean } | null>(null);
   const [tracker] = useState(createVelocityTracker);
@@ -217,7 +218,9 @@ export function ToastItem({
     // Launch from the trigger: start where the element that caused this toast is, then let the
     // stack springs carry it home. The rest position is measured before any transform applies.
     const origin = t.from && 'current' in t.from ? t.from.current : t.from;
-    if (origin && !reducedMotion) {
+    // Once per toast: a second mount pass (StrictMode) would measure the already-launched toast.
+    if (origin && !reducedMotion && !launched.current) {
+      launched.current = true;
       const from = origin.getBoundingClientRect();
       motion.x.set(from.left + from.width / 2 - (rest.left + rest.width / 2));
       motion.y.set(from.top + from.height / 2 - (rest.top + rest.height / 2));

@@ -1,6 +1,6 @@
 import { type ToastPosition, resolveSpring, sampleSpring } from '@halo-ui/react';
 import { Toaster, toast } from '@halo-ui/react/toast';
-import { type ReactNode, useEffect, useRef } from 'react';
+import { type ReactNode, useEffect, useRef, useState } from 'react';
 import { Button } from '../components/button';
 import { CodeBlock } from '../components/code-block';
 import { Segmented } from '../components/segmented';
@@ -49,13 +49,71 @@ const tile =
 
 function Group({ title, note, children }: { title: string; note?: ReactNode; children: ReactNode }) {
   return (
-    <fieldset className="m-0 grid min-w-0 gap-3 border-0 border-t border-line p-0 pt-5">
+    <fieldset className="m-0 grid min-w-0 gap-3 border-0 border-t border-line p-0 pt-5 first:border-t-0 first:pt-0">
       <legend className="float-left mb-1 w-full p-0 font-display text-body font-semibold tracking-[-0.01em] text-ink">{title}</legend>
       {note && <p className="m-0 -mt-1 text-label leading-snug text-ink-faint">{note}</p>}
       {children}
     </fieldset>
   );
 }
+
+/** A group that stays folded until opened, showing its current values so nothing is hidden by surprise. */
+function Fold({ title, current, children }: { title: string; current: string; children: ReactNode }) {
+  return (
+    <details className="group border-t border-line pt-4">
+      <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-3 select-none [&::-webkit-details-marker]:hidden">
+        <span className="font-display text-body font-semibold tracking-[-0.01em] text-ink">{title}</span>
+        <span className="flex items-center gap-2 text-label text-ink-faint">
+          {current}
+          <svg aria-hidden width="10" height="10" viewBox="0 0 10 10" className="transition-transform duration-200 group-open:rotate-180">
+            <path d="m2 3.5 3 3 3-3" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </span>
+      </summary>
+      <div className="grid gap-4 pt-3 pb-1">{children}</div>
+    </details>
+  );
+}
+
+/**
+ * Four choices up front, the rest behind "More". The current pick always stays visible,
+ * so folding never hides what is selected.
+ */
+function Shortlist<T>({
+  items,
+  isSelected,
+  render,
+  className,
+  limit = 4,
+}: {
+  items: readonly T[];
+  isSelected: (item: T) => boolean;
+  render: (item: T) => ReactNode;
+  className: string;
+  limit?: number;
+}) {
+  const [open, setOpen] = useState(false);
+  const extra = items.length - limit;
+  const shown = open ? items : items.filter((item, index) => index < limit || isSelected(item));
+  return (
+    <>
+      <div className={className}>{shown.map(render)}</div>
+      {extra > 0 && (
+        <button
+          type="button"
+          aria-expanded={open}
+          onClick={() => setOpen((value) => !value)}
+          className="inline-flex min-h-6 cursor-pointer items-center justify-self-start text-label text-ink-soft underline decoration-line underline-offset-4 hover:text-ink pointer-coarse:min-h-11 pointer-coarse:min-w-11 pointer-coarse:px-1"
+        >
+          {open ? 'Fewer' : `${extra} more`}
+        </button>
+      )}
+    </>
+  );
+}
+
+const featured = <T extends { value: string }>(list: readonly T[], first: readonly string[]) =>
+  [...first.map((v) => list.find((x) => x.value === v)).filter((x): x is T => Boolean(x)), ...list.filter((x) => !first.includes(x.value))];
 
 function MiniCurve({ preset }: { preset: Parameters<typeof resolveSpring>[0] }) {
   const samples = sampleSpring(resolveSpring(preset), 28, 2);
@@ -140,8 +198,6 @@ export function ToastBuilder({ config, onChange, output, onOutput }: ToastBuilde
 
   return (
     <>
-      <Toaster id="playground" label="Playground notifications" theme={theme} {...toToasterProps(config)} />
-
       <div className="flex flex-wrap items-center gap-2 border-b border-line p-5" aria-live="polite">
         <p className="m-0 mr-2 text-ui text-ink">
           {added.length === 0 ? (
@@ -184,43 +240,52 @@ export function ToastBuilder({ config, onChange, output, onOutput }: ToastBuilde
 
       <div className="grid lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)]">
         <form className="grid content-start gap-6 border-line p-5 max-lg:border-b lg:border-r" onSubmit={(event) => event.preventDefault()} aria-label="Toast layers">
-          <Group title="Material">
-            <div className="grid grid-cols-3 gap-2">
-              {[...worlds, ...customWorlds].map((w) => (
+          <Group title="World">
+            <Shortlist
+              className="grid grid-cols-2 gap-2 sm:grid-cols-4"
+              items={featured([...worlds, ...customWorlds], ['dichroic', 'partition', 'ink', 'smoked'])}
+              isSelected={(w) => config.world === w.value}
+              render={(w) => (
                 <button key={w.value} type="button" aria-pressed={config.world === w.value} onClick={() => set({ world: w.value })} className={tile}>
                   <span data-world={w.value} className="grid h-12 place-items-center rounded-xl bg-wall-deep">
                     <span data-halo-world={w.value} data-theme={theme} className="halo halo-surface block h-6 w-[70%] [--halo-radius:8px]" />
                   </span>
                   <span className="grid text-label leading-tight font-medium text-ink">
                     {w.name}
-                    {customWorlds.includes(w as (typeof customWorlds)[number]) && <span className="text-caption font-normal whitespace-nowrap text-ink-faint">Your CSS</span>}
+                    {customWorlds.some((c) => c.value === w.value) && <span className="text-caption font-normal whitespace-nowrap text-ink-faint">Example: your CSS</span>}
                   </span>
                 </button>
-              ))}
-            </div>
+              )}
+            />
           </Group>
 
           <Group title="Entrance and exit">
-            <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-              {motions.map((m) => (
+            <Shortlist
+              className="grid grid-cols-2 gap-2"
+              items={featured(motions, ['fade', 'rise', 'bloom', 'hinge'])}
+              isSelected={(m) => config.motion === m.value}
+              render={(m) => (
                 <button key={m.value} type="button" aria-pressed={config.motion === m.value} onClick={() => set({ motion: m.value })} className={tile}>
                   <span className="text-label font-medium text-ink">{m.name}</span>
                   <span className="text-caption leading-snug text-ink-faint">{m.line}</span>
                 </button>
-              ))}
-            </div>
+              )}
+            />
           </Group>
 
           <Group title="Spring" note="Drives every move: entering, stacking, and springing back after a swipe. Each pick plays on the track.">
             <SpringPreview spring={config.spring} />
-            <div className="grid grid-cols-4 gap-2">
-              {springChoices.map((s) => (
+            <Shortlist
+              className="grid grid-cols-4 gap-2"
+              items={featured(springChoices, ['smooth', 'snappy', 'bouncy', 'jelly'])}
+              isSelected={(s) => config.spring === s.value}
+              render={(s) => (
                 <button key={s.value} type="button" aria-pressed={config.spring === s.value} onClick={() => set({ spring: s.value })} className={cn(tile, 'p-2.5 text-ink')}>
                   <MiniCurve preset={s.value} />
                   <span className="text-label font-medium">{s.name}</span>
                 </button>
-              ))}
-            </div>
+              )}
+            />
             <details className="group" open={customSpring !== null}>
               <summary className="flex min-h-6 cursor-pointer items-center text-label text-ink-soft select-none hover:text-ink pointer-coarse:min-h-11">Custom spring</summary>
               <div className="mt-3 grid gap-4">
@@ -247,9 +312,12 @@ export function ToastBuilder({ config, onChange, output, onOutput }: ToastBuilde
             </details>
           </Group>
 
-          <Group title="Colour" note="Coat colours paint the Dichroic edge, so picking one switches the material to Dichroic.">
-            <div className="grid grid-cols-3 gap-2">
-              {(['material', ...Object.keys(coats)] as CoatName[]).map((name) => (
+          <Group title="Colour" note="Coat colours paint the Dichroic edge, so picking one switches the world to Dichroic.">
+            <Shortlist
+              className="grid grid-cols-2 gap-2"
+              items={['material', ...Object.keys(coats)] as CoatName[]}
+              isSelected={(name) => config.coat === name}
+              render={(name) => (
                 <button
                   key={name}
                   type="button"
@@ -260,10 +328,10 @@ export function ToastBuilder({ config, onChange, output, onOutput }: ToastBuilde
                   ) : (
                     <CoatSwatch colors={coats[name as Exclude<CoatName, 'material'>].colors} />
                   )}
-                  <span className="text-label font-medium text-ink">{name === 'material' ? 'Material' : coats[name as Exclude<CoatName, 'material'>].name}</span>
+                  <span className="text-label font-medium text-ink">{name === 'material' ? 'World’s own' : coats[name as Exclude<CoatName, 'material'>].name}</span>
                 </button>
-              ))}
-            </div>
+              )}
+            />
             <Segmented
               label="Intent: show the type in colour"
               value={config.intent || 'off'}
@@ -277,7 +345,7 @@ export function ToastBuilder({ config, onChange, output, onOutput }: ToastBuilde
             />
           </Group>
 
-          <Group title="Shape">
+          <Fold title="Shape" current={`${config.radius[0]?.toUpperCase()}${config.radius.slice(1)} · ${config.density === 'comfortable' ? 'Regular' : `${config.density[0]?.toUpperCase()}${config.density.slice(1)}`}`}>
             <Segmented
               label="Corners"
               value={config.radius}
@@ -299,9 +367,12 @@ export function ToastBuilder({ config, onChange, output, onOutput }: ToastBuilde
                 { value: 'spacious', label: 'Spacious' },
               ]}
             />
-          </Group>
+          </Fold>
 
-          <Group title="Details">
+          <Fold
+            title="Details"
+            current={[config.icons && 'Icons', config.closeButton && 'Close', config.timer && `${config.timer} timer`].filter(Boolean).join(' · ') || 'None'}
+          >
             <div className="grid gap-3">
               <Toggle label="Type icons" checked={config.icons} onChange={(icons) => set({ icons })} />
               <Toggle label="Close button" checked={config.closeButton} onChange={(closeButton) => set({ closeButton })} />
@@ -317,9 +388,9 @@ export function ToastBuilder({ config, onChange, output, onOutput }: ToastBuilde
                 { value: 'edge', label: 'Edge' },
               ]}
             />
-          </Group>
+          </Fold>
 
-          <Group title="Stack">
+          <Fold title="Stack" current={positions.find((p) => p.value === config.position)?.label ?? ''}>
             <Select label="Position" value={config.position} onChange={(event) => set({ position: event.target.value as ToastPosition })}>
               {positions.map((p) => (
                 <option key={p.value} value={p.value}>
@@ -337,10 +408,18 @@ export function ToastBuilder({ config, onChange, output, onOutput }: ToastBuilde
               onChange={(duration) => set({ duration })}
             />
             <Toggle label="Always fanned out" checked={config.expand} onChange={(expand) => set({ expand })} />
-          </Group>
+          </Fold>
         </form>
 
         <div className="grid min-w-0 content-start gap-5 p-5 lg:sticky lg:top-16 lg:self-start">
+          {/* The stage: previews land here, beside the controls, never in the page corner. */}
+          <div data-world={config.world} className="relative h-[300px] overflow-hidden rounded-2xl bg-wall-deep" aria-label="Preview stage" role="region">
+            <span aria-hidden className="cast absolute inset-x-[10%] bottom-[-30%] h-[70%]">
+              <span className="pool top-0 left-0 h-full w-[55%] bg-coat-a" />
+              <span className="pool top-[10%] right-0 h-full w-[50%] bg-coat-b" />
+            </span>
+            <Toaster id="playground" contained offset={16} label="Playground notifications" theme={theme} {...toToasterProps(config)} />
+          </div>
           <div>
             <p className="m-0 mb-3 text-label text-ink-soft">Every change fires a preview. Or fire your own:</p>
             <div className="flex flex-wrap gap-2">

@@ -7,7 +7,7 @@ import {
   rubberband,
   useReducedMotion,
 } from '@halo-ui/react/spring';
-import { type KeyboardEvent, type PointerEvent, useEffect, useRef, useState } from 'react';
+import { type KeyboardEvent, type PointerEvent, type ReactNode, useEffect, useRef, useState } from 'react';
 import { cn } from '../lib/cn';
 import { useSettings } from '../lib/settings';
 
@@ -25,13 +25,29 @@ type HangingPaneProps = {
   anchorClassName?: string;
   /** Where the wires are fixed, in px from the stage top (e.g. under a sticky nav). */
   ceiling?: number;
+  /** What hangs. Defaults to the hero's "Grab me" pane with its release-speed readout. */
+  children?: ReactNode;
+  /** Accessible name for the pane. */
+  label?: string;
+  /** Padding and radius classes for the pane itself. */
+  paneClassName?: string;
+  /** Open held at the top of a swing, then released. The hero does; panes further down don't. */
+  swingIn?: boolean;
 };
 
 /**
  * A pane hung from two wires. Grab it, fling it, let go: the release velocity
  * feeds the same spring solver the toast and drawer use.
  */
-export function HangingPane({ className, anchorClassName, ceiling = 0 }: HangingPaneProps) {
+export function HangingPane({
+  className,
+  anchorClassName,
+  ceiling = 0,
+  children,
+  label = 'A pane on a spring. Drag and release it, or press the arrow keys to nudge it.',
+  paneClassName = 'p-6 [--halo-radius:28px] sm:p-9',
+  swingIn = true,
+}: HangingPaneProps) {
   const { world, theme } = useSettings();
   const reducedMotion = useReducedMotion();
   const stageRef = useRef<HTMLDivElement>(null);
@@ -121,7 +137,7 @@ export function HangingPane({ className, anchorClassName, ceiling = 0 }: Hanging
 
   // The held moment: the pane waits at the top of its swing, then is released.
   useEffect(() => {
-    if (reducedMotion) return;
+    if (reducedMotion || !swingIn) return;
     // Held far enough left that the opening swing crosses the headline, frosting real letters.
     rig.x.set(-300);
     rig.y.set(70);
@@ -254,10 +270,13 @@ export function HangingPane({ className, anchorClassName, ceiling = 0 }: Hanging
           tabIndex={0}
           role="group"
           aria-roledescription="spring demo"
-          aria-label="A pane on a spring. Drag and release it, or press the arrow keys to nudge it."
+          aria-label={label}
           data-halo-world={world}
           data-theme={theme}
-          className="halo halo-surface pointer-events-auto relative isolate cursor-grab touch-none p-6 [--halo-radius:28px] data-[grabbing]:cursor-grabbing partition:bg-transparent partition:backdrop-filter-none sm:p-9"
+          className={cn(
+            'halo halo-surface pointer-events-auto relative isolate cursor-grab touch-none data-[grabbing]:cursor-grabbing partition:bg-transparent partition:backdrop-filter-none',
+            paneClassName,
+          )}
           style={{ transformOrigin: '50% 0' }}
           onPointerDown={onPointerDown}
           onPointerMove={onPointerMove}
@@ -276,6 +295,8 @@ export function HangingPane({ className, anchorClassName, ceiling = 0 }: Hanging
             />
           ))}
           {world === 'partition' && <div ref={etchRef} aria-hidden className="etched absolute inset-0 -z-10 rounded-[inherit]" />}
+          {children ?? (
+          <>
           <div className="flex items-start gap-4">
             <svg width="22" height="22" viewBox="0 0 20 20" fill="none" aria-hidden className="mt-1 flex-none text-[var(--halo-success)]">
               <circle cx="10" cy="10" r="8.25" stroke="currentColor" strokeWidth="1.5" />
@@ -289,11 +310,13 @@ export function HangingPane({ className, anchorClassName, ceiling = 0 }: Hanging
             </div>
           </div>
           <p className="m-0 mt-5 flex items-baseline justify-between border-t border-[color-mix(in_oklch,var(--halo-fg)_10%,transparent)] pt-3 text-caption text-[var(--halo-fg-muted)]">
-            <span>Last release</span>
+            <span>Release speed</span>
             <span ref={readoutRef} className="font-mono text-[var(--halo-fg)] tabular-nums">
               0 px/s
             </span>
           </p>
+          </>
+          )}
         </div>
       </div>
     </div>

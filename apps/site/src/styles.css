@@ -88,8 +88,19 @@
   --coat-b: oklch(80% 0.11 300);
   --coat-c: oklch(88% 0.11 90);
 }
-[data-world='ink'] {
+[data-world='ink'],
+[data-world='vellum'] {
   --pool: 0;
+}
+[data-world='opal'] {
+  --coat-a: oklch(86% 0.08 200);
+  --coat-b: oklch(84% 0.09 320);
+  --coat-c: oklch(90% 0.08 90);
+}
+[data-world='mercury'] {
+  --coat-a: oklch(80% 0.01 250);
+  --coat-b: oklch(70% 0.01 250);
+  --coat-c: oklch(90% 0.005 250);
 }
 
 /* The type scale. Every UI size in the site is one of these steps. */

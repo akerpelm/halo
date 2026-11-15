@@ -379,3 +379,25 @@ axe-core (WCAG 2.2 AA plus best practices) passes in light and dark, with toasts
 - Every toaster has a distinct landmark name, and only the unnamed one takes the Alt+T shortcut.
 - Every target is at least 24px. On coarse pointers, site controls grow to 44px, and toast actions and close buttons get a 44px hit area through an invisible `::after` that doesn't change the look.
 - There is no horizontal overflow from 320px up.
+
+
+## Toast types only Halo ships
+
+- `from`: the toast launches out of its trigger (measured once per toast, before any transform) and lands in the stack on the stack springs.
+- `toast.stream`: text arrives under a spinner with a 2px caret, announced once when it finishes.
+- `toast.undo`: the countdown ring sits on the Undo button, so the timer is the undo window.
+- `group`: repeats update one toast and pop a pill counter (screen readers hear "3 times").
+
+## Worlds: Opal, Mercury, Vellum
+
+- **Opal** puts its iridescence on the surface itself, as a gradient keyed to `--halo-shift`.
+- **Mercury** uses a 2px chrome edge whose bright band slides with motion.
+- **Vellum** is matte drafting film (3px blur, a 6px radius) with a printed rule drawn as stacked inset shadows 4–5px in.
+
+## Showcase structure after the critique (29/40)
+
+- Phones get a scrolling row of section chips under the header.
+- The builder previews inside its own stage via a `contained` Toaster, shows four options per group with "N more", and folds Shape, Details, and Stack.
+- "World" is the one name for materials.
+- The wall labels hang on the same rigging as the hero and can be flung.
+- The page closes on a display-size line: "Every animation on this page runs on its own springs."

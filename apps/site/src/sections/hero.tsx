@@ -11,7 +11,7 @@ export function Hero() {
       {/* Desktop: the pane hangs in front of the wall text, so the glass frosts real letters. */}
       <HangingPane ceiling={64} className="absolute inset-0 hidden lg:block" anchorClassName="top-[22%] right-[max(4%,calc(50%-600px))] w-[min(560px,40vw)]" />
 
-      <div className="relative z-[15] mx-auto flex max-w-[1240px] flex-col px-4 pt-32 sm:px-8 lg:min-h-[min(100svh,980px)] lg:justify-end lg:pb-24">
+      <div className="relative z-[15] mx-auto flex max-w-[1240px] flex-col px-4 pt-28 sm:px-8 md:pt-32 lg:min-h-[min(100svh,980px)] lg:justify-end lg:pb-24">
         <h1 id="hero-heading" className="m-0 max-w-[15ch] text-[clamp(3rem,7.6vw,6rem)] leading-[0.94] font-semibold tracking-[-0.035em]">
           Surfaces that move like they weigh something.
         </h1>
@@ -21,7 +21,7 @@ export function Hero() {
         </p>
         <div className="mt-9 flex flex-wrap items-center gap-3">
           <Magnet>
-            <Button tone="primary" size="lg" onClick={fireNextDemo}>
+            <Button tone="primary" size="lg" onClick={(event) => fireNextDemo(event.currentTarget)}>
               Fire a toast
             </Button>
           </Magnet>
@@ -33,7 +33,7 @@ export function Hero() {
       </div>
 
       {/* Small screens: the pane hangs below the copy instead. */}
-      <HangingPane className="relative h-[440px] lg:hidden" anchorClassName="inset-x-0 mx-auto top-[110px] w-[min(400px,calc(100%-32px))]" />
+      <HangingPane className="relative h-[300px] lg:hidden" anchorClassName="inset-x-0 mx-auto top-[56px] w-[min(400px,calc(100%-32px))]" paneClassName="p-5 [--halo-radius:22px]" />
     </section>
   );
 }

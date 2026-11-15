@@ -3,7 +3,7 @@ import { CompareTable } from '../components/compare-table';
 import { DemoDrawer } from '../components/demo-drawer';
 import { Section } from '../components/section';
 import { CountUp } from '../components/count-up';
-import { WallLabel } from '../components/wall-label';
+import { HungLabel } from '../components/hung-label';
 import { defaultDrawerConfig, drawerCode } from '../lib/config';
 import { useSettings } from '../lib/settings';
 
@@ -26,7 +26,7 @@ export function DrawerSection() {
         </p>
       }
       aside={
-        <WallLabel
+        <HungLabel
           title="Drawer"
           date="2026"
           medium="Native dialog, spring steel, projected detents"
