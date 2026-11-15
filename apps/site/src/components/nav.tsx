@@ -1,13 +1,25 @@
+import { useId } from 'react';
 import { DocsSearch } from '../docs/search';
 import { useCurrentPath } from '../lib/router';
 import { AppearanceMenu } from './appearance-menu';
 import { Link } from './link';
 
+/**
+ * The mark: the front arc of a tilted ring. The missing top is what makes it read as 3D.
+ * A fixed Dichroic gradient, not the current world's coat, so it never fades into the wall.
+ */
 export function Mark({ className }: { className?: string }) {
+  const gradient = useId();
   return (
-    <svg viewBox="0 0 28 20" fill="none" aria-hidden className={className}>
-      <path d="M9 0v6M19 0v6" stroke="var(--wire)" />
-      <rect x="2.75" y="6.75" width="22.5" height="12.5" rx="4.5" stroke="var(--ink)" strokeWidth="1.5" />
+    <svg viewBox="0 0 28 10" aria-hidden className={className}>
+      <defs>
+        <linearGradient id={gradient} x1="0" y1="0" x2="1" y2="0.35">
+          <stop offset="0" stopColor="oklch(80% 0.14 198)" />
+          <stop offset="0.55" stopColor="oklch(69% 0.22 332)" />
+          <stop offset="1" stopColor="oklch(85% 0.14 78)" />
+        </linearGradient>
+      </defs>
+      <path d="M1 1A13 8 0 0 0 27 1A13 3.6 0 0 1 1 1Z" fill={`url(#${gradient})`} />
     </svg>
   );
 }
@@ -24,7 +36,7 @@ export function Nav() {
     <header className="sticky top-0 z-40 bg-wall/72 backdrop-blur-xl backdrop-saturate-150" style={{ viewTransitionName: 'site-header' }}>
       <nav aria-label="Main" className="mx-auto flex h-16 max-w-[1240px] items-center gap-2 px-4 sm:gap-6 sm:px-8">
         <Link href="/" aria-label="Halo, home" className="flex items-center gap-2 rounded-md text-ink no-underline pointer-coarse:min-h-11">
-          <Mark className="h-5 w-7" />
+          <Mark className="mt-1.5 h-[10px] w-7" />
           <span className="font-display text-title font-semibold tracking-[-0.02em]">halo</span>
         </Link>
         <ul className="m-0 flex list-none gap-0.5 p-0">

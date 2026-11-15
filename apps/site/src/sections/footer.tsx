@@ -17,7 +17,7 @@ export function Footer() {
       <nav aria-label="Site map" className="mx-auto grid max-w-[1240px] gap-8 border-t border-line px-4 py-10 text-ui sm:grid-cols-3 sm:px-8">
         <div>
           <p className="m-0 mb-3 flex items-center gap-2 text-ink">
-            <Mark className="h-4 w-6" />
+            <Mark className="mt-1 h-[9px] w-6" />
             <span className="font-medium">Halo 0.1.0</span>
           </p>
           <p className="m-0 text-ink-faint">Spring-physics toast and drawer for React.</p>

@@ -417,6 +417,10 @@ axe-core (WCAG 2.2 AA plus best practices) passes in light and dark, with toasts
 - **Routing:** the History API, with no router dependency. Hosted on Cloudflare Workers static assets at haloui.dev; `wrangler.jsonc` sets single-page-application not-found handling, so `/docs/*` and `/playground` load directly. Agent prompts always link `https://haloui.dev/llms.txt` (`lib/site.ts`), never the current origin.
 
 
+## Mark
+
+The front arc of a tilted ring: a crescent that is thick at the front and tapers to points, with the top missing so it reads as a ring seen from above. It uses a fixed Dichroic gradient (cyan 198, magenta 332, amber 78), never the current world's coat, so it can't fade into the wall. It sits bare beside the wordmark in the header and footer. The favicon puts it on a dark rounded tile, because a bare crescent shrinks to a sliver in a square tab icon.
+
 ## Information architecture
 
 - **Three surfaces:** Home (`/`, a short showcase: hero, flick test, Only in Halo, Worlds, then three doors onward), Docs (`/docs/*`), and Playground (`/playground`).
