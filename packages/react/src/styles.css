@@ -128,7 +128,8 @@
   --halo-blur: 0px;
   --halo-saturate: 1;
   --halo-surface: light-dark(oklch(100% 0 0), oklch(21% 0.008 262));
-  --halo-surface-solid: var(--halo-surface);
+  /* Spelled out, not var(--halo-surface): an override of the surface built from the solid would otherwise be a cycle. */
+  --halo-surface-solid: light-dark(oklch(100% 0 0), oklch(21% 0.008 262));
   --halo-shadow:
     0 1px 2px light-dark(oklch(25% 0.01 262 / 0.08), oklch(0% 0 0 / 0.5)),
     0 10px 24px -14px light-dark(oklch(25% 0.01 262 / 0.28), oklch(0% 0 0 / 0.7));
