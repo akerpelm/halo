@@ -17,7 +17,9 @@ export function Playground({ build, onBuild }: PlaygroundProps) {
           <h1 id="playground-heading" className="m-0 text-[clamp(1.75rem,3vw,2.25rem)] leading-[1.05] font-semibold tracking-[-0.03em]">
             Playground
           </h1>
-          <p className="m-0 mt-2 text-body text-ink-soft">Start from the plainest toast, layer it up, then take the code or an agent prompt.</p>
+          <p className="m-0 mt-2 text-body text-ink-soft">
+            {component === 'toast' ? 'Start from the plainest toast, layer it up' : 'Pick an edge, detents, and a spring'}, then take the code or an agent prompt.
+          </p>
         </div>
         <Segmented
           label="Building"

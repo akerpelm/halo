@@ -354,6 +354,7 @@ The playground starts from PLAIN: Ink, fade, smooth spring, no icons, timer, or 
 
 - **One world setting.** The builder's world is the site's world (the header Appearance menu). Picking one in either place restyles the whole gallery. The menu lists the nine library worlds, then Midnight under "Written in this site's CSS". Dark-only custom worlds give their panels the site's dark text tokens (`themeFor`).
 - **The fold.** A compact header (h1, one line, the Toast/Drawer toggle) so the stage is in the first viewport. The stage is sticky: beside the controls on desktop, and pinned under the nav as a 168px mini-stage above them on phones. The column is a flex column, not a grid, so the stage can stick across it.
+- **Drawer stage.** The Drawer builder has the same pinned stage: a half-scale miniature showing the sheet at its first detent (where it opens), dashed marks for the larger detents, its corners, density and world, with the real Open button floating in the corner away from the edge.
 
 
 ## Extending: custom worlds

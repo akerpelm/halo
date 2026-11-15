@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Button } from '../components/button';
 import { CodeBlock } from '../components/code-block';
 import { DemoDrawer } from '../components/demo-drawer';
+import { DrawerStage } from '../components/drawer-stage';
 import { Segmented } from '../components/segmented';
 import { Slider } from '../components/slider';
 import { SpringCurve } from '../components/spring-curve';
@@ -25,7 +26,8 @@ export function DrawerBuilder({ output, onOutput }: { output: 'code' | 'prompt';
   const set = (patch: Partial<DrawerConfig>) => setConfig((current) => ({ ...current, ...patch }));
 
   return (
-    <div className="grid lg:grid-cols-[320px_1fr]">
+    // Same shape as the toast builder: on phones the stage moves first and stays pinned.
+    <div className="flex flex-col lg:grid lg:grid-cols-[320px_1fr]">
       <form className="grid content-start gap-6 border-line p-5 max-lg:border-b lg:border-r" onSubmit={(event) => event.preventDefault()} aria-label="Drawer settings">
         <Segmented
           label="Edge"
@@ -78,10 +80,14 @@ export function DrawerBuilder({ output, onOutput }: { output: 'code' | 'prompt';
           Reset to defaults
         </Button>
       </form>
-      <div className="grid min-w-0 content-start gap-5 p-5">
-        <div className="flex flex-wrap gap-2">
-          <DemoDrawer trigger="Open drawer" tone="primary" size="md" config={config} />
-        </div>
+      <div className="min-w-0 max-lg:contents lg:flex lg:flex-col lg:gap-5 lg:p-5">
+        <DrawerStage
+          config={config}
+          className="sticky top-16 z-10 h-[300px] max-lg:order-first max-lg:m-3 max-lg:h-[200px] lg:top-[76px] lg:shadow-[0_0_0_12px_var(--wall)]"
+        >
+          <DemoDrawer trigger="Open drawer" tone="primary" size="sm" config={config} />
+        </DrawerStage>
+        <div className="grid gap-5 max-lg:p-5">
         <Segmented
           label="Output"
           hideLabel
@@ -99,6 +105,7 @@ export function DrawerBuilder({ output, onOutput }: { output: 'code' | 'prompt';
           copyLabel={output === 'code' ? 'Copy code' : 'Copy prompt'}
           wrap={output === 'prompt'}
         />
+        </div>
       </div>
     </div>
   );
