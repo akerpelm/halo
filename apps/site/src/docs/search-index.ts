@@ -6,7 +6,7 @@ export type Entry = { label: string; kind: 'Page' | 'Section' | 'Function' | 'Op
 
 export function buildIndex(): Entry[] {
   const entries: Entry[] = [
-    { label: 'Home', kind: 'Page', href: '/', hint: 'The showcase: flick test, worlds, and what only Halo does.' },
+    { label: 'Home', kind: 'Page', href: '/', hint: 'The showcase: the flick test, four extra toast types, and the worlds.' },
     { label: 'Playground', kind: 'Page', href: '/playground', hint: 'Start from a plain toast and layer it up. Take the code or an agent prompt.' },
   ];
   for (const page of docPages) {

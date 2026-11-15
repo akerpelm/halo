@@ -1,7 +1,7 @@
 {
   "name": "halo-ui-react",
   "version": "0.1.0",
-  "description": "Spring-physics toast and drawer for React. Frosted glass, accessible by default, built for agents.",
+  "description": "Spring-physics toast and drawer for React. Native <dialog> drawer, polite and assertive announcements, no dependencies, and an llms.txt for AI agents.",
   "license": "MIT",
   "author": "Alex Kerpelman",
   "homepage": "https://haloui.dev",
@@ -21,7 +21,10 @@
     "glass",
     "accessible",
     "sonner",
-    "vaul"
+    "vaul",
+    "bottom-sheet",
+    "notifications",
+    "snackbar"
   ],
   "type": "module",
   "sideEffects": [

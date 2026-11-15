@@ -44,8 +44,8 @@ export function ToastSection() {
       </p>
       <FlickTest />
 
-      <h3 className="mt-16 mb-2 text-heading font-semibold tracking-[-0.02em]">Only in Halo</h3>
-      <p className="mt-0 mb-6 max-w-[60ch] text-body leading-[1.55] text-ink-soft">Four kinds of toast no other library ships.</p>
+      <h3 className="mt-16 mb-2 text-heading font-semibold tracking-[-0.02em]">Four toasts you’d otherwise build yourself</h3>
+      <p className="mt-0 mb-6 max-w-[60ch] text-body leading-[1.55] text-ink-soft">Each is one call, with the motion, timing and announcements already handled.</p>
       <dl className="m-0 grid gap-x-8 gap-y-6 sm:grid-cols-2">
         {(
           [

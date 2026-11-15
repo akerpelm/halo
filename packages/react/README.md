@@ -1,6 +1,6 @@
 # halo-ui-react
 
-A spring-physics **Toast** and **Drawer** for React. Frosted glass, accessible by default, no dependencies besides React.
+A spring-physics **Toast** and **Drawer** for React. Frosted glass, a native `<dialog>` drawer, and no dependencies besides React.
 
 **[Docs and playground →](https://haloui.dev)**
 
@@ -32,9 +32,9 @@ toast.success('Invite sent', { description: 'They will get an email shortly' });
 - **Snapping by intent.** Drawer detents and toast dismissal are chosen from where a flick would coast to, not from fixed thresholds.
 - **Transform and opacity only.** Nothing animates layout.
 - **Native `<dialog>`.** Top layer, focus trap, and Esc come from the platform. No portal and no Radix.
-- **Accessible by default.** Separate polite and assertive live regions with announced types, a hotkey to reach the stack, keyboard dismissal, a handle that is a real button, and support for reduced motion, reduced transparency, and higher contrast.
+- **Keyboard and screen readers.** Separate polite and assertive live regions that announce each type, a hotkey to reach the stack, keyboard dismissal, a drawer handle that is a real button, and support for reduced motion, reduced transparency, and higher contrast. [Details](https://haloui.dev/docs/toast#accessibility).
 - **Nine worlds, out of the box.** `world` is `dichroic`, `partition`, `smoked`, `vapor`, `crystal`, `ink`, `opal`, `mercury`, or `vellum`, or any you write in CSS. Each is a complete token set, in light and dark.
-- **Toasts nobody else has:** `from` launches a toast out of the button that caused it, `toast.stream()` writes streaming text (an AI reply) live, `toast.undo()` puts the countdown on the Undo button, and `group` collapses repeats into one toast with a springing count.
+- **Four toasts you’d otherwise build yourself:** `from` launches a toast out of the button that caused it, `toast.stream()` writes streaming text (an AI reply) live, `toast.undo()` puts the countdown on the Undo button, and `group` collapses repeats into one toast with a springing count.
 - **Six entrances and exits, all on springs:** `motion="rise | fade | drop | hinge | focus | bloom"`.
 - **Colour presets:** `coat={[a, b, c]}` recolours the dichroic edge; `intent="tint | edge | glow"` shows each toast's type in colour, even with icons off.
 - **Density and radius as props.** `density="compact | comfortable | spacious"`, `radius="square | soft | round | pill"` or px.

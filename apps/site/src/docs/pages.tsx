@@ -114,7 +114,7 @@ const toastPage: DocPage = {
     { id: 'api', title: 'Calling toast()' },
     { id: 'options', title: 'Options' },
     { id: 'toaster', title: 'Toaster props' },
-    { id: 'only-in-halo', title: 'Only in Halo' },
+    { id: 'extra-types', title: 'Undo, stream, launch, group' },
     { id: 'accessibility', title: 'Keyboard and screen readers' },
     { id: 'vs-sonner', title: 'Next to Sonner' },
   ],
@@ -156,7 +156,7 @@ toast.update(id, 'Export ready', { type: 'success' });`}
           <PropTable rows={g.rows} caption={`Toaster props: ${g.title}`} />
         </Plaque>
       ))}
-      <H2 id="only-in-halo">Only in Halo</H2>
+      <H2 id="extra-types">Undo, stream, launch, group</H2>
       <H3>Launch from the trigger</H3>
       <P>
         Pass <C>from</C> and the toast flies out of the element that caused it, then lands in the stack on a spring.

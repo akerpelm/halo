@@ -385,7 +385,7 @@ axe-core (WCAG 2.2 AA plus best practices) passes in light and dark, with toasts
 - There is no horizontal overflow from 320px up.
 
 
-## Toast types only Halo ships
+## Extra toast types
 
 - `from`: the toast launches out of its trigger (measured once per toast, before any transform) and lands in the stack on the stack springs.
 - `toast.stream`: text arrives under a spinner with a 2px caret, announced once when it finishes.
@@ -423,7 +423,7 @@ The front arc of a tilted ring: a crescent that is thick at the front and tapers
 
 ## Information architecture
 
-- **Three surfaces:** Home (`/`, a short showcase: hero, flick test, Only in Halo, Worlds, then three doors onward), Docs (`/docs/*`), and Playground (`/playground`).
+- **Three surfaces:** Home (`/`, a short showcase: hero, flick test, four extra toast types, Worlds, then three doors onward), Docs (`/docs/*`), and Playground (`/playground`).
 - **The header carries only:** the logo (home), Docs, Playground, a site-wide ⌘K search, and one Appearance menu that holds the world and the theme. Section links don't go in the header: Home is a story you scroll, and the docs cover each component.
 - **Wayfinding below the fold:** the footer is a site map (every docs page, Home, Playground, llms.txt), and Home ends on "Where next": the playground, the drawer, and agents. Reference (every toast type, the Sonner and Vaul comparisons, all demo drawers) lives in the docs.
 - **Phones and tablets (below 1024px):** one header row. The docs replace the sidebar with a bar that sticks under the header ("Docs › Page", Contents) and opens a Halo drawer listing every page and this page's sections, so changing page never means scrolling back up.
