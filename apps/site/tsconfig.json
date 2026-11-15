@@ -10,5 +10,5 @@
       "halo-ui-react/drawer": ["../../packages/react/src/drawer/index.ts"]
     }
   },
-  "include": ["src", "vite.config.ts"]
+  "include": ["src", "e2e", "vite.config.ts", "playwright.config.ts"]
 }

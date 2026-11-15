@@ -37,6 +37,7 @@ pnpm dev         # builds the library, then runs the site with library source al
 pnpm test        # 50 tests
 pnpm typecheck
 pnpm build
+pnpm --filter haloui-site test:e2e   # Playwright browser checks against a preview build
 ```
 
 pnpm 10, Node 22 (`.node-version`). Run builds one after another: a stale `tsup --watch` from an earlier `pnpm dev` can empty `dist` mid-build. Restart `pnpm dev` after changing `tsup.config.ts`.
@@ -54,7 +55,7 @@ pnpm 10, Node 22 (`.node-version`). Run builds one after another: a stale `tsup 
 
 ## Verifying a change
 
-Typecheck, test and build before every commit. For anything visual, open the page in a browser and check:
+Typecheck, test and build before every commit. CI runs those plus the Playwright checks (`apps/site/e2e`) on every pull request. The Playwright suite covers axe, overflow, the keyboard walk, page transitions and reduced motion in Chromium; for anything visual, still open the page in a browser and check:
 
 - widths 320, 375, 640, 768, 1024, 1440: no horizontal overflow, nothing clipped;
 - light and dark, in Dichroic and at least one other world (Ink and Midnight catch the most bugs);
@@ -82,11 +83,9 @@ Bring a library change's behaviour under test: break the code on purpose and con
 ## Open items, in priority order
 
 1. Test on a real iPhone in Safari, and in Firefox. Everything so far was verified only in headless Chrome.
-2. Add GitHub Actions CI: typecheck, test and build on every pull request.
-3. Add the browser checks above as Playwright tests in the repo.
-4. Automate npm releases from CI with trusted publishing and provenance.
-5. Add `CHANGELOG.md` before the next release.
-6. Document the `view-transition-name` trap in the Toast docs and `apps/site/public/llms.txt`.
-7. Confirm how `Drawer.Root` and the other parts behave when used from a Next.js server component, and document it.
-8. Add Open Graph tags and a share image for haloui.dev.
-9. Consider trimming the toast bundle (8.4 kB min+gzip).
+2. Automate npm releases from CI with trusted publishing and provenance.
+3. Add `CHANGELOG.md` before the next release.
+4. Document the `view-transition-name` trap in the Toast docs and `apps/site/public/llms.txt`.
+5. Confirm how `Drawer.Root` and the other parts behave when used from a Next.js server component, and document it.
+6. Add Open Graph tags and a share image for haloui.dev.
+7. Consider trimming the toast bundle (8.4 kB min+gzip).

@@ -7,3 +7,5 @@ dist
 .wrangler
 .impeccable
 apps/site/.impeccable
+test-results
+playwright-report
