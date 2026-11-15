@@ -123,6 +123,9 @@
 }
 
 @layer base {
+  html[data-booting] .halo {
+    visibility: hidden;
+  }
   html {
     background: var(--wall-deep);
     scroll-behavior: smooth;

@@ -7,7 +7,7 @@ type CompareTableProps = {
 export function CompareTable({ caption, them, rows }: CompareTableProps) {
   return (
     <>
-      <div className="sm:hidden">
+      <div data-md-skip className="sm:hidden">
         <p className="mt-0 mb-3 text-label text-ink-faint">{caption}</p>
         <dl className="m-0">
           {rows.map(([topic, theirs, ours]) => (

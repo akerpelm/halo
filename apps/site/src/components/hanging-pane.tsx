@@ -185,7 +185,7 @@ export function HangingPane({
   }, []);
 
   useEffect(() => {
-    if (reducedMotion || !swingIn) return;
+    if (!swingIn || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     rig.x.set(-300);
     rig.y.set(70);
     rig.tilt.set(11);

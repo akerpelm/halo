@@ -8,9 +8,11 @@ import { PathContext, usePath } from './lib/router';
 import { useSettings } from './lib/settings';
 import { Footer } from './sections/footer';
 import { Home } from './sections/home';
+import { NotFound } from './sections/not-found';
 import { PlaygroundPage } from './sections/playground-page';
+import { docsSlugFor, playgroundRoute, routeFor } from './routes';
 
-export function App() {
+export function App({ serverPath = '/' }: { serverPath?: string }) {
   const { world, theme, setWorld } = useSettings();
   const [layers, setLayers] = useState<Omit<BuildConfig, 'world'>>(PLAIN);
   const build: BuildConfig = { ...layers, world };
@@ -18,9 +20,18 @@ export function App() {
     setLayers(rest);
     if (next !== world) setWorld(next);
   };
-  const path = usePath();
-  const surface = path.startsWith('/docs') ? 'docs' : path.startsWith('/playground') ? 'playground' : 'home';
-  const docsSlug = surface === 'docs' ? path.split('/')[2] || 'getting-started' : null;
+  const path = usePath(serverPath);
+  const docsSlug = docsSlugFor(path);
+  const surface = path === '/' ? 'home' : docsSlug ? 'docs' : path === playgroundRoute.path ? 'playground' : 'not-found';
+
+  useLayoutEffect(() => {
+    document.title = routeFor(path).title;
+  }, [path]);
+
+  useLayoutEffect(() => {
+    const root = document.documentElement;
+    if (root.dataset.world === world && root.dataset.theme === theme) delete root.dataset.booting;
+  }, [world, theme]);
 
   useLayoutEffect(() => {
     const target = window.location.hash ? document.getElementById(window.location.hash.slice(1)) : null;
@@ -52,6 +63,11 @@ export function App() {
           {surface === 'playground' && (
             <SurfaceTransition>
               <PlaygroundPage build={build} onBuild={setBuild} />
+            </SurfaceTransition>
+          )}
+          {surface === 'not-found' && (
+            <SurfaceTransition>
+              <NotFound />
             </SurfaceTransition>
           )}
         </main>

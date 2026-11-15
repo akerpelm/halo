@@ -9,3 +9,4 @@ dist
 apps/site/.impeccable
 test-results
 playwright-report
+dist-ssr

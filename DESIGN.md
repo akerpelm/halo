@@ -414,7 +414,7 @@ axe-core (WCAG 2.2 AA plus best practices) passes in light and dark, with toasts
 - **Gallery carried in:** each page opens with a live specimen on the hanging rig (without cast light, so it never washes over text). Prop groups are glass plaques on two short cables that fade in from above, held by the same clamps, in the visitor's current world.
 - **Props:** one semantic table per group, with explicit ARIA table roles, so it restyles into stacked rows on phones without losing semantics. Every row has a `#prop-*` anchor.
 - **Search:** ⌘K, Ctrl+K, or `/` opens a native top-layer dialog. It follows the ARIA combobox and listbox pattern and indexes every page, section, function, option, prop, token, and selector.
-- **Routing:** the History API, with no router dependency. Hosted on Cloudflare Workers static assets at haloui.dev; `wrangler.jsonc` sets single-page-application not-found handling, so `/docs/*` and `/playground` load directly. Agent prompts always link `https://haloui.dev/llms.txt` (`lib/site.ts`), never the current origin.
+- **Routing:** the History API, with no router dependency. Every route in `src/routes.ts` is prerendered at build time to its own HTML file (`docs/toast.html`, served at `/docs/toast` with no trailing slash) with its own title, description, canonical and Open Graph tags, and the client hydrates it. `wrangler.jsonc` serves `404.html` with a real 404 for anything else. Agent prompts always link `https://haloui.dev/llms.txt` (`lib/site.ts`), never the current origin.
 
 
 ## Mark

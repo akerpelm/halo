@@ -6,16 +6,19 @@ export type SiteTheme = 'light' | 'dark';
 type Settings = { world: HaloWorldName; theme: SiteTheme };
 
 const KEY = 'halo-site';
-const root = document.documentElement;
-const savedWorld = allWorlds.find((w) => w.value === root.dataset.world)?.value;
-let settings: Settings = {
-  world: savedWorld ?? 'dichroic',
-  theme: root.dataset.theme === 'dark' ? 'dark' : 'light',
-};
+const defaults: Settings = { world: 'dichroic', theme: 'light' };
+const root = typeof document === 'undefined' ? null : document.documentElement;
+let settings: Settings = root
+  ? {
+      world: allWorlds.find((w) => w.value === root.dataset.world)?.value ?? defaults.world,
+      theme: root.dataset.theme === 'dark' ? 'dark' : 'light',
+    }
+  : defaults;
 const listeners = new Set<() => void>();
 
 function commit(next: Partial<Settings>) {
   settings = { ...settings, ...next };
+  if (!root) return;
   root.dataset.world = settings.world;
   root.dataset.theme = settings.theme;
   try {
@@ -32,7 +35,7 @@ const subscribe = (listener: () => void) => {
 };
 
 export function useSettings() {
-  const current = useSyncExternalStore(subscribe, () => settings);
+  const current = useSyncExternalStore(subscribe, () => settings, () => defaults);
   return {
     ...current,
     setWorld: (world: HaloWorldName) => commit({ world }),

@@ -1,10 +1,13 @@
 import { addTransitionType, createContext, startTransition, useContext, useEffect, useState } from 'react';
+import { docsRoutes, docsSlugFor } from '../routes';
 
 type Setter = (path: string) => void;
 let setPathInReact: Setter | null = null;
 
-const docsOrder = ['getting-started', 'toast', 'drawer', 'worlds', 'motion', 'customize', 'agents'];
-const docsIndex = (path: string) => (path.startsWith('/docs') ? docsOrder.indexOf(path.split('/')[2] || 'getting-started') : -1);
+const docsIndex = (path: string) => {
+  const slug = docsSlugFor(path);
+  return slug ? docsRoutes.findIndex((r) => r.slug === slug) : -1;
+};
 
 export function transitionTypeFor(from: string, to: string): 'page-next' | 'page-prev' | 'surface' | null {
   if (from === to) return null;
@@ -25,8 +28,8 @@ function go(next: string) {
   });
 }
 
-export function usePath() {
-  const [path, setPath] = useState(() => window.location.pathname);
+export function usePath(serverPath: string) {
+  const [path, setPath] = useState(() => (typeof window === 'undefined' ? serverPath : window.location.pathname));
   useEffect(() => {
     setPathInReact = setPath;
     const onPop = () => window.setTimeout(() => go(window.location.pathname), 0);

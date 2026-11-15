@@ -2,7 +2,7 @@ import type { AnchorHTMLAttributes, MouseEvent } from 'react';
 import { navigate } from '../lib/router';
 
 export function Link({ href = '', onClick, ...props }: AnchorHTMLAttributes<HTMLAnchorElement>) {
-  const internal = href.startsWith('/') && !href.startsWith('//') && !href.endsWith('.txt');
+  const internal = href.startsWith('/') && !href.startsWith('//') && !/\.(txt|md|xml)$/.test(href);
   return (
     <a
       href={href}

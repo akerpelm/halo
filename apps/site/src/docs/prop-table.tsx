@@ -43,7 +43,7 @@ export function PropTable({ rows, caption, nameLabel = 'Prop' }: { rows: readonl
             </td>
             {hasDefault && (
               <td role="cell" className="py-3 pr-4 font-mono text-caption text-[var(--halo-fg-muted,var(--ink-soft))] max-md:block max-md:p-0">
-                <span className="md:hidden">default </span>
+                <span data-md-skip className="md:hidden">default </span>
                 {row.default ?? '–'}
               </td>
             )}

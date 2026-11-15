@@ -24,7 +24,10 @@ apps/site        haloui.dev (Vite, React 19, Tailwind v4)
   src/docs/        docs pages, search, prop tables, the mobile docs menu
   src/components/  hanging-pane (the signature), drawer-stage, nav, and the rest
   src/lib/         router, settings (world and theme), build config, cable simulation
-wrangler.jsonc   Cloudflare deploy config (static assets, single-page-app routing)
+  src/routes.ts    the route manifest: every path, title, description and OG image. Nav order, prerender, sitemap and llms.txt read it
+  src/prerender/   head tags, sitemap, llms.txt, _headers and _redirects, and the HTML-to-Markdown converter
+  src/content/     llms.md, the template for /llms.txt
+wrangler.jsonc   Cloudflare deploy config (static assets, 404.html for unknown paths)
 ```
 
 Entry points: `halo-ui-react`, `halo-ui-react/toast`, `halo-ui-react/drawer`, `halo-ui-react/spring`, `halo-ui-react/styles.css`. The public API is `toast()`, `<Toaster>`, the `Drawer` namespace, `useDrawer`, and the spring helpers. Do not change it without a version bump and a docs update.
@@ -75,6 +78,10 @@ Bring a library change's behaviour under test: break the code on purpose and con
 - Library: bump `version` in `packages/react/package.json`, commit, then run `npm publish` in `packages/react` (it rebuilds and tests first, then asks for 2FA). Tag the commit. The owner runs the publish; agents prepare it.
 
 ## Gotchas
+
+- The site is prerendered (`vite build --ssr` + `scripts/prerender.mjs`) and hydrated. Never read `window`, `document`, `localStorage`, `navigator` or `matchMedia` at module level or during render: use `useSyncExternalStore` with a server snapshot, or an effect. A hydration mismatch shows up as React error #418 and fails `e2e/seo.spec.ts`.
+- During hydration, settings and media queries return their server values (Dichroic, light, motion allowed), then update. Effects that run once on mount must read the live value (see the swing-in in `hanging-pane.tsx`). `html[data-booting]` hides panes until the saved world and theme have rendered.
+- A new page needs an entry in `src/routes.ts`. Docs pages also need a `docPages` entry with the same slug.
 
 - A `view-transition-name` makes its element a backdrop root, so frosted glass inside stops blurring the page. Persistent chrome is named only during transitions: `html:active-view-transition [style*='--vt-name']` in `apps/site/src/styles.css`.
 - Never define a world's `--halo-surface-solid` as `var(--halo-surface)`. Overrides built from it become a cycle and the pane turns transparent.

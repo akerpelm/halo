@@ -20,7 +20,7 @@ export function Plaque({ id, title, count, children }: { id: string; title: stri
         ))}
         <h3 id={`${id}-title`} className="m-0 flex items-baseline justify-between gap-4 font-display text-title font-semibold tracking-[-0.015em] text-[var(--halo-fg)]">
           {title}
-          {count !== undefined && <span className="font-sans text-label font-normal text-[var(--halo-fg-muted)]">{count} props</span>}
+          {count !== undefined && <span data-md-skip className="font-sans text-label font-normal text-[var(--halo-fg-muted)]">{count} props</span>}
         </h3>
         {children}
       </div>

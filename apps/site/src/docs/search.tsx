@@ -1,4 +1,4 @@
-import { useEffect, useId, useMemo, useRef, useState } from 'react';
+import { useEffect, useId, useMemo, useRef, useState, useSyncExternalStore } from 'react';
 import { cn } from '../lib/cn';
 import { navigate } from '../lib/router';
 import { useSettings } from '../lib/settings';
@@ -6,6 +6,8 @@ import { themeFor } from '../lib/worlds';
 import { type PropRow, drawerParts, drawerRootProps, selectors, toastFunctions, toastOptions, toasterProps, tokens } from './api';
 import { docPages } from './pages';
 import { propId } from './prop-table';
+
+const noSubscription = () => () => {};
 
 type Entry = { label: string; kind: 'Page' | 'Section' | 'Function' | 'Option' | 'Prop' | 'Part' | 'Token' | 'Selector'; href: string; hint: string };
 
@@ -86,7 +88,7 @@ export function DocsSearch() {
     return () => window.removeEventListener('keydown', onKey);
   }, []);
 
-  const isMac = typeof navigator !== 'undefined' && /Mac|iPhone|iPad/.test(navigator.platform);
+  const isMac = useSyncExternalStore(noSubscription, () => /Mac|iPhone|iPad/.test(navigator.platform), () => true);
   const optionId = (i: number) => `${listId}-option-${i}`;
 
   return (

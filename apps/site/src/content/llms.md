@@ -1,11 +1,12 @@
 # Halo (halo-ui-react)
 
-> A spring-physics Toast and Drawer for React 18.2+. Frosted-glass material, accessible by default, no dependencies besides React. Nine visual worlds: "dichroic" (default), "partition", "smoked", "vapor", "crystal", "ink", "opal", "mercury", "vellum", plus any you define in CSS.
+> A spring-physics Toast and Drawer for React {{react}}+, on one closed-form spring engine. No dependencies besides React. Toasts announce through polite and assertive live regions and dismiss from the keyboard; the drawer is a native <dialog>. Nine visual worlds: "dichroic" (default), "partition", "smoked", "vapor", "crystal", "ink", "opal", "mercury", "vellum", plus any you define in CSS.
 
 Install: `npm i halo-ui-react`
 Styles: import `halo-ui-react/styles.css` once (e.g. in your root layout or main entry).
-Human docs: https://haloui.dev/docs (getting started, toast, drawer, worlds, motion, customize, agents). Agent recipes: https://haloui.dev/docs/agents.
+Human docs: https://haloui.dev/docs/getting-started. Every docs page is also served as Markdown at its URL plus .md (for example https://haloui.dev/docs/toast.md); the full list is at the end of this file. Agent recipes: https://haloui.dev/docs/agents.
 Source: https://github.com/akerpelm/halo (MIT).
+Sizes, min+gzip: toast {{toast}} kB, drawer {{drawer}} kB (each including the springs), spring engine {{spring}} kB, styles.css {{styles}} kB. {{method}}
 Entry points: `halo-ui-react/toast`, `halo-ui-react/drawer`, `halo-ui-react/spring`, or everything from `halo-ui-react`.
 All components are client components (the bundle starts with 'use client').
 

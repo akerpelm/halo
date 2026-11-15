@@ -1,5 +1,5 @@
 import { createSpringValue, resolveSpring, useReducedMotion } from 'halo-ui-react/spring';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 
 type CountUpProps = {
   value: number;
@@ -20,6 +20,11 @@ export function CountUp({ value, decimals = 0, suffix = '', className }: CountUp
     }),
   );
   const [seen, setSeen] = useState(false);
+  const [settled] = useState(() => format(value));
+
+  useLayoutEffect(() => {
+    if (ref.current) ref.current.textContent = format(0);
+  }, []);
 
   useEffect(() => {
     const el = ref.current;
@@ -38,7 +43,7 @@ export function CountUp({ value, decimals = 0, suffix = '', className }: CountUp
   return (
     <span className={className}>
       <span ref={ref} aria-hidden className="tabular-nums">
-        {format(0)}
+        {settled}
       </span>
       <span className="sr-only">{format(value)}</span>
     </span>

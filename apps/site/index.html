@@ -3,21 +3,23 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <meta name="description" content="Halo: a spring-physics toast and drawer for React. Frosted glass, fully accessible, ready for AI agents." />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <link rel="canonical" href="https://haloui.dev/" />
-    <title>Halo · Toast and Drawer for React</title>
+    <!--app-head-->
+    <title>Halo: spring-physics toast and drawer for React</title>
+    <!--/app-head-->
     <script>
       try {
         const saved = JSON.parse(localStorage.getItem('halo-site') || '{}');
         const theme = saved.theme === 'light' || saved.theme === 'dark' ? saved.theme : matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        const world = ['dichroic', 'partition', 'smoked', 'vapor', 'crystal', 'ink', 'opal', 'mercury', 'vellum', 'midnight'].includes(saved.world) ? saved.world : 'dichroic';
         document.documentElement.dataset.theme = theme;
-        if (['dichroic', 'partition', 'smoked', 'vapor', 'crystal', 'ink', 'opal', 'mercury', 'vellum', 'midnight'].includes(saved.world)) document.documentElement.dataset.world = saved.world;
+        document.documentElement.dataset.world = world;
+        if (theme !== 'light' || world !== 'dichroic') document.documentElement.dataset.booting = '';
       } catch {}
     </script>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root"><!--app-html--></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
