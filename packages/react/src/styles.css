@@ -1,12 +1,15 @@
 /*
  * Halo material.
+ * Token selectors are wrapped in :where() so they carry zero specificity: any selector you write,
+ * such as [data-halo-world='yours'], overrides them without !important or load-order tricks.
+ *
  * Two worlds share one structure:
  *   dichroic  – clear frosted pane, coated edge that shifts hue with motion, colored cast light
  *   partition – acid-etched pane, aluminium hairline, neutral silhouette shadow
  * Every value is a custom property so you can retune it from your own CSS.
  */
 
-.halo {
+:where(.halo) {
   --halo-radius: 18px;
   --halo-blur: 22px;
   --halo-saturate: 1.7;
@@ -46,14 +49,20 @@
   -webkit-font-smoothing: antialiased;
 }
 
-.halo[data-theme='light'] {
+/* Dichroic uses the coat; reset so a dichroic pane nested in another world doesn't inherit its edge. */
+:where(.halo[data-halo-world='dichroic']) {
+  --halo-world-edge: initial;
+}
+
+:where(.halo[data-theme='light']) {
   color-scheme: light;
 }
-.halo[data-theme='dark'] {
+:where(.halo[data-theme='dark']) {
   color-scheme: dark;
 }
 
-.halo[data-halo-world='partition'] {
+:where(.halo[data-halo-world='partition']) {
+  --halo-world-edge: light-dark(oklch(78% 0.006 250), oklch(100% 0 0 / 0.17));
   --halo-blur: 30px;
   --halo-saturate: 1.05;
   --halo-surface: light-dark(oklch(97.5% 0.002 250 / 0.8), oklch(24% 0.004 250 / 0.74));
@@ -66,7 +75,8 @@
 }
 
 /* Smoked: bronze-tinted glass. Always reads dark, whatever the page theme. */
-.halo[data-halo-world='smoked'] {
+:where(.halo[data-halo-world='smoked']) {
+  --halo-world-edge: linear-gradient(to bottom, oklch(88% 0.06 75 / 0.42), oklch(80% 0.05 65 / 0.2));
   color-scheme: dark;
   --halo-blur: 18px;
   --halo-saturate: 1.25;
@@ -84,7 +94,8 @@
 }
 
 /* Vapor: breath on cold glass. Very diffuse, barely-there tint, no hard edge. */
-.halo[data-halo-world='vapor'] {
+:where(.halo[data-halo-world='vapor']) {
+  --halo-world-edge: light-dark(oklch(100% 0 0 / 0.75), oklch(100% 0 0 / 0.12));
   --halo-radius: 22px;
   --halo-blur: 42px;
   --halo-saturate: 1.35;
@@ -97,7 +108,7 @@
 }
 
 /* Crystal: clear, thick, bevelled. Less blur, so the page stays visible behind it. */
-.halo[data-halo-world='crystal'] {
+:where(.halo[data-halo-world='crystal']) {
   --halo-blur: 10px;
   --halo-saturate: 1.9;
   --halo-surface: light-dark(oklch(99% 0.004 250 / 0.55), oklch(28% 0.012 262 / 0.5));
@@ -111,7 +122,8 @@
 }
 
 /* Ink: solid and crisp. No blur at all, for dense tools and low-power devices. */
-.halo[data-halo-world='ink'] {
+:where(.halo[data-halo-world='ink']) {
+  --halo-world-edge: light-dark(oklch(88% 0.004 262), oklch(33% 0.01 262));
   --halo-radius: 14px;
   --halo-blur: 0px;
   --halo-saturate: 1;
@@ -122,33 +134,25 @@
     0 10px 24px -14px light-dark(oklch(25% 0.01 262 / 0.28), oklch(0% 0 0 / 0.7));
 }
 
-/* Declared on the pane, not the root, so --halo-shift (written per frame on the pane) resolves here. */
+/*
+ * The edge is resolved on the pane, so --halo-shift (written per frame on the pane) can move it.
+ * A world sets --halo-world-edge on its own selector; worlds that don't get the dichroic coat.
+ */
 .halo-surface {
   /* Every stop has similar weight, so the ring reads as one even line all the way round. */
-  --halo-edge: conic-gradient(
-    from calc(210deg + var(--halo-shift, 0) * 220deg),
+  --halo-edge: var(
+    --halo-world-edge,
+    conic-gradient(
+      from calc(210deg + var(--halo-shift, 0) * 220deg),
     var(--halo-coat-a),
     var(--halo-coat-b),
-    var(--halo-coat-c),
-    var(--halo-coat-a)
+      var(--halo-coat-c),
+      var(--halo-coat-a)
+    )
   );
 }
-.halo[data-halo-world='partition'] .halo-surface,
-.halo-surface[data-halo-world='partition'] {
-  /* One even aluminium hairline. The top highlight comes from the inset shadow, not the ring. */
-  --halo-edge: light-dark(oklch(78% 0.006 250), oklch(100% 0 0 / 0.17));
-}
 
-.halo[data-halo-world='smoked'] .halo-surface,
-.halo-surface[data-halo-world='smoked'] {
-  /* Lit from above, the way smoked glass catches a warm room. */
-  --halo-edge: linear-gradient(to bottom, oklch(88% 0.06 75 / 0.42), oklch(80% 0.05 65 / 0.2));
-}
 
-.halo[data-halo-world='vapor'] .halo-surface,
-.halo-surface[data-halo-world='vapor'] {
-  --halo-edge: light-dark(oklch(100% 0 0 / 0.75), oklch(100% 0 0 / 0.12));
-}
 
 /* A prismatic bevel: the hues stay pale and equally bright, so the line weight never wavers. */
 .halo[data-halo-world='crystal'] .halo-surface,
@@ -162,10 +166,6 @@
   );
 }
 
-.halo[data-halo-world='ink'] .halo-surface,
-.halo-surface[data-halo-world='ink'] {
-  --halo-edge: light-dark(oklch(88% 0.004 262), oklch(33% 0.01 262));
-}
 
 /* The pane itself. */
 .halo-surface {
@@ -214,7 +214,7 @@
 }
 
 @media (prefers-contrast: more) {
-  .halo {
+  :where(.halo) {
     --halo-surface: var(--halo-surface-solid);
     --halo-fg-muted: var(--halo-fg);
   }
@@ -237,20 +237,20 @@
 
 /* ── Density ───────────────────────────────────────────
    Padding, gaps, and type size move together so every density stays balanced. */
-.halo {
+:where(.halo) {
   --halo-pad-y: 14px;
   --halo-pad-x: 16px;
   --halo-pad-end: 14px;
   --halo-inner-gap: 12px;
 }
-.halo[data-density='compact'] {
+:where(.halo[data-density='compact']) {
   --halo-pad-y: 9px;
   --halo-pad-x: 12px;
   --halo-pad-end: 10px;
   --halo-inner-gap: 9px;
   --halo-font-size: 13px;
 }
-.halo[data-density='spacious'] {
+:where(.halo[data-density='spacious']) {
   --halo-pad-y: 18px;
   --halo-pad-x: 20px;
   --halo-pad-end: 18px;
@@ -501,7 +501,7 @@
   animation: halo-drain linear forwards;
   transition: opacity 180ms ease;
 }
-.halo {
+:where(.halo) {
   --halo-timer-dim: color-mix(in oklch, var(--halo-surface-solid) 82%, transparent);
 }
 .halo-toast[data-timer-paused] .halo-toast-timeline,
@@ -797,7 +797,7 @@ dialog.halo-drawer::backdrop {
 }
 
 [data-halo-recess] {
-  transform-origin: 50% 0;
+  transform-origin: 50% 50vh;
 }
 [data-halo-recess][data-halo-recessed] {
   overflow: hidden;

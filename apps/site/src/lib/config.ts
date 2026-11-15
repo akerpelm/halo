@@ -21,7 +21,7 @@ export const defaultDrawerConfig: DrawerConfig = {
   recess: true,
   density: 'comfortable',
   radius: 'large',
-  spring: { duration: 0.5, bounce: 0.12 },
+  spring: { duration: 0.38, bounce: 0.1 },
 };
 
 /** Drawer radius presets in px; 'large' is the library default (28px). */

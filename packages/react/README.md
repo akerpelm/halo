@@ -45,4 +45,22 @@ toast.success('Invite sent', { description: 'They will get an email shortly' });
 | `@halo-ui/react/spring` | 1.6 kB |
 | `styles.css` | 2.9 kB |
 
+## Make it yours
+
+A world is one CSS selector. Write your own and pass its name to `world`:
+
+```css
+[data-halo-world='midnight'] {
+  color-scheme: dark;
+  --halo-surface: oklch(24% 0.06 278 / 0.74);
+  --halo-fg: oklch(96% 0.02 280);
+  --halo-blur: 24px;
+  --halo-world-edge: linear-gradient(to bottom, oklch(82% 0.12 290 / 0.65), transparent);
+}
+```
+
+Halo's token selectors use `:where()`, so they have zero specificity and any selector you write wins.
+
+Extend a built-in world with the same selector (`[data-halo-world='dichroic'] { --halo-radius: 12px }`). With Tailwind, import the stylesheet into a layer (`@import '@halo-ui/react/styles.css' layer(components);`) and use `classNames` for each part, or arbitrary properties like `className="[--halo-blur:8px]"`.
+
 The full API, written for both people and AI agents, lives in [`apps/site/public/llms.txt`](../../apps/site/public/llms.txt).

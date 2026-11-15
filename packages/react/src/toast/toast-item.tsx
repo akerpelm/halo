@@ -4,6 +4,7 @@ import { createVelocityTracker, project, rubberband } from '../core/gesture';
 import { type SpringConfig, resolveSpring } from '../core/spring';
 import { CloseIcon, TimerRing, type ToastMotion, type ToastTimer, TypeIcon } from './icons';
 import { type ToastRecord, toast as toastApi } from './store';
+import type { ToastClassNames } from './toaster';
 
 type Axis = 'x' | 'y';
 
@@ -28,6 +29,7 @@ type ToastItemProps = {
   motionStyle: ToastMotion;
   icons: boolean;
   tint: boolean;
+  classNames: ToastClassNames | undefined;
   onHeight: (id: ToastRecord['id'], height: number) => void;
   onRemove: (id: ToastRecord['id']) => void;
   onInteract: (interacting: boolean) => void;
@@ -47,10 +49,21 @@ const TYPE_LABEL: Record<ToastRecord['type'], string> = {
 const FADE = resolveSpring('smooth');
 const EXIT = resolveSpring({ duration: 0.3, bounce: 0 });
 const DISMISS_DECELERATION = 0.995;
+/** Dismiss once a drag, or where its flick would coast to, passes a third of the toast. */
+const DISMISS_FRACTION = 1 / 3;
 
 type Motion = { x: SpringValue; y: SpringValue; dy: SpringValue; scale: SpringValue; opacity: SpringValue; reveal: SpringValue };
 
+const cx = (...parts: Array<string | undefined | false>) => parts.filter(Boolean).join(' ');
+
 const unit = (n: number) => Math.max(0, Math.min(1, n));
+/** How far the material's shadow reaches past the pane, in px. */
+const SHADOW_BLEED = 64;
+
+/** The same spring character, played faster: stiffness scales by 1/k², damping by 1/k. */
+function quicken(config: SpringConfig, k: number): SpringConfig {
+  return { ...config, stiffness: config.stiffness / (k * k), damping: config.damping / k };
+}
 
 /** One reveal value (0 hidden, 1 shown) read by each motion style. Overshoot past 1 is kept for transforms. */
 function revealStyle(style: ToastMotion, p: number, edge: 1 | -1) {
@@ -64,13 +77,18 @@ function revealStyle(style: ToastMotion, p: number, edge: 1 | -1) {
       return { transform: `perspective(700px) rotateX(${q * -78}deg)`, opacity: unit(p * 1.6), filter: '', clip: '' };
     case 'focus':
       return { transform: `scale(${1 + q * 0.07})`, opacity: unit(p), filter: q > 0.002 ? `blur(${(unit(q) * 12).toFixed(2)}px)` : '', clip: '' };
-    case 'bloom':
+    case 'bloom': {
+      // The clip reaches past the pane by the shadow's extent and ends fully open, so the shadow
+      // grows with the reveal instead of switching on when the clip is removed.
+      const side = unit(q);
+      const bleed = SHADOW_BLEED * (1 - side);
       return {
         transform: '',
-        opacity: unit(p * 4),
+        opacity: unit(p * 3),
         filter: '',
-        clip: q > 0.002 ? `inset(0 ${(unit(q) * 42).toFixed(2)}% round var(--halo-radius))` : '',
+        clip: q > 0.002 ? `inset(-${SHADOW_BLEED}px calc(${(side * 42).toFixed(2)}% - ${bleed.toFixed(1)}px) round var(--halo-radius))` : '',
       };
+    }
     default:
       return { transform: `translate3d(0, ${edge * q * 28}px, 0) scale(${0.96 + 0.04 * p})`, opacity: unit(p), filter: '', clip: '' };
   }
@@ -136,6 +154,7 @@ export function ToastItem({
   motionStyle,
   icons,
   tint,
+  classNames,
   onHeight,
   onRemove,
   onInteract,
@@ -189,7 +208,7 @@ export function ToastItem({
     motion.opacity.set(visible ? 1 : 0);
     motion.reveal.set(0);
     if (reducedMotion) motion.reveal.to(1, { config: FADE });
-    else motion.reveal.to(1, { config });
+    else motion.reveal.to(1, { config: quicken(config, 0.75) });
     return () => observer.disconnect();
   }, []);
 
@@ -299,7 +318,7 @@ export function ToastItem({
     springFor(current.axis).set(value);
     tracker.add(value, event.timeStamp);
 
-    const armed = isAllowed(current.axis, Math.sign(raw)) && Math.abs(raw) > size * 0.5;
+    const armed = isAllowed(current.axis, Math.sign(raw)) && Math.abs(raw) > size * DISMISS_FRACTION;
     if (armed !== current.armed) {
       current.armed = armed;
       if (armed && event.pointerType === 'touch') navigator.vibrate?.(6);
@@ -321,7 +340,7 @@ export function ToastItem({
     const size = sizeFor(current.axis);
     const sign = Math.sign(landing);
 
-    if (!cancelled && isAllowed(current.axis, sign) && Math.abs(landing) > size * 0.5) {
+    if (!cancelled && isAllowed(current.axis, sign) && Math.abs(landing) > size * DISMISS_FRACTION) {
       // Hand the finger's momentum to the exit. The toast keeps travelling instead of restarting.
       exiting.current = true;
       t.onDismiss?.(t);
@@ -350,7 +369,7 @@ export function ToastItem({
       data-dismissed={t.dismissed || undefined}
       data-timer-paused={!running || undefined}
       data-tint={tint || undefined}
-      className={['halo-toast', 'halo-surface', t.className].filter(Boolean).join(' ')}
+      className={cx('halo-toast halo-surface', classNames?.toast, t.className)}
       style={{ height: clamped ? frontHeight : undefined, zIndex: 1000 - lastIndex.current }}
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}
@@ -367,22 +386,22 @@ export function ToastItem({
         }
       }}
     >
-      <div ref={bodyRef} className="halo-toast-body">
+      <div ref={bodyRef} className={cx('halo-toast-body', classNames?.body)}>
         {(icon || ring === 'icon') && (
-          <span key={t.type} className="halo-toast-icon" data-timer={ring === 'icon' || undefined}>
+          <span key={t.type} className={cx('halo-toast-icon', classNames?.icon)} data-timer={ring === 'icon' || undefined}>
             {ring === 'icon' && <TimerRing duration={duration} restartKey={t.revision} />}
             {icon}
           </span>
         )}
         <div className="halo-toast-text">
           {typeLabel && <span className="halo-sr-only">{typeLabel} </span>}
-          <div className="halo-toast-title">{t.title}</div>
-          {t.description && <div className="halo-toast-description">{t.description}</div>}
+          <div className={cx('halo-toast-title', classNames?.title)}>{t.title}</div>
+          {t.description && <div className={cx('halo-toast-description', classNames?.description)}>{t.description}</div>}
         </div>
         {t.action && (
           <button
             type="button"
-            className="halo-toast-action"
+            className={cx('halo-toast-action', classNames?.action)}
             onClick={(event) => {
               t.action?.onClick(event);
               if (!event.defaultPrevented) userDismiss();
@@ -392,7 +411,7 @@ export function ToastItem({
           </button>
         )}
         {closeButton && dismissible ? (
-          <button type="button" className="halo-toast-close" data-timer={ring === 'close' || undefined} aria-label="Dismiss notification" onClick={userDismiss}>
+          <button type="button" className={cx('halo-toast-close', classNames?.close)} data-timer={ring === 'close' || undefined} aria-label="Dismiss notification" onClick={userDismiss}>
             {ring === 'close' && <TimerRing duration={duration} restartKey={t.revision} />}
             <CloseIcon />
           </button>

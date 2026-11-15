@@ -31,18 +31,18 @@ export type SpringPresetName = keyof typeof springPresets;
  * `bounce` is 0 (no overshoot) to ~0.5 (playful).
  */
 export const springPresets = {
-  snappy: { duration: 0.32, bounce: 0.08 },
-  smooth: { duration: 0.45, bounce: 0 },
-  bouncy: { duration: 0.5, bounce: 0.32 },
-  gentle: { duration: 0.7, bounce: 0.12 },
+  snappy: { duration: 0.26, bounce: 0.12 },
+  smooth: { duration: 0.34, bounce: 0 },
+  bouncy: { duration: 0.4, bounce: 0.34 },
+  gentle: { duration: 0.5, bounce: 0.1 },
   /** Quick and firm, with no overshoot at all. */
-  stiff: { duration: 0.22, bounce: 0 },
+  stiff: { duration: 0.18, bounce: 0 },
   /** Short and springy: a single confident overshoot. */
-  pop: { duration: 0.36, bounce: 0.3 },
+  pop: { duration: 0.3, bounce: 0.34 },
   /** Wobbles visibly before settling. */
-  jelly: { duration: 0.62, bounce: 0.5 },
+  jelly: { duration: 0.5, bounce: 0.48 },
   /** Slow and unhurried, for calm products. */
-  lazy: { duration: 0.95, bounce: 0.06 },
+  lazy: { duration: 0.7, bounce: 0.05 },
 } as const satisfies Record<string, { duration: number; bounce: number }>;
 
 const DEFAULT_CONFIG: SpringConfig = { stiffness: 400, damping: 38, mass: 1 };

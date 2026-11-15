@@ -1,4 +1,4 @@
-import type { HaloDensity, HaloWorld, SpringPresetName, ToastMotion, ToastPosition, ToastTimer } from '@halo-ui/react';
+import type { HaloDensity, HaloWorldName, SpringPresetName, ToastMotion, ToastPosition, ToastTimer } from '@halo-ui/react';
 import type { RadiusPreset } from './config';
 
 export type SpringChoice = SpringPresetName | { duration: number; bounce: number };
@@ -6,7 +6,7 @@ export type CoatName = 'material' | 'aurora' | 'ember' | 'lagoon' | 'orchid' | '
 
 /** Everything the playground can layer onto a toast. */
 export type BuildConfig = {
-  world: HaloWorld;
+  world: HaloWorldName;
   motion: ToastMotion;
   spring: SpringChoice;
   coat: CoatName;
@@ -104,7 +104,7 @@ const springName = (s: SpringChoice) =>
   typeof s === 'string' ? (springChoices.find((c) => c.value === s)?.name ?? s) : `Custom ${s.duration}s / ${s.bounce}`;
 
 /** The layers added on top of PLAIN, each with a label and how to peel it back off. */
-export function layers(config: BuildConfig, worldName: (w: HaloWorld) => string) {
+export function layers(config: BuildConfig, worldName: (w: HaloWorldName) => string) {
   const list: Array<{ key: keyof BuildConfig; label: string }> = [];
   if (config.world !== PLAIN.world) list.push({ key: 'world', label: `${worldName(config.world)} glass` });
   if (config.motion !== PLAIN.motion) list.push({ key: 'motion', label: `${motions.find((m) => m.value === config.motion)?.name} entrance` });

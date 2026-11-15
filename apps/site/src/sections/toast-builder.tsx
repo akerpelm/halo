@@ -1,4 +1,4 @@
-import { type HaloWorld, type ToastPosition, resolveSpring, sampleSpring } from '@halo-ui/react';
+import { type ToastPosition, resolveSpring, sampleSpring } from '@halo-ui/react';
 import { Toaster, toast } from '@halo-ui/react/toast';
 import { type ReactNode, useEffect, useRef } from 'react';
 import { Button } from '../components/button';
@@ -7,6 +7,7 @@ import { Segmented } from '../components/segmented';
 import { Select } from '../components/select';
 import { Slider } from '../components/slider';
 import { SpringCurve } from '../components/spring-curve';
+import { SpringPreview } from '../components/spring-preview';
 import { Toggle } from '../components/toggle';
 import {
   type BuildConfig,
@@ -25,7 +26,7 @@ import { cn } from '../lib/cn';
 import { PRINCIPLES, llmsUrl } from '../lib/config';
 import { playgroundDemos } from '../lib/demo-toasts';
 import { useSettings } from '../lib/settings';
-import { worldName, worlds } from '../lib/worlds';
+import { customWorlds, worldName, worlds } from '../lib/worlds';
 
 type ToastBuilderProps = {
   config: BuildConfig;
@@ -88,8 +89,18 @@ export function ToastBuilder({ config, onChange, output, onOutput }: ToastBuilde
   // Every change fires a preview, so each layer lands visibly. Debounced so sliders don't spam,
   // and the previous preview leaves first so its exit is part of the show.
   useEffect(() => {
-    if (previousConfig.current === config) return;
+    const previous = previousConfig.current;
+    if (previous === config) return;
     previousConfig.current = config;
+
+    // Only motion and spring need the entrance replayed. Anything else restyles the toast that is
+    // already showing, and refreshing it restarts its clock so it stays up while you tweak.
+    const replay = previous.motion !== config.motion || JSON.stringify(previous.spring) !== JSON.stringify(config.spring);
+    const showing = lastPreview.current !== null && toast.isActive(lastPreview.current);
+    if (showing && !replay && lastPreview.current !== null) {
+      playgroundDemos.refresh(lastPreview.current);
+      return;
+    }
     let fire = 0;
     const timer = window.setTimeout(() => {
       const previous = lastPreview.current;
@@ -113,7 +124,7 @@ export function ToastBuilder({ config, onChange, output, onOutput }: ToastBuilde
     const pick = <T,>(list: readonly T[]) => list[Math.floor(Math.random() * list.length)] as T;
     onChange({
       ...config,
-      world: pick(worlds).value,
+      world: pick([...worlds, ...customWorlds]).value,
       motion: pick(motions).value,
       spring: pick(springChoices).value,
       coat: pick(['material', 'aurora', 'ember', 'lagoon', 'orchid', 'mono'] as const),
@@ -175,12 +186,15 @@ export function ToastBuilder({ config, onChange, output, onOutput }: ToastBuilde
         <form className="grid content-start gap-6 border-line p-5 max-lg:border-b lg:border-r" onSubmit={(event) => event.preventDefault()} aria-label="Toast layers">
           <Group title="Material">
             <div className="grid grid-cols-3 gap-2">
-              {worlds.map((w) => (
-                <button key={w.value} type="button" aria-pressed={config.world === w.value} onClick={() => set({ world: w.value as HaloWorld })} className={tile}>
+              {[...worlds, ...customWorlds].map((w) => (
+                <button key={w.value} type="button" aria-pressed={config.world === w.value} onClick={() => set({ world: w.value })} className={tile}>
                   <span data-world={w.value} className="grid h-12 place-items-center rounded-xl bg-wall-deep">
                     <span data-halo-world={w.value} data-theme={theme} className="halo halo-surface block h-6 w-[70%] [--halo-radius:8px]" />
                   </span>
-                  <span className="text-[13px] font-medium text-ink">{w.name}</span>
+                  <span className="flex items-baseline justify-between gap-2 text-[13px] font-medium text-ink">
+                    {w.name}
+                    {customWorlds.includes(w as (typeof customWorlds)[number]) && <span className="text-[11px] font-normal text-ink-faint">Your CSS</span>}
+                  </span>
                 </button>
               ))}
             </div>
@@ -197,7 +211,8 @@ export function ToastBuilder({ config, onChange, output, onOutput }: ToastBuilde
             </div>
           </Group>
 
-          <Group title="Spring" note="Drives every move: entering, stacking, and springing back after a swipe.">
+          <Group title="Spring" note="Drives every move: entering, stacking, and springing back after a swipe. Each pick plays on the track.">
+            <SpringPreview spring={config.spring} />
             <div className="grid grid-cols-4 gap-2">
               {springChoices.map((s) => (
                 <button key={s.value} type="button" aria-pressed={config.spring === s.value} onClick={() => set({ spring: s.value })} className={cn(tile, 'p-2.5 text-ink')}>

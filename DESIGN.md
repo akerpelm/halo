@@ -345,3 +345,12 @@ The Toaster's `motion` prop picks how toasts arrive and leave. Every style is on
 ## Playground as builder
 
 The playground starts from PLAIN: Ink, fade, smooth spring, no icons, timer, or close button, and soft corners. Each choice is shown as a removable layer chip. Every change previews out, then in. Directions load into it as presets.
+
+
+## Extending: custom worlds
+
+A world is a single `[data-halo-world='name']` selector of custom properties. The library reads `--halo-world-edge` for the edge ring, and only Dichroic and Crystal (whose edges follow `--halo-shift`) declare their edge on the pane. The site proves this with **Midnight**, defined only in `apps/site/src/styles.css` inside `@layer components`, which you can pick in the builder and fire from "Make it yours". Per-part styling uses the Toaster's `classNames`, and the stylesheet is imported into a cascade layer so Tailwind utilities win.
+
+## Push-back
+
+The recess zooms the page out around the centre of the viewport (`transform-origin` set to the current scroll position), drifting 14px away from the drawer's edge at full progress. Depth defaults to 6% and bounce to 0.42, on a 0.46s spring.

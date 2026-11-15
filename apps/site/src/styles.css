@@ -167,6 +167,25 @@
   }
 }
 
+/*
+ * A custom world, defined the way any Halo user would: one selector of custom properties.
+ * Nothing in the library knows about it.
+ */
+@layer components {
+  [data-halo-world='midnight'] {
+    color-scheme: dark;
+    --halo-surface: oklch(24% 0.06 278 / 0.74);
+    --halo-surface-solid: oklch(21% 0.06 278);
+    --halo-fg: oklch(96% 0.02 280);
+    --halo-fg-muted: oklch(80% 0.05 280);
+    --halo-blur: 24px;
+    --halo-radius: 14px;
+    --halo-world-edge: linear-gradient(to bottom,
+      oklch(82% 0.12 290 / 0.65), oklch(62% 0.16 305 / 0.18));
+    --halo-shadow: 0 22px 44px -22px oklch(22% 0.12 285 / 0.75);
+  }
+}
+
 /* The recessed page, used by the drawer's `recess` option. */
 [data-halo-recess] {
   background: var(--wall);

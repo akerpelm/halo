@@ -115,7 +115,28 @@ Parts:
 
 Focus moves into the panel on open (or to an element with autofocus or data-autofocus) and returns to the trigger on close. Page scroll is locked while open.
 
-## Styling
+## Styling and custom worlds
+
+A world is one CSS selector of custom properties. Define your own and pass its name:
+
+```css
+[data-halo-world='midnight'] {
+  color-scheme: dark;
+  --halo-surface: oklch(24% 0.06 278 / 0.74);
+  --halo-surface-solid: oklch(21% 0.06 278);
+  --halo-fg: oklch(96% 0.02 280);
+  --halo-fg-muted: oklch(80% 0.05 280);
+  --halo-blur: 24px;
+  --halo-world-edge: linear-gradient(to bottom, oklch(82% 0.12 290 / 0.65), oklch(62% 0.16 305 / 0.18));
+  --halo-shadow: 0 22px 44px -22px oklch(22% 0.12 285 / 0.75);
+}
+```
+Halo's token selectors use :where(), so they have zero specificity: any selector you write wins. If you import Halo's stylesheet into a cascade layer, put your world in the same layer after it, or leave it unlayered.
+`<Toaster world="midnight" />` and `<Drawer.Root world="midnight">` accept any world name.
+Extend a built-in world with the same selector, e.g. `[data-halo-world='dichroic'] { --halo-radius: 12px; }`, or one instance with `style` or a Tailwind arbitrary property: `className="[--halo-blur:8px]"`.
+Toaster `classNames={{ toast, body, icon, title, description, action, close }}` adds classes to every toast part. Per toast: `toast('x', { className })`.
+State hooks for CSS: `[data-type]`, `[data-front]`, `[data-tint]`, `[data-swiping]`, `[data-dismissed]`; drawer: `.halo-drawer-panel[data-dragging]`.
+
 
 Everything is CSS custom properties on `.halo` and `.halo-surface`:
 --halo-surface, --halo-surface-solid, --halo-fg, --halo-fg-muted, --halo-radius, --halo-blur, --halo-saturate, --halo-coat-a, --halo-coat-b, --halo-coat-c, --halo-edge, --halo-shadow, --halo-focus, --halo-success, --halo-error, --halo-warning, --halo-info, --halo-toast-width, --halo-drawer-width.

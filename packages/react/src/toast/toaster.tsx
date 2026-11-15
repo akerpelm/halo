@@ -8,6 +8,11 @@ import { ToastItem } from './toast-item';
 
 export type ToastPosition = 'top-left' | 'top-center' | 'top-right' | 'bottom-left' | 'bottom-center' | 'bottom-right';
 export type HaloWorld = 'dichroic' | 'partition' | 'smoked' | 'vapor' | 'crystal' | 'ink';
+/** A built-in world, or the name of one you define in CSS with [data-halo-world='your-name']. */
+export type HaloWorldName = HaloWorld | (string & {});
+
+/** Extra classes for each part of every toast, e.g. Tailwind utilities. */
+export type ToastClassNames = Partial<Record<'toast' | 'body' | 'icon' | 'title' | 'description' | 'action' | 'close', string>>;
 
 export const haloWorlds: readonly HaloWorld[] = ['dichroic', 'partition', 'smoked', 'vapor', 'crystal', 'ink'];
 export type HaloTheme = 'light' | 'dark' | 'system';
@@ -23,8 +28,10 @@ export type ToasterProps = {
   /** Default auto-dismiss time in ms. */
   duration?: number;
   spring?: SpringInput;
-  world?: HaloWorld;
+  world?: HaloWorldName;
   theme?: HaloTheme;
+  /** Classes for each toast part. Pair with a layered stylesheet import so utilities win. */
+  classNames?: ToastClassNames;
   /** Padding and type size. */
   density?: HaloDensity;
   /** Corner radius: a preset or px. `pill` makes capsule toasts. */
@@ -73,6 +80,7 @@ export function Toaster({
   theme = 'system',
   density = 'comfortable',
   radius,
+  classNames,
   hotkey = ['altKey', 'KeyT'],
   label = 'Notifications',
   closeButton = true,
@@ -217,6 +225,7 @@ export function Toaster({
                 motionStyle={motion}
                 icons={icons}
                 tint={tint}
+                classNames={classNames}
                 onHeight={reportHeight}
                 onRemove={remove}
                 onInteract={setInteracting}

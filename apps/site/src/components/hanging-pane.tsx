@@ -11,7 +11,7 @@ import { type KeyboardEvent, type PointerEvent, useEffect, useRef, useState } fr
 import { cn } from '../lib/cn';
 import { useSettings } from '../lib/settings';
 
-const PANE_SPRING = resolveSpring({ duration: 0.62, bounce: 0.34 });
+const PANE_SPRING = resolveSpring({ duration: 0.48, bounce: 0.36 });
 const LIGHT_SPRING = resolveSpring({ duration: 0.9, bounce: 0 });
 const REACH = 560;
 const NUDGE = 1400;

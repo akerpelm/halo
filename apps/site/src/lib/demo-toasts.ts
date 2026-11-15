@@ -42,7 +42,12 @@ export function createDemos(toasterId?: string) {
         'I moved the onboarding copy into the shared doc and left notes on the two screens that still use the old pricing table. Can you take a look before Thursday?',
     }),
   };
-  return demos;
+  return {
+    ...demos,
+    /** Re-send the success demo into an existing toast: same content, fresh clock, no entrance. */
+    refresh: (id: string | number) =>
+      toast.update(id, 'Invite sent', { ...on, type: 'success', description: 'mara@studio.example will get an email shortly' }),
+  };
 }
 
 export const demos = createDemos();

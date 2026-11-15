@@ -8,6 +8,7 @@ import { Directions } from './sections/directions';
 import { DrawerSection } from './sections/drawer-section';
 import { Footer } from './sections/footer';
 import { Hero } from './sections/hero';
+import { MakeItYours } from './sections/make-it-yours';
 import { Playground } from './sections/playground';
 import { ToastSection } from './sections/toast-section';
 
@@ -32,6 +33,7 @@ export function App() {
           <DrawerSection />
           <Directions onOpenToast={setBuild} />
           <Playground build={build} onBuild={setBuild} />
+          <MakeItYours />
           <Agents />
         </main>
         <Footer />

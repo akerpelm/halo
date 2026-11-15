@@ -135,4 +135,6 @@ export const toast = Object.assign((title: ReactNode, options?: ToastOptions) =>
   /** Update a toast in place. It morphs instead of stacking a new one. */
   update: (id: ToastRecord['id'], title: ReactNode, options?: ToastOptions) => upsert(title, { ...options, id }),
   dismiss,
+  /** Whether a toast is on screen and not on its way out. */
+  isActive: (id: ToastRecord['id']) => toasts.some((t) => t.id === id && !t.dismissed),
 });

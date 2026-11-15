@@ -101,3 +101,34 @@ describe('appearance props', () => {
     expect(region.style.getPropertyValue('--halo-coat-b')).toBe('green');
   });
 });
+
+describe('extending', () => {
+  it('accepts a custom world name and passes it to the stylesheet hook', () => {
+    render(<Toaster world="midnight" />);
+    expect(screen.getByRole('region').getAttribute('data-halo-world')).toBe('midnight');
+  });
+
+  it('adds classNames to each toast part', () => {
+    render(<Toaster classNames={{ toast: 'shadow-xl', title: 'font-bold', close: 'text-red-600' }} />);
+    act(() => {
+      toast('Styled');
+    });
+    const item = screen.getByText('Styled').closest('li');
+    expect(item?.className).toContain('shadow-xl');
+    expect(screen.getByText('Styled').className).toContain('font-bold');
+    expect(screen.getByRole('button', { name: 'Dismiss notification' }).className).toContain('text-red-600');
+  });
+
+  it('reports whether a toast is still active', () => {
+    render(<Toaster />);
+    let id: string | number = '';
+    act(() => {
+      id = toast('Here');
+    });
+    expect(toast.isActive(id)).toBe(true);
+    act(() => {
+      toast.dismiss(id);
+    });
+    expect(toast.isActive(id)).toBe(false);
+  });
+});

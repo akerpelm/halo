@@ -7,6 +7,7 @@ const links = [
   ['Drawer', '#drawer'],
   ['Directions', '#directions'],
   ['Playground', '#playground'],
+  ['Customize', '#customize'],
   ['Agents', '#agents'],
 ] as const;
 

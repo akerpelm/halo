@@ -19,7 +19,7 @@ import { clamp, createVelocityTracker, nearest, project, rubberband } from '../c
 import { type HaloDensity, type HaloRadius, appearanceStyle } from '../core/appearance';
 import { type SpringInput, fromDuration, resolveSpring } from '../core/spring';
 import { useReducedMotion } from '../core/use-media-query';
-import type { HaloTheme, HaloWorld } from '../toast/toaster';
+import type { HaloTheme, HaloWorldName } from '../toast/toaster';
 
 /** How far the page sinks back (0–1 of its size) and how much it bounces when it settles. */
 export type RecessConfig = { depth: number; bounce: number };
@@ -37,7 +37,7 @@ type DrawerContextValue = {
   setActiveSnap: (snap: SnapPoint) => void;
   dismissible: boolean;
   spring: SpringInput;
-  world: HaloWorld;
+  world: HaloWorldName;
   theme: HaloTheme;
   recess: RecessConfig | null;
   density: HaloDensity;
@@ -89,7 +89,7 @@ export type DrawerRootProps = {
   /** When false, the drawer cannot be swiped, clicked, or escaped closed. */
   dismissible?: boolean;
   spring?: SpringInput;
-  world?: HaloWorld;
+  world?: HaloWorldName;
   theme?: HaloTheme;
   density?: HaloDensity;
   /** Corner radius of the open edge: a preset or px (capped at 40px so sheets stay sheets). */
@@ -112,7 +112,7 @@ function Root({
   defaultSnapPoint,
   onActiveSnapPointChange,
   dismissible = true,
-  spring = { duration: 0.5, bounce: 0.12 },
+  spring = { duration: 0.38, bounce: 0.1 },
   world = 'dichroic',
   theme = 'system',
   recess: recessProp = false,
@@ -180,6 +180,8 @@ const VERTICAL: Record<DrawerSide, boolean> = { bottom: true, top: true, left: f
 /** Which way a positive pointer delta moves along the open direction. */
 const OPEN_SIGN: Record<DrawerSide, 1 | -1> = { bottom: -1, top: 1, left: 1, right: -1 };
 const SNAP_DECELERATION = 0.992;
+/** The direction the page drifts while a drawer from each edge is open. */
+const AWAY: Record<DrawerSide, { x: number; y: number }> = { bottom: { x: 0, y: -1 }, top: { x: 0, y: 1 }, left: { x: 1, y: 0 }, right: { x: -1, y: 0 } };
 
 let scrollLocks = 0;
 let savedOverflow = '';
@@ -275,21 +277,31 @@ function Content({ children, className, overlay = true, style, ...props }: Drawe
       if (overlayRef.current) overlayRef.current.style.opacity = String(progress);
       if (currentRecess) {
         if (reducedMotionRef.current) page.set(progress);
-        else page.to(progress, { config: fromDuration(0.62, currentRecess.bounce) });
+        else page.to(progress, { config: fromDuration(0.46, currentRecess.bounce) });
       }
     }, PIXEL_PRECISION),
   );
 
   // The page behind rides its own, bouncier spring that chases the drawer's progress.
   const [page] = useState<SpringValue>(() =>
-    createSpringValue(0, fromDuration(0.62, 0.32), (value) => {
+    createSpringValue(0, fromDuration(0.46, 0.32), (value) => {
       const element = document.querySelector<HTMLElement>('[data-halo-recess]');
       const depth = latest.current.recess?.depth ?? 0.06;
       if (!element) return;
       // Clear at rest so the page isn't left as a transformed containing block.
       const active = Math.abs(value) > 0.0005;
-      element.style.transform = active ? `scale(${1 - depth * value}) translateY(${value * 12}px)` : '';
-      element.toggleAttribute('data-halo-recessed', active);
+      if (!active) {
+        element.style.transform = '';
+        element.style.transformOrigin = '';
+        element.toggleAttribute('data-halo-recessed', false);
+        return;
+      }
+      // Zoom out around the middle of what you're looking at, not the top of the page,
+      // and drift a little away from the edge the drawer comes from, to make room for it.
+      const away = AWAY[latest.current.side];
+      element.style.transformOrigin = `50% ${window.scrollY + window.innerHeight / 2}px`;
+      element.style.transform = `translate3d(${away.x * value * 14}px, ${away.y * value * 14}px, 0) scale(${1 - depth * value})`;
+      element.toggleAttribute('data-halo-recessed', true);
     }),
   );
 

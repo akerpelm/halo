@@ -113,8 +113,8 @@ export function FlickTest() {
     // Halo: release speed from the last 80ms, dismissal from where that flick would coast to.
     const velocity = tracker.velocity(event.timeStamp);
     const landing = dx + project(velocity, HALO_DECELERATION);
-    // Same rule as the Toast: dismiss when the flick would carry it past half its own width.
-    const haloDismiss = Math.abs(landing) > (haloRef.current?.offsetWidth ?? 260) * 0.5;
+    // Same rule as the Toast: dismiss when the flick would carry it past a third of its own width.
+    const haloDismiss = Math.abs(landing) > (haloRef.current?.offsetWidth ?? 260) / 3;
     if (reducedMotion) halo.x.set(haloDismiss ? off : 0);
     else halo.x.to(haloDismiss ? off : 0, { velocity });
     if (haloDismiss) halo.opacity.to(0);

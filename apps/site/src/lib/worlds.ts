@@ -1,4 +1,4 @@
-import type { HaloWorld } from '@halo-ui/react';
+import type { HaloWorld, HaloWorldName } from '@halo-ui/react';
 
 export const worlds: ReadonlyArray<{ value: HaloWorld; name: string; line: string }> = [
   { value: 'dichroic', name: 'Dichroic', line: 'A clear pane with a coated edge whose hue shifts as it moves. It throws cyan, magenta, and amber light on what sits behind it.' },
@@ -9,4 +9,10 @@ export const worlds: ReadonlyArray<{ value: HaloWorld; name: string; line: strin
   { value: 'ink', name: 'Ink', line: 'Solid and crisp, with no blur at all. The cheapest to render, for dense tools and low-power devices.' },
 ];
 
-export const worldName = (world: HaloWorld) => worlds.find((w) => w.value === world)?.name ?? world;
+/** Worlds defined in this site's CSS, not the library: proof that a world is just a selector. */
+export const customWorlds: ReadonlyArray<{ value: string; name: string; line: string }> = [
+  { value: 'midnight', name: 'Midnight', line: 'A custom world: one selector of CSS in this site, nothing in the library.' },
+];
+
+export const worldName = (world: HaloWorldName) =>
+  [...worlds, ...customWorlds].find((w) => w.value === world)?.name ?? world;
