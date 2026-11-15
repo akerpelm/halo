@@ -8,7 +8,7 @@ const skipped = (el: Element) =>
 
 const languageFor = (label: string) => {
   const ext = label.split('.').pop() ?? '';
-  return ({ tsx: 'tsx', ts: 'ts', jsx: 'jsx', js: 'js', css: 'css', sh: 'sh', md: 'md', json: 'json', html: 'html' } as Record<string, string>)[ext] ?? '';
+  return ({ tsx: 'tsx', ts: 'ts', jsx: 'jsx', js: 'js', css: 'css', sh: 'sh', md: 'md', json: 'json', html: 'html', diff: 'diff' } as Record<string, string>)[ext] ?? '';
 };
 
 function inline(node: Node, base: string): string {

@@ -17,9 +17,11 @@ export function llms(): string {
     .replaceAll('{{spring}}', String(sizes.spring))
     .replaceAll('{{styles}}', String(sizes.styles))
     .replaceAll('{{method}}', sizes.method);
-  const docs = docsRoutes.map((route) => `- [${route.name}](${absoluteUrl(route.markdown)}): ${route.description}`);
+  const line = (route: (typeof docsRoutes)[number]) => `- [${route.name}](${absoluteUrl(route.markdown)}): ${route.description}`;
+  const docs = docsRoutes.filter((r) => r.group !== 'Migrate').map(line);
+  const migrate = docsRoutes.filter((r) => r.group === 'Migrate').map(line);
   const optional = [homeRoute, playgroundRoute].map((route) => `- [${docTitle(route.title)}](${absoluteUrl(route.path)}): ${route.description}`);
-  return `${filled.trimEnd()}\n\n## Docs\n\n${docs.join('\n')}\n\n## Optional\n\n${optional.join('\n')}\n`;
+  return `${filled.trimEnd()}\n\n## Docs\n\n${docs.join('\n')}\n\n## Migrate\n\n${migrate.join('\n')}\n\n## Optional\n\n${optional.join('\n')}\n`;
 }
 
 export function headers(): string {

@@ -2,7 +2,7 @@ import { toast } from 'halo-ui-react/toast';
 import type { ReactNode } from 'react';
 import { Button } from '../components/button';
 import { CodeBlock } from '../components/code-block';
-import { CompareTable } from '../components/compare-table';
+import { Link } from '../components/link';
 import { DemoDrawer } from '../components/demo-drawer';
 import { MaterialSample } from '../components/material-sample';
 import { SpringCurve } from '../components/spring-curve';
@@ -10,12 +10,14 @@ import { coats, motions, springChoices } from '../lib/build';
 import { demos, newDemos } from '../lib/demo-toasts';
 import { defaultDrawerConfig } from '../lib/config';
 import { sizes } from '../lib/package-facts';
-import { LLMS_URL } from '../lib/site';
 import { worlds } from '../lib/worlds';
-import { releaseSteps, vsSonner, vsVaul } from './comparisons';
+import { releaseSteps } from './comparisons';
 import { drawerParts, drawerRootProps, selectors, toastFunctions, toastOptions, toasterGroups, tokens } from './api';
 import { Plaque } from './plaque';
 import { PropTable } from './prop-table';
+import { accessibilityPage, nextjsPage } from './pages-guides';
+import { migrateSonnerPage, migrateVaulPage } from './pages-migrate';
+import { recipes } from './recipes';
 import { C, H2, H3, List, Note, P } from './prose';
 
 export type DocPage = {
@@ -25,6 +27,8 @@ export type DocPage = {
   sections: ReadonlyArray<{ id: string; title: string }>;
   body: () => ReactNode;
 };
+
+const docLink = 'text-ink underline decoration-line underline-offset-4 hover:decoration-ink';
 
 function Try({ children }: { children: ReactNode }) {
   return <div className="my-4 flex flex-wrap gap-2">{children}</div>;
@@ -116,7 +120,6 @@ const toastPage: DocPage = {
     { id: 'toaster', title: 'Toaster props' },
     { id: 'extra-types', title: 'Undo, stream, launch, group' },
     { id: 'accessibility', title: 'Keyboard and screen readers' },
-    { id: 'vs-sonner', title: 'Next to Sonner' },
   ],
   body: () => (
     <>
@@ -199,8 +202,17 @@ toast.update(id, 'Export ready', { type: 'success' });`}
           'Toasts past the visible count are inert: they never block clicks or take focus.',
         ]}
       />
-      <H2 id="vs-sonner">Next to Sonner</H2>
-      <CompareTable caption="How Halo behaves next to Sonner, checked against Sonner's source." them="Sonner" rows={vsSonner} />
+      <P>
+        Everything else, from announcements to target sizes, is on the{' '}
+        <Link href="/docs/accessibility" className={docLink}>
+          Accessibility
+        </Link>{' '}
+        page. Coming from Sonner? See{' '}
+        <Link href="/docs/migrate/sonner" className={docLink}>
+          Migrate from Sonner
+        </Link>
+        , with how the two behave side by side.
+      </P>
     </>
   ),
 };
@@ -215,7 +227,6 @@ const drawerPage: DocPage = {
     { id: 'parts', title: 'Parts' },
     { id: 'detents', title: 'Detents' },
     { id: 'recess', title: 'Pushing the page back' },
-    { id: 'vs-vaul', title: 'Next to Vaul' },
   ],
   body: () => (
     <>
@@ -266,8 +277,13 @@ const drawerPage: DocPage = {
       <Note title="Why there is no portal">
         The native dialog renders in the browser's top layer, above everything, wherever it sits in your tree. No z-index fights, and focus is trapped by the platform.
       </Note>
-      <H2 id="vs-vaul">Next to Vaul</H2>
-      <CompareTable caption="How Halo behaves next to Vaul, checked against Vaul's source. Vaul's README now says it is unmaintained." them="Vaul" rows={vsVaul} />
+      <P>
+        Coming from Vaul? See{' '}
+        <Link href="/docs/migrate/vaul" className={docLink}>
+          Migrate from Vaul
+        </Link>
+        , with a prop-by-prop mapping and how the two behave side by side.
+      </P>
     </>
   ),
 };
@@ -440,68 +456,6 @@ toast('Saved', { className: 'ring-2 ring-emerald-500/40' });`}
   ),
 };
 
-const recipes: ReadonlyArray<{ id: string; title: string; when: string; prompt: () => string }> = [
-  {
-    id: 'recipe-toasts',
-    title: 'Add toasts',
-    when: 'A new app, or one with no notification system yet.',
-    prompt: () => `Add Halo toasts to this React app. Read ${LLMS_URL} first.
-1. npm i halo-ui-react, and import 'halo-ui-react/styles.css' once in the root layout or entry file.
-2. Render <Toaster /> once near the root, inside providers and outside the router outlet.
-3. Use toast.success / toast.error / toast.info / toast.warning for outcomes, toast.promise for async work, and toast.update(id, ...) to change a toast in place instead of stacking another.
-4. Give actions as { action: { label, onClick } }.
-Keep messages short: a title, plus a description only when it adds something.`,
-  },
-  {
-    id: 'recipe-sonner',
-    title: 'Migrate from Sonner',
-    when: 'The app imports from "sonner".',
-    prompt: () => `Replace Sonner with Halo in this app. Read ${LLMS_URL} first.
-- Change imports from 'sonner' to 'halo-ui-react/toast', and add import 'halo-ui-react/styles.css' once.
-- toast(), toast.success/error/warning/info/loading, toast.promise, and toast.dismiss keep the same call shapes.
-- <Toaster> props: position, expand, visibleToasts, and closeButton carry over unchanged.
-- richColors becomes intent="tint". toastOptions.classNames becomes classNames on <Toaster>.
-- Remove any custom CSS that overrides Sonner's transform or transition. Halo's motion is springs in JavaScript.
-Do not change message text. Run the app and confirm toasts appear, stack, and dismiss.`,
-  },
-  {
-    id: 'recipe-drawer',
-    title: 'Add a drawer',
-    when: 'A mobile sheet, a share sheet, or a side panel.',
-    prompt: () => `Add a Halo drawer. Read ${LLMS_URL} first.
-Use Drawer.Root > Drawer.Trigger + Drawer.Content > Drawer.Handle, Drawer.Title (required), Drawer.Description, Drawer.Scroll around long content, and Drawer.Close.
-Snap points are viewport fractions or '320px' strings, smallest first. For side panels use side="right" with no snap points.
-Do not add a portal or an overlay component: Drawer.Content is a native <dialog> and handles both.`,
-  },
-  {
-    id: 'recipe-vaul',
-    title: 'Migrate from Vaul',
-    when: 'The app imports from "vaul".',
-    prompt: () => `Replace Vaul with Halo's Drawer. Read ${LLMS_URL} first.
-- Change imports from 'vaul' to 'halo-ui-react/drawer'.
-- Delete Drawer.Portal and Drawer.Overlay wrappers. Drawer.Content is a native dialog with its own overlay.
-- snapPoints carries over. activeSnapPoint + setActiveSnapPoint become activeSnapPoint + onActiveSnapPointChange.
-- direction becomes side.
-- shouldScaleBackground becomes recess, and the [data-vaul-drawer-wrapper] element gets data-halo-recess instead.
-- Keep Drawer.Title in every drawer; it labels the dialog.`,
-  },
-  {
-    id: 'recipe-stream',
-    title: 'Stream an AI reply',
-    when: 'Long-running model output that should show progress.',
-    prompt: () => `When the app streams a model reply, show it with toast.stream(source, { title: 'Summarising…', success: 'Summary ready' }).
-The source must be an AsyncIterable<string> or ReadableStream<string> of text chunks. Await the returned promise for the full text.
-Do not also announce the text elsewhere; Halo announces it once, when it finishes.`,
-  },
-  {
-    id: 'recipe-undo',
-    title: 'Make destructive actions undoable',
-    when: 'Archive, delete, remove, or move.',
-    prompt: () => `For each destructive action, apply it optimistically, then call toast.undo('Conversation archived', { onUndo: restore }), where restore reverses it.
-Do not add confirmation dialogs where undo is possible.`,
-  },
-];
-
 const agentsPage: DocPage = {
   slug: 'agents',
   title: 'For agents',
@@ -533,22 +487,13 @@ const agentsPage: DocPage = {
         </section>
       ))}
       <H2 id="nextjs">Next.js and SSR</H2>
-      <List
-        items={[
-          <>
-            Every Halo module starts with <C>'use client'</C>, so you can import it from server components. Halo renders on the client.
-          </>,
-          <>
-            Import <C>halo-ui-react/styles.css</C> in <C>app/layout.tsx</C> and put <C>{'<Toaster />'}</C> in the root layout's body.
-          </>,
-          <>
-            Call <C>toast()</C> from client code, such as event handlers, or after a server action resolves on the client.
-          </>,
-          <>
-            For the drawer's recess, add <C>data-halo-recess</C> to the element that wraps your page content inside <C>{'<body>'}</C>.
-          </>,
-        ]}
-      />
+      <P>
+        Put <C>{'<Toaster />'}</C> in the root layout, compose drawers inside client components, and call <C>toast()</C> from client code. The{' '}
+        <Link href="/docs/nextjs" className={docLink}>
+          Next.js guide
+        </Link>{' '}
+        has the code.
+      </P>
       <H2 id="rules">Rules for agents</H2>
       <List
         items={[
@@ -567,4 +512,16 @@ const agentsPage: DocPage = {
   ),
 };
 
-export const docPages: readonly DocPage[] = [gettingStarted, toastPage, drawerPage, worldsPage, motionPage, customizePage, agentsPage];
+export const docPages: readonly DocPage[] = [
+  gettingStarted,
+  nextjsPage,
+  migrateSonnerPage,
+  migrateVaulPage,
+  toastPage,
+  drawerPage,
+  worldsPage,
+  motionPage,
+  customizePage,
+  accessibilityPage,
+  agentsPage,
+];

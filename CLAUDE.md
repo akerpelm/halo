@@ -97,6 +97,6 @@ Bring a library change's behaviour under test: break the code on purpose and con
 2. Automate npm releases from CI with trusted publishing and provenance.
 3. Add `CHANGELOG.md` before the next release.
 4. Document the `view-transition-name` trap in the Toast docs and `apps/site/public/llms.txt`.
-5. Confirm how `Drawer.Root` and the other parts behave when used from a Next.js server component, and document it.
+5. Confirm the Next.js guide (`/docs/nextjs`) in a real App Router app: `<Toaster />` in a server layout, and `Drawer.Root` failing from a server component (the guide says to use it in a client component).
 6. Add Open Graph tags and a share image for haloui.dev.
 7. Consider trimming the toast bundle (see `packages/react/sizes.json`).

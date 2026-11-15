@@ -4,7 +4,8 @@ import { Link } from '../components/link';
 import { cn } from '../lib/cn';
 import { useSettings } from '../lib/settings';
 import { themeFor } from '../lib/worlds';
-import { type DocPage, docPages } from './pages';
+import { docGroups } from '../routes';
+import type { DocPage } from './pages';
 
 const item = 'flex min-h-11 items-center rounded-xl px-3 text-body text-[var(--halo-fg)] no-underline';
 
@@ -35,21 +36,25 @@ export function DocsMenu({ page }: { page: DocPage }) {
           <Drawer.Description className="sr-only">Every docs page, and the sections of {page.title}.</Drawer.Description>
           <Drawer.Scroll className="max-h-[70dvh] pb-6">
             <nav aria-label="Docs pages">
-              <p className="m-0 mt-2 mb-1 px-3 text-caption font-medium tracking-[0.02em] text-[var(--halo-fg-muted)] uppercase">Pages</p>
-              <ul className="m-0 grid list-none gap-0.5 p-0">
-                {docPages.map((p) => (
-                  <li key={p.slug}>
-                    <Link
-                      href={`/docs/${p.slug}`}
-                      onClick={close}
-                      aria-current={p.slug === page.slug ? 'page' : undefined}
-                      className={cn(item, p.slug === page.slug && 'bg-[color-mix(in_oklch,var(--halo-fg)_9%,transparent)] font-medium')}
-                    >
-                      {p.title}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
+              {docGroups.map(({ group, routes }) => (
+                <div key={group}>
+                  <p className="m-0 mt-4 mb-1 px-3 text-caption font-medium tracking-[0.02em] text-[var(--halo-fg-muted)] uppercase">{group}</p>
+                  <ul className="m-0 grid list-none gap-0.5 p-0">
+                    {routes.map((p) => (
+                      <li key={p.slug}>
+                        <Link
+                          href={p.path}
+                          onClick={close}
+                          aria-current={p.slug === page.slug ? 'page' : undefined}
+                          className={cn(item, p.slug === page.slug && 'bg-[color-mix(in_oklch,var(--halo-fg)_9%,transparent)] font-medium')}
+                        >
+                          {p.name}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
             </nav>
             <nav aria-label="On this page">
               <p className="m-0 mt-5 mb-1 px-3 text-caption font-medium tracking-[0.02em] text-[var(--halo-fg-muted)] uppercase">On this page</p>

@@ -4,6 +4,7 @@ import { Link } from '../components/link';
 import { PageTransition } from '../components/page-transition';
 import { cn } from '../lib/cn';
 import { useSettings } from '../lib/settings';
+import { docGroups } from '../routes';
 import { type DocPage, docPages } from './pages';
 import { DocsMenu } from './docs-menu';
 import { specimens } from './specimens';
@@ -22,23 +23,27 @@ export function DocsLayout({ slug }: { slug: string }) {
       <Toaster id="custom" label="Midnight demo notifications" world="midnight" theme={theme} position="bottom-left" style={{ '--vt-name': 'custom-toaster' } as CSSProperties} />
 
       <nav aria-label="Docs" className="min-w-0 max-lg:hidden lg:sticky lg:top-24 lg:self-start" style={{ viewTransitionName: 'docs-sidebar' }}>
-        <p className="m-0 mb-3 text-caption font-medium tracking-[0.02em] text-ink-faint uppercase">Documentation</p>
-        <ul className="m-0 grid list-none gap-0.5 p-0">
-          {docPages.map((p) => (
-            <li key={p.slug}>
-              <Link
-                href={`/docs/${p.slug}`}
-                aria-current={p.slug === page.slug ? 'page' : undefined}
-                className={cn(
-                  'flex min-h-9 items-center rounded-lg px-3 text-ui no-underline transition-colors duration-150 pointer-coarse:min-h-11',
-                  p.slug === page.slug ? 'bg-ink/[0.08] font-medium text-ink' : 'text-ink-soft hover:bg-ink/[0.04] hover:text-ink',
-                )}
-              >
-                {p.title}
-              </Link>
-            </li>
-          ))}
-        </ul>
+        {docGroups.map(({ group, routes }) => (
+          <div key={group} className="mb-5">
+            <p className="m-0 mb-2 px-3 text-caption font-medium tracking-[0.02em] text-ink-faint uppercase">{group}</p>
+            <ul className="m-0 grid list-none gap-0.5 p-0">
+              {routes.map((p) => (
+                <li key={p.slug}>
+                  <Link
+                    href={p.path}
+                    aria-current={p.slug === page.slug ? 'page' : undefined}
+                    className={cn(
+                      'flex min-h-9 items-center rounded-lg px-3 text-ui no-underline transition-colors duration-150 pointer-coarse:min-h-11',
+                      p.slug === page.slug ? 'bg-ink/[0.08] font-medium text-ink' : 'text-ink-soft hover:bg-ink/[0.04] hover:text-ink',
+                    )}
+                  >
+                    {p.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
       </nav>
 
       <PageTransition key={page.slug}>

@@ -409,6 +409,7 @@ axe-core (WCAG 2.2 AA plus best practices) passes in light and dark, with toasts
 
 ## Docs (/docs)
 
+- **Groups:** the sidebar groups pages by what the reader is doing: Start (Getting started, Next.js), Migrate (from Sonner, from Vaul), Components (Toast, Drawer), Style and motion (Worlds, Motion, Customize), More (Accessibility, For agents). The comparison tables live on the Migrate pages; Toast and Drawer are reference.
 - **Layout:** a three-column reference with the sidebar, a reading column of at most 68ch for prose, and an "On this page" outline at xl. On phones the sidebar becomes one row of page chips, and the site's section row is hidden there so only one row shows.
 - **Header:** on docs pages it shows only Home / Docs / Playground and a version badge; the sidebar owns docs navigation.
 - **Gallery carried in:** each page opens with a live specimen on the hanging rig (without cast light, so it never washes over text). Prop groups are glass plaques on two short cables that fade in from above, held by the same clamps, in the visitor's current world.
