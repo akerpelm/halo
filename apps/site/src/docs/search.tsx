@@ -94,7 +94,7 @@ export function DocsSearch() {
       <button
         type="button"
         onClick={open}
-        aria-label="Search the docs"
+        aria-keyshortcuts="Meta+K Control+K /"
         className="flex h-9 w-full cursor-pointer items-center gap-2 rounded-full bg-ink/[0.06] pr-2 pl-3.5 max-md:justify-center max-md:px-0 text-ui text-ink-soft transition-colors duration-150 hover:bg-ink/[0.1] hover:text-ink pointer-coarse:h-11 dark:bg-ink/[0.09]"
       >
         <svg aria-hidden width="14" height="14" viewBox="0 0 16 16" fill="none">
@@ -102,7 +102,7 @@ export function DocsSearch() {
           <path d="m11 11 3.5 3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
         </svg>
         <span className="flex-1 text-left max-md:sr-only">Search</span>
-        <kbd className="rounded-md px-1.5 py-0.5 font-sans text-caption text-ink-faint shadow-[inset_0_0_0_1px_var(--line)] max-md:hidden">{isMac ? '⌘K' : 'Ctrl K'}</kbd>
+        <kbd aria-hidden className="rounded-md px-1.5 py-0.5 font-sans text-caption text-ink-faint shadow-[inset_0_0_0_1px_var(--line)] max-md:hidden">{isMac ? '⌘K' : 'Ctrl K'}</kbd>
       </button>
 
       <dialog
