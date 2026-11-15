@@ -1,4 +1,4 @@
-import type { DrawerSide, HaloDensity, HaloWorld, ToastPosition } from '@halo-ui/react';
+import type { DrawerSide, HaloDensity, HaloWorld, ToastPosition, ToastTimer } from '@halo-ui/react';
 
 export type RadiusPreset = 'square' | 'soft' | 'round' | 'pill';
 
@@ -10,7 +10,7 @@ export type ToastConfig = {
   visibleToasts: number;
   gap: number;
   duration: number;
-  timeline: boolean;
+  timer: ToastTimer;
   closeButton: boolean;
   density: HaloDensity;
   radius: RadiusPreset;
@@ -23,7 +23,7 @@ export const defaultToastConfig: ToastConfig = {
   visibleToasts: 3,
   gap: 12,
   duration: 5000,
-  timeline: true,
+  timer: 'close',
   closeButton: true,
   density: 'comfortable',
   radius: 'round',
@@ -74,7 +74,7 @@ export function toasterCode(config: ToastConfig, world: HaloWorld) {
   if (config.visibleToasts !== d.visibleToasts) attrs.push(`visibleToasts={${config.visibleToasts}}`);
   if (config.gap !== d.gap) attrs.push(`gap={${config.gap}}`);
   if (config.duration !== d.duration) attrs.push(`duration={${config.duration}}`);
-  if (!config.timeline) attrs.push('timeline={false}');
+  if (config.timer !== 'close') attrs.push(config.timer ? `timer="${config.timer}"` : 'timer={false}');
   if (!config.closeButton) attrs.push('closeButton={false}');
   if (!sameSpring(config.spring, d.spring)) attrs.push(`spring={${springLiteral(config.spring)}}`);
   const jsx = attrs.length ? `<Toaster\n  ${attrs.join('\n  ')}\n/>` : '<Toaster />';

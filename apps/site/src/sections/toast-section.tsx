@@ -102,7 +102,7 @@ export function ToastSection() {
             ['Stack layout', 'Transitions on transform, opacity, and height.', 'Transform and opacity only. Height clips are offset inside the spring.'],
             ['Hidden toasts', 'Timers run for toasts tucked behind the deck.', 'A toast only counts down while it is visible.'],
             ['Screen readers', 'One polite live region for every type.', 'Polite and assertive regions. Errors interrupt, and every type is announced by name.'],
-            ['Time left', 'Not shown.', 'The edge itself drains around the pane, and freezes while you read.'],
+            ['Time left', 'Not shown.', 'A countdown ring around the close button, the status icon, or the edge. It freezes while you read.'],
           ]}
         />
       </div>

@@ -13,7 +13,7 @@ type ToastDirection = { name: string; line: string; config: ToastConfig };
 type DrawerDirection = { name: string; line: string; config: DrawerConfig };
 
 const toastDirections: ToastDirection[] = [
-  { name: 'Deck', line: 'The default. A collapsed stack that fans out on hover, with an edge that drains as time runs out.', config: defaultToastConfig },
+  { name: 'Deck', line: 'The default. A collapsed stack that fans out on hover, with a countdown ring around the close button.', config: defaultToastConfig },
   {
     name: 'Fan',
     line: 'Always expanded, from the top center. For dashboards where several updates matter at once.',
@@ -22,12 +22,12 @@ const toastDirections: ToastDirection[] = [
   {
     name: 'Hush',
     line: 'No timer and no close button. Bottom center and critically damped, for calm writing tools.',
-    config: { ...defaultToastConfig, position: 'bottom-center', timeline: false, closeButton: false, duration: 4000, spring: { duration: 0.45, bounce: 0 } },
+    config: { ...defaultToastConfig, position: 'bottom-center', timer: false, closeButton: false, duration: 4000, spring: { duration: 0.45, bounce: 0 } },
   },
   {
     name: 'Spring-loaded',
-    line: 'More bounce and a quicker clock. For playful products where feedback should feel physical.',
-    config: { ...defaultToastConfig, position: 'top-right', duration: 3500, spring: { duration: 0.5, bounce: 0.32 } },
+    line: 'More bounce, a quicker clock, and the status icon as the timer. For playful products.',
+    config: { ...defaultToastConfig, position: 'top-right', duration: 3500, timer: 'icon', spring: { duration: 0.5, bounce: 0.32 } },
   },
 ];
 

@@ -482,8 +482,78 @@
 .halo {
   --halo-timer-dim: color-mix(in oklch, var(--halo-surface-solid) 82%, transparent);
 }
-.halo-toast-timeline[data-paused] {
+.halo-toast[data-timer-paused] .halo-toast-timeline,
+.halo-toast[data-timer-paused] .halo-timer-progress {
   animation-play-state: paused;
+}
+
+/* ── Timer ring ── */
+.halo-timer-ring {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+.halo-timer-track,
+.halo-timer-progress {
+  fill: none;
+  stroke-width: 1.6;
+}
+.halo-timer-track {
+  stroke: color-mix(in oklch, var(--halo-fg) 13%, transparent);
+}
+.halo-timer-progress {
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-dasharray: 1;
+  /* Start at twelve o'clock; the tail retreats anticlockwise as time runs out. */
+  transform: rotate(-90deg);
+  transform-origin: 50% 50%;
+  animation: halo-ring-empty linear forwards;
+}
+@keyframes halo-ring-empty {
+  to {
+    stroke-dashoffset: 1;
+  }
+}
+
+/* Close ring: the × sits inside the countdown, so it reads as "closes by itself". Always visible. */
+.halo-toast-close[data-timer] {
+  position: relative;
+  width: 26px;
+  height: 26px;
+  margin: -3px -5px 0 0;
+  opacity: 1;
+  color: var(--halo-fg-muted);
+}
+.halo-toast-close[data-timer]:hover {
+  color: var(--halo-fg);
+}
+
+/* Icon ring: the status icon becomes the face of the timer, in its own colour. */
+.halo-toast-icon[data-timer] {
+  position: relative;
+  width: 26px;
+  height: 26px;
+  margin: -3px 0 -3px -4px;
+}
+.halo-toast-icon[data-timer] {
+  display: block;
+}
+/* The ring takes the place of the icon's own outline, so the badge itself is what empties.
+   Scaled so the glyph sits where it would inside its original circle. */
+.halo-toast-icon[data-timer] > svg:not(.halo-timer-ring) {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 27.9px;
+  height: 27.9px;
+  translate: -50% -50%;
+}
+.halo-toast-icon[data-timer] > svg:not(.halo-timer-ring) circle[r='8.25'] {
+  display: none;
 }
 
 .halo-spinner {

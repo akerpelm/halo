@@ -58,6 +58,18 @@ function Loading() {
   );
 }
 
+export type ToastTimer = 'close' | 'icon' | 'edge' | false;
+
+/** A ring that empties over `duration`, anticlockwise from the top, like a kitchen timer. */
+export function TimerRing({ duration, restartKey }: { duration: number; restartKey: number }) {
+  return (
+    <svg className="halo-timer-ring" viewBox="0 0 26 26" aria-hidden focusable={false}>
+      <circle className="halo-timer-track" cx="13" cy="13" r="11.5" pathLength={1} />
+      <circle key={restartKey} className="halo-timer-progress" cx="13" cy="13" r="11.5" pathLength={1} style={{ animationDuration: `${duration}ms` }} />
+    </svg>
+  );
+}
+
 export function CloseIcon() {
   return (
     <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden focusable={false}>

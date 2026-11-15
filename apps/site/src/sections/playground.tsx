@@ -145,6 +145,17 @@ export function Playground({ toastConfig, onToastConfig }: PlaygroundProps) {
                   { value: 'pill', label: 'Pill' },
                 ]}
               />
+              <Segmented
+                label="Time left"
+                value={toastConfig.timer || 'off'}
+                onChange={(value) => setToast({ timer: value === 'off' ? false : value })}
+                options={[
+                  { value: 'close', label: 'Close ring' },
+                  { value: 'icon', label: 'Icon ring' },
+                  { value: 'edge', label: 'Edge' },
+                  { value: 'off', label: 'Off' },
+                ]}
+              />
               <SpringControls value={toastConfig.spring} onChange={(spring) => setToast({ spring })} />
               <Slider label="Visible toasts" value={toastConfig.visibleToasts} min={1} max={6} step={1} onChange={(visibleToasts) => setToast({ visibleToasts })} />
               <Slider label="Gap" value={toastConfig.gap} min={4} max={24} step={1} format={(v) => `${v} px`} onChange={(gap) => setToast({ gap })} />
@@ -159,7 +170,6 @@ export function Playground({ toastConfig, onToastConfig }: PlaygroundProps) {
               />
               <div className="grid gap-3">
                 <Toggle label="Always expanded" checked={toastConfig.expand} onChange={(expand) => setToast({ expand })} />
-                <Toggle label="Edge drains with time left" checked={toastConfig.timeline} onChange={(timeline) => setToast({ timeline })} />
                 <Toggle label="Close button" checked={toastConfig.closeButton} onChange={(closeButton) => setToast({ closeButton })} />
               </div>
             </>

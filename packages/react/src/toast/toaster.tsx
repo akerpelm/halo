@@ -3,6 +3,7 @@ import { type HaloDensity, type HaloRadius, appearanceStyle } from '../core/appe
 import { type SpringInput, resolveSpring } from '../core/spring';
 import { useReducedMotion } from '../core/use-media-query';
 import { toastStore } from './store';
+import type { ToastTimer } from './icons';
 import { ToastItem } from './toast-item';
 
 export type ToastPosition = 'top-left' | 'top-center' | 'top-right' | 'bottom-left' | 'bottom-center' | 'bottom-right';
@@ -33,8 +34,12 @@ export type ToasterProps = {
   /** Landmark name read by screen readers. */
   label?: string;
   closeButton?: boolean;
-  /** The edge drains as time runs out, and visibly freezes on hover or focus. */
-  timeline?: boolean;
+  /**
+   * How time left is shown. `close`: a ring around the close button empties (default).
+   * `icon`: the ring sits around the status icon. `edge`: the pane's edge drains. `false`: hidden.
+   * Every style freezes while the stack is hovered, focused, or touched.
+   */
+  timer?: ToastTimer;
   /** Distance from the viewport edge in px. */
   offset?: number;
   className?: string;
@@ -58,7 +63,7 @@ export function Toaster({
   hotkey = ['altKey', 'KeyT'],
   label = 'Notifications',
   closeButton = true,
-  timeline = true,
+  timer = 'close',
   offset = 24,
   className,
   style,
@@ -190,7 +195,7 @@ export function Toaster({
                 config={config}
                 reducedMotion={reducedMotion}
                 closeButton={closeButton}
-                timeline={timeline}
+                timer={timer}
                 onHeight={reportHeight}
                 onRemove={remove}
                 onInteract={setInteracting}

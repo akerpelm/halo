@@ -2,7 +2,7 @@ import { type PointerEvent, type RefObject, useEffect, useLayoutEffect, useRef, 
 import { PIXEL_PRECISION, type SpringValue, createSpringValue } from '../core/animator';
 import { createVelocityTracker, project, rubberband } from '../core/gesture';
 import { type SpringConfig, resolveSpring } from '../core/spring';
-import { CloseIcon, TypeIcon } from './icons';
+import { CloseIcon, TimerRing, type ToastTimer, TypeIcon } from './icons';
 import { type ToastRecord, toast as toastApi } from './store';
 
 type Axis = 'x' | 'y';
@@ -24,7 +24,7 @@ type ToastItemProps = {
   config: SpringConfig;
   reducedMotion: boolean;
   closeButton: boolean;
-  timeline: boolean;
+  timer: ToastTimer;
   onHeight: (id: ToastRecord['id'], height: number) => void;
   onRemove: (id: ToastRecord['id']) => void;
   onInteract: (interacting: boolean) => void;
@@ -87,7 +87,7 @@ export function ToastItem({
   config,
   reducedMotion,
   closeButton,
-  timeline,
+  timer,
   onHeight,
   onRemove,
   onInteract,
@@ -280,6 +280,8 @@ export function ToastItem({
     go(spring, 0, velocity);
   };
 
+  // Which timer to draw, if any. Untimed toasts (loading, Infinity) never show one.
+  const ring = timed ? timer : false;
   const typeLabel = TYPE_LABEL[t.type];
   const icon = t.icon ?? (t.type === 'default' ? null : <TypeIcon type={t.type} />);
 
@@ -292,6 +294,7 @@ export function ToastItem({
       data-front={index === 0 || undefined}
       data-clamped={clamped || undefined}
       data-dismissed={t.dismissed || undefined}
+      data-timer-paused={!running || undefined}
       className={['halo-toast', 'halo-surface', t.className].filter(Boolean).join(' ')}
       style={{ height: clamped ? frontHeight : undefined, zIndex: 1000 - lastIndex.current }}
       onPointerDown={onPointerDown}
@@ -308,8 +311,9 @@ export function ToastItem({
       }}
     >
       <div ref={bodyRef} className="halo-toast-body">
-        {icon && (
-          <span key={t.type} className="halo-toast-icon">
+        {(icon || ring === 'icon') && (
+          <span key={t.type} className="halo-toast-icon" data-timer={ring === 'icon' || undefined}>
+            {ring === 'icon' && <TimerRing duration={duration} restartKey={t.revision} />}
             {icon}
           </span>
         )}
@@ -330,18 +334,24 @@ export function ToastItem({
             {t.action.label}
           </button>
         )}
-        {closeButton && dismissible && (
-          <button type="button" className="halo-toast-close" aria-label="Dismiss notification" onClick={userDismiss}>
+        {closeButton && dismissible ? (
+          <button type="button" className="halo-toast-close" data-timer={ring === 'close' || undefined} aria-label="Dismiss notification" onClick={userDismiss}>
+            {ring === 'close' && <TimerRing duration={duration} restartKey={t.revision} />}
             <CloseIcon />
           </button>
+        ) : (
+          ring === 'close' && (
+            <span className="halo-toast-close" data-timer="" aria-hidden>
+              <TimerRing duration={duration} restartKey={t.revision} />
+            </span>
+          )
         )}
       </div>
-      {timeline && timed && (
+      {ring === 'edge' && (
         <span
           key={t.revision}
           aria-hidden
           className="halo-toast-timeline"
-          data-paused={!running || undefined}
           style={{ animationDuration: `${duration}ms` }}
         />
       )}
