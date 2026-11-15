@@ -439,4 +439,5 @@ React `<ViewTransition>` with `addTransitionType`. The path lives in React state
   - The header (and, between docs pages, the sidebar) show only their new snapshot, so the active item swaps at once and the header's backdrop blur never flashes.
   - The outline crossfades quickly.
   - Toasters float above at z 200 and never move with the page.
+  - These names (header, toasters) apply only during a transition, via `html:active-view-transition` and a `--vt-name` custom property. A `view-transition-name` makes its element a backdrop root, so a permanent name would stop toasts and the header menu from blurring the page.
 - **Reduced motion:** every view-transition animation runs at 0s.

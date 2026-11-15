@@ -1,3 +1,4 @@
+import type { CSSProperties } from 'react';
 import { Toaster } from '@halo-ui/react/toast';
 import { Link } from '../components/link';
 import { PageTransition } from '../components/page-transition';
@@ -16,7 +17,7 @@ export function DocsLayout({ slug }: { slug: string }) {
 
   return (
     <div className="mx-auto grid max-w-[1240px] grid-cols-[minmax(0,1fr)] gap-x-12 px-4 pt-6 pb-24 sm:px-8 lg:grid-cols-[200px_minmax(0,1fr)] lg:pt-10 xl:grid-cols-[200px_minmax(0,1fr)_180px]">
-      <Toaster id="custom" label="Midnight demo notifications" world="midnight" theme={theme} position="bottom-left" style={{ viewTransitionName: 'custom-toaster' }} />
+      <Toaster id="custom" label="Midnight demo notifications" world="midnight" theme={theme} position="bottom-left" style={{ '--vt-name': 'custom-toaster' } as CSSProperties} />
 
       <nav aria-label="Docs" className="min-w-0 max-lg:mb-8 lg:sticky lg:top-24 lg:self-start" style={{ viewTransitionName: 'docs-sidebar' }}>
         <p className="m-0 mb-3 text-caption font-medium tracking-[0.02em] text-ink-faint uppercase max-lg:sr-only">Documentation</p>

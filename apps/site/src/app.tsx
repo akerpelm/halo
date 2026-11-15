@@ -1,5 +1,5 @@
 import { Toaster } from '@halo-ui/react/toast';
-import { useLayoutEffect, useState } from 'react';
+import { type CSSProperties, useLayoutEffect, useState } from 'react';
 import { Nav } from './components/nav';
 import { SurfaceTransition } from './components/page-transition';
 import { DocsLayout } from './docs/docs-layout';
@@ -61,7 +61,7 @@ export function App() {
         <Footer />
       </div>
       {/* Floats above every surface; its own transition name keeps open toasts still during navigation. */}
-      <Toaster world={world} theme={theme} duration={3500} style={{ viewTransitionName: 'site-toaster' }} />
+      <Toaster world={world} theme={theme} duration={3500} style={{ '--vt-name': 'site-toaster' } as CSSProperties} />
     </PathContext.Provider>
   );
 }

@@ -304,6 +304,15 @@
 
 /* Persistent chrome stays still while content moves. The header uses backdrop-filter, so its old
    snapshot is hidden to avoid a flash. */
+/*
+ * Persistent chrome is named only while a transition runs. A view-transition-name makes its
+ * element a backdrop root, which would stop the frosted toasts and the header's menu from
+ * blurring the page behind them the rest of the time.
+ */
+html:active-view-transition [style*='--vt-name'] {
+  view-transition-name: var(--vt-name);
+}
+
 ::view-transition-group(site-header),
 ::view-transition-group(docs-sidebar),
 ::view-transition-group(docs-outline),

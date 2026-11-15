@@ -1,4 +1,4 @@
-import { useId } from 'react';
+import { type CSSProperties, useId } from 'react';
 import { DocsSearch } from '../docs/search';
 import { useCurrentPath } from '../lib/router';
 import { AppearanceMenu } from './appearance-menu';
@@ -33,7 +33,7 @@ const surfaces = [
 export function Nav() {
   const path = useCurrentPath();
   return (
-    <header className="sticky top-0 z-40 bg-wall/72 backdrop-blur-xl backdrop-saturate-150" style={{ viewTransitionName: 'site-header' }}>
+    <header className="sticky top-0 z-40 bg-wall/72 backdrop-blur-xl backdrop-saturate-150" style={{ '--vt-name': 'site-header' } as CSSProperties}>
       <nav aria-label="Main" className="mx-auto flex h-16 max-w-[1240px] items-center gap-2 px-4 sm:gap-6 sm:px-8">
         <Link href="/" aria-label="Halo, home" className="flex items-center gap-2 rounded-md text-ink no-underline pointer-coarse:min-h-11">
           <Mark className="mt-1.5 h-[10px] w-7" />
