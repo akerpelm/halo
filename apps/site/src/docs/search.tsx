@@ -39,7 +39,6 @@ function rank(entry: Entry, query: string) {
   return -1;
 }
 
-/** Docs search over every page, section, prop, token, and selector. ⌘K, Ctrl+K, or / to open. */
 export function DocsSearch() {
   const { world, theme } = useSettings();
   const dialogRef = useRef<HTMLDialogElement>(null);
@@ -75,7 +74,6 @@ export function DocsSearch() {
     navigate(entry.href);
   };
 
-  // A global shortcut is an outside-system subscription, which is what effects are for.
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
       const typing = event.target instanceof HTMLElement && event.target.closest('input, textarea, select, [contenteditable]');
@@ -97,14 +95,14 @@ export function DocsSearch() {
         type="button"
         onClick={open}
         aria-label="Search the docs"
-        className="flex h-9 w-full cursor-pointer items-center gap-2 rounded-full bg-ink/[0.06] pr-2 pl-3.5 max-sm:justify-center max-sm:px-0 text-ui text-ink-soft transition-colors duration-150 hover:bg-ink/[0.1] hover:text-ink pointer-coarse:h-11 dark:bg-ink/[0.09]"
+        className="flex h-9 w-full cursor-pointer items-center gap-2 rounded-full bg-ink/[0.06] pr-2 pl-3.5 max-md:justify-center max-md:px-0 text-ui text-ink-soft transition-colors duration-150 hover:bg-ink/[0.1] hover:text-ink pointer-coarse:h-11 dark:bg-ink/[0.09]"
       >
         <svg aria-hidden width="14" height="14" viewBox="0 0 16 16" fill="none">
           <circle cx="7" cy="7" r="5.25" stroke="currentColor" strokeWidth="1.5" />
           <path d="m11 11 3.5 3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
         </svg>
-        <span className="flex-1 text-left max-sm:sr-only">Search</span>
-        <kbd className="rounded-md px-1.5 py-0.5 font-sans text-caption text-ink-faint shadow-[inset_0_0_0_1px_var(--line)] max-sm:hidden">{isMac ? '⌘K' : 'Ctrl K'}</kbd>
+        <span className="flex-1 text-left max-md:sr-only">Search</span>
+        <kbd className="rounded-md px-1.5 py-0.5 font-sans text-caption text-ink-faint shadow-[inset_0_0_0_1px_var(--line)] max-md:hidden">{isMac ? '⌘K' : 'Ctrl K'}</kbd>
       </button>
 
       <dialog

@@ -2,6 +2,7 @@ import { InstallChip } from '../components/install-chip';
 import { Link } from '../components/link';
 import { docPages } from '../docs/pages';
 import { Mark } from '../components/nav';
+import { GITHUB_URL, NPM_URL } from '../lib/site';
 
 export function Footer() {
   return (
@@ -37,6 +38,8 @@ export function Footer() {
               ['Home', '/'],
               ['Playground', '/playground'],
               ['llms.txt', '/llms.txt'],
+              ['GitHub', GITHUB_URL],
+              ['npm', NPM_URL],
             ] as const
           ).map(([label, href]) => (
             <li key={href}>

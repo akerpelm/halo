@@ -2,12 +2,9 @@ import { type CSSProperties, useId } from 'react';
 import { DocsSearch } from '../docs/search';
 import { useCurrentPath } from '../lib/router';
 import { AppearanceMenu } from './appearance-menu';
+import { GitHubLink } from './github-link';
 import { Link } from './link';
 
-/**
- * The mark: the front arc of a tilted ring. The missing top is what makes it read as 3D.
- * A fixed Dichroic gradient, not the current world's coat, so it never fades into the wall.
- */
 export function Mark({ className }: { className?: string }) {
   const gradient = useId();
   return (
@@ -24,7 +21,6 @@ export function Mark({ className }: { className?: string }) {
   );
 }
 
-/** Three surfaces, one search, one appearance menu. Sections belong to the page, not the header. */
 const surfaces = [
   ['Docs', '/docs/getting-started', '/docs'],
   ['Playground', '/playground', '/playground'],
@@ -53,9 +49,10 @@ export function Nav() {
           ))}
         </ul>
         <div className="ml-auto flex items-center gap-2">
-          <div className="w-10 sm:w-56">
+          <div className="w-10 md:w-56">
             <DocsSearch />
           </div>
+          <GitHubLink />
           <AppearanceMenu />
         </div>
       </nav>
