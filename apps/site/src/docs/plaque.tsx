@@ -9,7 +9,7 @@ import { themeFor } from '../lib/worlds';
 export function Plaque({ id, title, count, children }: { id: string; title: string; count?: number; children: ReactNode }) {
   const { world, theme } = useSettings();
   return (
-    <section id={id} aria-labelledby={`${id}-title`} className="mt-10 scroll-mt-32 md:scroll-mt-24">
+    <section id={id} aria-labelledby={`${id}-title`} className="mt-10 scroll-mt-32 lg:scroll-mt-24">
       <svg aria-hidden viewBox="0 0 100 28" preserveAspectRatio="none" className="block h-7 w-full overflow-visible">
         <line x1="12" y1="0" x2="12" y2="28" stroke="var(--wire)" strokeWidth="1" vectorEffect="non-scaling-stroke" />
         <line x1="88" y1="0" x2="88" y2="28" stroke="var(--wire)" strokeWidth="1" vectorEffect="non-scaling-stroke" />

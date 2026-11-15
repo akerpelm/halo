@@ -4,7 +4,7 @@ import { cn } from '../lib/cn';
 /** A section heading with a copyable anchor, the way docs readers expect. */
 export function H2({ id, children }: { id: string; children: ReactNode }) {
   return (
-    <h2 id={id} className="group mt-14 mb-3 scroll-mt-32 text-heading font-semibold tracking-[-0.02em] text-ink md:scroll-mt-24">
+    <h2 id={id} className="group mt-14 mb-3 scroll-mt-32 text-heading font-semibold tracking-[-0.02em] text-ink lg:scroll-mt-24">
       {children}
       <a href={`#${id}`} className="ml-2 text-ink-faint no-underline opacity-0 transition-opacity duration-150 group-hover:opacity-100 focus-visible:opacity-100" aria-label={`Link to ${typeof children === 'string' ? children : 'this section'}`}>
         #

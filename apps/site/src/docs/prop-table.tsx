@@ -37,7 +37,7 @@ export function PropTable({ rows, caption, nameLabel = 'Prop' }: { rows: readonl
             role="row"
             key={row.name}
             id={propId(row.name)}
-            className="scroll-mt-32 border-b border-[color-mix(in_oklch,currentColor_12%,transparent)] align-top last:border-0 max-md:block max-md:py-3 md:scroll-mt-24 target:bg-[color-mix(in_oklch,currentColor_6%,transparent)]"
+            className="scroll-mt-32 border-b border-[color-mix(in_oklch,currentColor_12%,transparent)] align-top last:border-0 max-md:block max-md:py-3 lg:scroll-mt-24 target:bg-[color-mix(in_oklch,currentColor_6%,transparent)]"
           >
             <th role="rowheader" scope="row" className="py-3 pr-4 font-mono text-label font-medium break-words max-md:block max-md:p-0">
               <a href={`#${propId(row.name)}`} className="text-[var(--halo-fg,var(--ink))] no-underline hover:underline hover:underline-offset-4">

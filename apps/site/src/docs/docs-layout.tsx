@@ -5,6 +5,7 @@ import { PageTransition } from '../components/page-transition';
 import { cn } from '../lib/cn';
 import { useSettings } from '../lib/settings';
 import { type DocPage, docPages } from './pages';
+import { DocsMenu } from './docs-menu';
 import { specimens } from './specimens';
 
 /** Docs: a sidebar of pages, a reading column, and an outline of the current page. */
@@ -16,20 +17,22 @@ export function DocsLayout({ slug }: { slug: string }) {
   const next = docPages[index + 1];
 
   return (
+    <>
+    <DocsMenu page={page} />
     <div className="mx-auto grid max-w-[1240px] grid-cols-[minmax(0,1fr)] gap-x-12 px-4 pt-6 pb-24 sm:px-8 lg:grid-cols-[200px_minmax(0,1fr)] lg:pt-10 xl:grid-cols-[200px_minmax(0,1fr)_180px]">
       <Toaster id="custom" label="Midnight demo notifications" world="midnight" theme={theme} position="bottom-left" style={{ '--vt-name': 'custom-toaster' } as CSSProperties} />
 
-      <nav aria-label="Docs" className="min-w-0 max-lg:mb-8 lg:sticky lg:top-24 lg:self-start" style={{ viewTransitionName: 'docs-sidebar' }}>
-        <p className="m-0 mb-3 text-caption font-medium tracking-[0.02em] text-ink-faint uppercase max-lg:sr-only">Documentation</p>
-        <ul className="m-0 flex list-none gap-1.5 overflow-x-auto p-0 [scrollbar-width:none] lg:grid lg:gap-0.5 lg:overflow-visible [&::-webkit-scrollbar]:hidden">
+      <nav aria-label="Docs" className="min-w-0 max-lg:hidden lg:sticky lg:top-24 lg:self-start" style={{ viewTransitionName: 'docs-sidebar' }}>
+        <p className="m-0 mb-3 text-caption font-medium tracking-[0.02em] text-ink-faint uppercase">Documentation</p>
+        <ul className="m-0 grid list-none gap-0.5 p-0">
           {docPages.map((p) => (
-            <li key={p.slug} className="flex-none">
+            <li key={p.slug}>
               <Link
                 href={`/docs/${p.slug}`}
                 aria-current={p.slug === page.slug ? 'page' : undefined}
                 className={cn(
-                  'inline-flex min-h-9 items-center rounded-full px-3.5 text-ui no-underline transition-colors duration-150 pointer-coarse:min-h-11 lg:flex lg:rounded-lg lg:px-3',
-                  p.slug === page.slug ? 'bg-ink/[0.08] font-medium text-ink' : 'text-ink-soft hover:bg-ink/[0.04] hover:text-ink max-lg:shadow-[inset_0_0_0_1px_var(--line)]',
+                  'flex min-h-9 items-center rounded-lg px-3 text-ui no-underline transition-colors duration-150 pointer-coarse:min-h-11',
+                  p.slug === page.slug ? 'bg-ink/[0.08] font-medium text-ink' : 'text-ink-soft hover:bg-ink/[0.04] hover:text-ink',
                 )}
               >
                 {p.title}
@@ -82,5 +85,6 @@ export function DocsLayout({ slug }: { slug: string }) {
         </ul>
       </nav>
     </div>
+    </>
   );
 }

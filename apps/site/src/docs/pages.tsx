@@ -526,7 +526,7 @@ const agentsPage: DocPage = {
       <H2 id="recipes">Recipes</H2>
       <P>Copy the one that matches the job.</P>
       {recipes.map((r) => (
-        <section key={r.id} id={r.id} className="scroll-mt-32 md:scroll-mt-24">
+        <section key={r.id} id={r.id} className="scroll-mt-32 lg:scroll-mt-24">
           <H3>{r.title}</H3>
           <P className="mt-0 mb-3">{r.when}</P>
           <CodeBlock label={`${r.id.replace('recipe-', '')}.md`} wrap copyLabel="Copy prompt" code={r.prompt()} />

@@ -315,6 +315,7 @@ html:active-view-transition [style*='--vt-name'] {
 
 ::view-transition-group(site-header),
 ::view-transition-group(docs-sidebar),
+::view-transition-group(docs-menu),
 ::view-transition-group(docs-outline),
 ::view-transition-group(site-toaster),
 ::view-transition-group(custom-toaster) {
@@ -324,21 +325,25 @@ html:active-view-transition [style*='--vt-name'] {
 /* Header and sidebar: show only the new snapshot, so the active page swaps at once instead of
    both highlights showing mid-slide. */
 ::view-transition-old(site-header),
-::view-transition-old(docs-sidebar) {
+::view-transition-old(docs-sidebar),
+::view-transition-old(docs-menu) {
   display: none;
 }
 ::view-transition-new(site-header),
-::view-transition-new(docs-sidebar) {
+::view-transition-new(docs-sidebar),
+::view-transition-new(docs-menu) {
   animation: none;
 }
 /* Leaving or entering the docs (a surface switch), the sidebar and outline belong to the page:
    they leave and arrive with it, out then in. */
 html:active-view-transition-type(surface)::view-transition-old(docs-sidebar),
+html:active-view-transition-type(surface)::view-transition-old(docs-menu),
 html:active-view-transition-type(surface)::view-transition-old(docs-outline) {
   display: block;
   animation: vt-fade-out 90ms ease-in both;
 }
 html:active-view-transition-type(surface)::view-transition-new(docs-sidebar),
+html:active-view-transition-type(surface)::view-transition-new(docs-menu),
 html:active-view-transition-type(surface)::view-transition-new(docs-outline) {
   animation: vt-fade-in 220ms ease-out 90ms both;
 }
