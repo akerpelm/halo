@@ -419,6 +419,7 @@ dialog.docs-search[open] .docs-search-panel {
 
 @layer components {
   .rig {
+    --rig-cast: oklch(25% 0.02 260 / 0.16);
     --steel: var(--wire);
     --steel-light: color-mix(in oklch, var(--wire) 32%, white);
     --steel-dark: color-mix(in oklch, var(--wire) 70%, black);
@@ -439,6 +440,17 @@ dialog.docs-search[open] .docs-search-panel {
   .rig-plate {
     fill: var(--steel);
   }
+  .rig-shadow {
+    fill: none;
+    stroke: var(--rig-cast);
+    stroke-width: 2px;
+    stroke-linecap: round;
+    filter: blur(1.4px);
+  }
+  .rig-shadow-fill {
+    fill: var(--rig-cast);
+    filter: blur(2.5px);
+  }
   .rig-plate-edge {
     fill: var(--steel-dark);
   }
@@ -458,7 +470,7 @@ dialog.docs-search[open] .docs-search-panel {
     border-radius: 3px;
     background: linear-gradient(to right, var(--steel-dark), var(--steel-light) 34%, var(--steel) 62%, var(--steel-dark));
     box-shadow:
-      0 1px 2px oklch(20% 0.01 260 / 0.28),
+      2px 4px 5px -1px oklch(20% 0.01 260 / 0.3),
       inset 0 0.5px 0 color-mix(in oklch, var(--steel-light) 80%, white);
   }
   .rig-clamp::after {
@@ -470,4 +482,8 @@ dialog.docs-search[open] .docs-search-panel {
     background: var(--steel-dark);
     opacity: 0.7;
   }
+}
+
+[data-theme='dark'] .rig {
+  --rig-cast: oklch(0% 0 0 / 0.45);
 }

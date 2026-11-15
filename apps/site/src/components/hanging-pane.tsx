@@ -9,12 +9,14 @@ import {
 } from 'halo-ui-react/spring';
 import { type KeyboardEvent, type PointerEvent, type ReactNode, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { cn } from '../lib/cn';
+import { type Anchor, type Cable, type Edge, cablePaths, createCable, stepCable } from '../lib/cable';
 import { useSettings } from '../lib/settings';
 
 const PANE_SPRING = resolveSpring({ duration: 0.48, bounce: 0.36 });
 const LIGHT_SPRING = resolveSpring({ duration: 0.9, bounce: 0 });
 const REACH = 560;
 const NUDGE = 1400;
+const TAUT = 0.994;
 
 type Rig = { x: SpringValue; y: SpringValue; tilt: SpringValue; lightX: SpringValue; lightY: SpringValue };
 
@@ -33,6 +35,7 @@ type HangingPaneProps = {
 function CeilingMount() {
   return (
     <g data-mount="">
+      <rect className="rig-shadow-fill" x="-6" y="5" width="16" height="9" rx="3" />
       <rect className="rig-plate" x="-9" y="-1" width="18" height="3" rx="1" />
       <rect className="rig-plate-edge" x="-9" y="1.5" width="18" height="0.75" rx="0.375" />
       <rect className="rig-barrel" x="-2.75" y="2" width="5.5" height="7" rx="1.5" />
@@ -56,6 +59,8 @@ export function HangingPane({
   const world = worldOverride ?? settings.world;
   const theme = settings.theme;
   const reducedMotion = useReducedMotion();
+  const still = useRef(reducedMotion);
+  still.current = reducedMotion;
   const stageRef = useRef<HTMLDivElement>(null);
   const anchorRef = useRef<HTMLDivElement>(null);
   const paneRef = useRef<HTMLDivElement>(null);
@@ -70,6 +75,43 @@ export function HangingPane({
   const [rig] = useState<Rig>(() => {
     const state = { x: 0, y: 0, tilt: 0, lightX: 0, lightY: 0 };
     let light: Pick<Rig, 'lightX' | 'lightY'> | null = null;
+    const rope = { cables: [] as Cable[], sides: [] as Array<{ a: Anchor; b: Anchor; length: number; outward: number }>, edge: null as Edge | null, frame: 0, last: 0, quiet: 0 };
+
+    const draw = () => {
+      const wires = wiresRef.current;
+      if (!wires) return;
+      const bodies = wires.querySelectorAll('[data-cable]');
+      const sheens = wires.querySelectorAll('[data-cable-sheen]');
+      const shadows = wires.querySelectorAll('[data-cable-shadow]');
+      rope.cables.forEach((cable, i) => {
+        const paths = cablePaths(cable);
+        bodies[i]?.setAttribute('d', paths.body);
+        sheens[i]?.setAttribute('d', paths.sheen);
+        shadows[i]?.setAttribute('d', paths.shadow);
+      });
+    };
+
+    const tick = (now: number) => {
+      const dt = Math.min((now - rope.last) / 1000, 1 / 30);
+      rope.last = now;
+      let motion = 0;
+      rope.cables.forEach((cable, i) => {
+        const side = rope.sides[i];
+        if (!side || !rope.edge) return;
+        motion += stepCable(cable, side.a, side.b, side.length, side.outward, dt / 2, rope.edge);
+        motion += stepCable(cable, side.a, side.b, side.length, side.outward, dt / 2, rope.edge);
+      });
+      draw();
+      rope.quiet = motion < 0.04 ? rope.quiet + 1 : 0;
+      rope.frame = rope.quiet > 30 ? 0 : requestAnimationFrame(tick);
+    };
+
+    const wake = () => {
+      if (rope.frame || still.current) return;
+      rope.last = performance.now();
+      rope.quiet = 0;
+      rope.frame = requestAnimationFrame(tick);
+    };
 
     const render = () => {
       const pane = paneRef.current;
@@ -80,32 +122,38 @@ export function HangingPane({
 
       const wires = wiresRef.current;
       if (!wires) return;
-      const cables = wires.querySelectorAll('[data-cable]');
       const mounts = wires.querySelectorAll('[data-mount]');
       const { width, left, top, ceiling: ceilingY } = geometry.current;
       const angle = (state.tilt * Math.PI) / 180;
       const arm = width * 0.34;
       const centerX = left + width / 2;
-      const restLength = top - ceilingY;
-      [-1, 1].forEach((side, i) => {
-        const ax = centerX + side * arm;
-        const ay = ceilingY;
-        const bx = centerX + state.x + side * arm * Math.cos(angle);
-        const by = top + state.y + side * arm * Math.sin(angle);
-        const dx = bx - ax;
-        const dy = by - ay;
-        const span = Math.hypot(dx, dy) || 1;
-        const slack = Math.max(0, restLength - span);
-        const sag = Math.min(Math.sqrt((3 * span * slack) / 8), 34);
-        const nx = (-dy / span) * Math.sign(-dy || 1) * side;
-        const ny = (dx / span) * Math.sign(-dy || 1) * side;
-        const cx = (ax + bx) / 2 + nx * sag * 2;
-        const cy = (ay + by) / 2 + ny * sag * 2;
-        const d = `M${ax},${ay} Q${cx},${cy} ${bx},${by}`;
-        cables[i * 2]?.setAttribute('d', d);
-        cables[i * 2 + 1]?.setAttribute('d', d);
-        mounts[i]?.setAttribute('transform', `translate(${ax} ${ay})`);
+      const length = (top - ceilingY) * TAUT;
+      const half = width / 2;
+      rope.edge = {
+        from: { x: centerX + state.x - half * Math.cos(angle), y: top + state.y - half * Math.sin(angle) },
+        to: { x: centerX + state.x + half * Math.cos(angle), y: top + state.y + half * Math.sin(angle) },
+      };
+      rope.sides = [-1, 1].map((side) => ({
+        a: { x: centerX + side * arm, y: ceilingY },
+        b: { x: centerX + state.x + side * arm * Math.cos(angle), y: top + state.y + side * arm * Math.sin(angle) },
+        length,
+        outward: side,
+      }));
+      rope.sides.forEach((side, i) => {
+        mounts[i]?.setAttribute('transform', `translate(${side.a.x} ${side.a.y})`);
+        const cable = rope.cables[i];
+        const ceilingMoved = cable && (cable.points[0]?.x !== side.a.x || cable.points[0]?.y !== side.a.y);
+        if (!cable || ceilingMoved || still.current) {
+          rope.cables[i] = createCable(side.a, side.b);
+          return;
+        }
+        const first = cable.points[0];
+        const end = cable.points[cable.points.length - 1];
+        if (first) Object.assign(first, { x: side.a.x, y: side.a.y, px: side.a.x, py: side.a.y });
+        if (end) Object.assign(end, { x: side.b.x, y: side.b.y, px: side.b.x, py: side.b.y });
       });
+      draw();
+      wake();
     };
 
     const value = (key: keyof typeof state, config = PANE_SPRING) =>
@@ -253,9 +301,12 @@ export function HangingPane({
 
       <svg ref={wiresRef} aria-hidden className="rig absolute inset-0 z-10 h-full w-full overflow-visible">
         {[0, 1].map((i) => (
+          <path key={i} data-cable-shadow="" className="rig-shadow" />
+        ))}
+        {[0, 1].map((i) => (
           <g key={i}>
             <path data-cable="" className="rig-cable" />
-            <path data-cable="" className="rig-sheen" />
+            <path data-cable-sheen="" className="rig-sheen" />
           </g>
         ))}
         {[0, 1].map((i) => (
