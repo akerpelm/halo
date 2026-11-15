@@ -178,6 +178,23 @@ export function ToastBuilder({ config, onChange, output, onOutput }: ToastBuilde
     };
   }, [config]);
 
+  // The stage should never sit empty: the first time it scrolls into view, the plain toast lands in it.
+  const stageRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const stage = stageRef.current;
+    if (!stage) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry?.isIntersecting) return;
+        observer.disconnect();
+        if (lastPreview.current === null) lastPreview.current = playgroundDemos.success();
+      },
+      { threshold: 0.6 },
+    );
+    observer.observe(stage);
+    return () => observer.disconnect();
+  }, []);
+
   const surprise = () => {
     const pick = <T,>(list: readonly T[]) => list[Math.floor(Math.random() * list.length)] as T;
     onChange({
@@ -413,7 +430,7 @@ export function ToastBuilder({ config, onChange, output, onOutput }: ToastBuilde
 
         <div className="grid min-w-0 content-start gap-5 p-5 lg:sticky lg:top-16 lg:self-start">
           {/* The stage: previews land here, beside the controls, never in the page corner. */}
-          <div data-world={config.world} className="relative h-[300px] overflow-hidden rounded-2xl bg-wall-deep" aria-label="Preview stage" role="region">
+          <div ref={stageRef} data-world={config.world} className="relative h-[300px] overflow-hidden rounded-2xl bg-wall-deep" aria-label="Preview stage" role="region">
             <span aria-hidden className="cast absolute inset-x-[10%] bottom-[-30%] h-[70%]">
               <span className="pool top-0 left-0 h-full w-[55%] bg-coat-a" />
               <span className="pool top-[10%] right-0 h-full w-[50%] bg-coat-b" />

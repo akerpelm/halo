@@ -4,6 +4,7 @@
 
 Install: `npm i @halo-ui/react`
 Styles: import `@halo-ui/react/styles.css` once (e.g. in your root layout or main entry).
+Human docs: /docs (getting started, toast, drawer, worlds, motion, customize, agents). Agent recipes: /docs/agents.
 Entry points: `@halo-ui/react/toast`, `@halo-ui/react/drawer`, `@halo-ui/react/spring`, or everything from `@halo-ui/react`.
 All components are client components (the bundle starts with 'use client').
 

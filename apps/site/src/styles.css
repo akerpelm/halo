@@ -234,6 +234,26 @@
   mix-blend-mode: screen;
 }
 
+/* Docs search: a top-layer dialog whose panel springs in. */
+dialog.docs-search {
+  position: fixed;
+  inset: 0;
+}
+dialog.docs-search[open] .docs-search-panel {
+  animation: docs-search-in 520ms var(--ease-spring) both;
+}
+@keyframes docs-search-in {
+  from {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.98);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  dialog.docs-search[open] .docs-search-panel {
+    animation: none;
+  }
+}
+
 /* Etched partition: frost everywhere except a clear disc under the pointer. */
 .etched {
   -webkit-backdrop-filter: blur(var(--halo-blur)) saturate(var(--halo-saturate));

@@ -8,7 +8,8 @@ import { SpringCurve } from '../components/spring-curve';
 import { coats, motions, springChoices } from '../lib/build';
 import { demos, newDemos } from '../lib/demo-toasts';
 import { worlds } from '../lib/worlds';
-import { drawerParts, drawerRootProps, selectors, toastFunctions, toastOptions, toasterProps, tokens } from './api';
+import { drawerParts, drawerRootProps, selectors, toastFunctions, toastOptions, toasterGroups, tokens } from './api';
+import { Plaque } from './plaque';
 import { PropTable } from './prop-table';
 import { C, H2, H3, List, Note, P } from './prose';
 
@@ -139,9 +140,16 @@ toast.update(id, 'Export ready', { type: 'success' });`}
         </Button>
       </Try>
       <H2 id="options">Options</H2>
-      <PropTable rows={toastOptions} caption="Toast options" nameLabel="Option" />
+      <Plaque id="toast-options" title="Toast options" count={toastOptions.length}>
+        <PropTable rows={toastOptions} caption="Toast options" nameLabel="Option" />
+      </Plaque>
       <H2 id="toaster">Toaster props</H2>
-      <PropTable rows={toasterProps} caption="Toaster props" />
+      <P>Grouped by what they change. Every prop has its own link.</P>
+      {toasterGroups.map((g) => (
+        <Plaque key={g.id} id={`toaster-${g.id}`} title={g.title} count={g.rows.length}>
+          <PropTable rows={g.rows} caption={`Toaster props: ${g.title}`} />
+        </Plaque>
+      ))}
       <H2 id="only-in-halo">Only in Halo</H2>
       <H3>Launch from the trigger</H3>
       <P>
@@ -217,9 +225,13 @@ const drawerPage: DocPage = {
 </Drawer.Root>`}
       />
       <H2 id="root">Root props</H2>
-      <PropTable rows={drawerRootProps} caption="Drawer.Root props" />
+      <Plaque id="drawer-root" title="Drawer.Root" count={drawerRootProps.length}>
+        <PropTable rows={drawerRootProps} caption="Drawer.Root props" />
+      </Plaque>
       <H2 id="parts">Parts</H2>
-      <PropTable rows={drawerParts} caption="Drawer parts" nameLabel="Part" />
+      <Plaque id="drawer-parts" title="Parts">
+        <PropTable rows={drawerParts} caption="Drawer parts" nameLabel="Part" />
+      </Plaque>
       <H2 id="detents">Detents</H2>
       <P>
         Snap points are viewport fractions or pixel strings, smallest first. When you let go, Halo picks the detent nearest where your flick would coast to, and hands your speed to the spring.
@@ -402,41 +414,141 @@ const customizePage: DocPage = {
 toast('Saved', { className: 'ring-2 ring-emerald-500/40' });`}
       />
       <H2 id="tokens">Tokens</H2>
-      <PropTable rows={tokens} caption="Design tokens" nameLabel="Token" />
+      <Plaque id="token-list" title="Tokens">
+        <PropTable rows={tokens} caption="Design tokens" nameLabel="Token" />
+      </Plaque>
       <H2 id="selectors">Selectors and states</H2>
-      <PropTable rows={selectors} caption="Selectors" nameLabel="Selector" />
+      <Plaque id="selector-list" title="Selectors and states">
+        <PropTable rows={selectors} caption="Selectors" nameLabel="Selector" />
+      </Plaque>
     </>
   ),
 };
 
+const origin = () => (typeof window === 'undefined' ? '' : window.location.origin);
+
+const recipes: ReadonlyArray<{ id: string; title: string; when: string; prompt: () => string }> = [
+  {
+    id: 'recipe-toasts',
+    title: 'Add toasts',
+    when: 'A new app, or one with no notification system yet.',
+    prompt: () => `Add Halo toasts to this React app. Read ${origin()}/llms.txt first.
+1. npm i @halo-ui/react, and import '@halo-ui/react/styles.css' once in the root layout or entry file.
+2. Render <Toaster /> once near the root, inside providers and outside the router outlet.
+3. Use toast.success / toast.error / toast.info / toast.warning for outcomes, toast.promise for async work, and toast.update(id, ...) to change a toast in place instead of stacking another.
+4. Give actions as { action: { label, onClick } }.
+Keep messages short: a title, plus a description only when it adds something.`,
+  },
+  {
+    id: 'recipe-sonner',
+    title: 'Migrate from Sonner',
+    when: 'The app imports from "sonner".',
+    prompt: () => `Replace Sonner with Halo in this app. Read ${origin()}/llms.txt first.
+- Change imports from 'sonner' to '@halo-ui/react/toast', and add import '@halo-ui/react/styles.css' once.
+- toast(), toast.success/error/warning/info/loading, toast.promise, and toast.dismiss keep the same call shapes.
+- <Toaster> props: position, expand, visibleToasts, and closeButton carry over unchanged.
+- richColors becomes intent="tint". toastOptions.classNames becomes classNames on <Toaster>.
+- Remove any custom CSS that overrides Sonner's transform or transition. Halo's motion is springs in JavaScript.
+Do not change message text. Run the app and confirm toasts appear, stack, and dismiss.`,
+  },
+  {
+    id: 'recipe-drawer',
+    title: 'Add a drawer',
+    when: 'A mobile sheet, a share sheet, or a side panel.',
+    prompt: () => `Add a Halo drawer. Read ${origin()}/llms.txt first.
+Use Drawer.Root > Drawer.Trigger + Drawer.Content > Drawer.Handle, Drawer.Title (required), Drawer.Description, Drawer.Scroll around long content, and Drawer.Close.
+Snap points are viewport fractions or '320px' strings, smallest first. For side panels use side="right" with no snap points.
+Do not add a portal or an overlay component: Drawer.Content is a native <dialog> and handles both.`,
+  },
+  {
+    id: 'recipe-vaul',
+    title: 'Migrate from Vaul',
+    when: 'The app imports from "vaul".',
+    prompt: () => `Replace Vaul with Halo's Drawer. Read ${origin()}/llms.txt first.
+- Change imports from 'vaul' to '@halo-ui/react/drawer'.
+- Delete Drawer.Portal and Drawer.Overlay wrappers. Drawer.Content is a native dialog with its own overlay.
+- snapPoints carries over. activeSnapPoint + setActiveSnapPoint become activeSnapPoint + onActiveSnapPointChange.
+- direction becomes side.
+- shouldScaleBackground becomes recess, and the [data-vaul-drawer-wrapper] element gets data-halo-recess instead.
+- Keep Drawer.Title in every drawer; it labels the dialog.`,
+  },
+  {
+    id: 'recipe-stream',
+    title: 'Stream an AI reply',
+    when: 'Long-running model output that should show progress.',
+    prompt: () => `When the app streams a model reply, show it with toast.stream(source, { title: 'Summarising…', success: 'Summary ready' }).
+The source must be an AsyncIterable<string> or ReadableStream<string> of text chunks. Await the returned promise for the full text.
+Do not also announce the text elsewhere; Halo announces it once, when it finishes.`,
+  },
+  {
+    id: 'recipe-undo',
+    title: 'Make destructive actions undoable',
+    when: 'Archive, delete, remove, or move.',
+    prompt: () => `For each destructive action, apply it optimistically, then call toast.undo('Conversation archived', { onUndo: restore }), where restore reverses it.
+Do not add confirmation dialogs where undo is possible.`,
+  },
+];
+
 const agentsPage: DocPage = {
   slug: 'agents',
   title: 'For agents',
-  lede: 'Halo is written so an AI agent gets it right the first time: one obvious way to do each thing, documented in a form models read well.',
+  lede: 'Most installs now happen through an AI agent. These recipes give it one obvious way to do each thing, with the rules that keep the result accessible.',
   sections: [
     { id: 'llms', title: 'llms.txt' },
-    { id: 'prompt', title: 'A prompt that works' },
+    { id: 'recipes', title: 'Recipes' },
+    { id: 'nextjs', title: 'Next.js and SSR' },
+    { id: 'rules', title: 'Rules for agents' },
     { id: 'playground', title: 'Prompts from the playground' },
   ],
   body: () => (
     <>
       <H2 id="llms">llms.txt</H2>
       <P>
-        The whole API in one plain-text file: install, every prop, every rule. Point your agent at{' '}
+        The whole API in one plain-text file: install, every prop, every rule. Every recipe below starts by pointing your agent at{' '}
         <a href="/llms.txt" className="text-ink underline decoration-line underline-offset-4 hover:decoration-ink">
           /llms.txt
         </a>
         .
       </P>
-      <H2 id="prompt">A prompt that works</H2>
-      <CodeBlock
-        label="prompt.md"
-        wrap
-        code={`Read ${typeof window === 'undefined' ? '' : window.location.origin}/llms.txt, then replace this app's notifications with Halo toasts. Keep every existing message and its meaning.`}
+      <H2 id="recipes">Recipes</H2>
+      <P>Copy the one that matches the job.</P>
+      {recipes.map((r) => (
+        <section key={r.id} id={r.id} className="scroll-mt-32 md:scroll-mt-24">
+          <H3>{r.title}</H3>
+          <P className="mt-0 mb-3">{r.when}</P>
+          <CodeBlock label={`${r.id.replace('recipe-', '')}.md`} wrap copyLabel="Copy prompt" code={r.prompt()} />
+        </section>
+      ))}
+      <H2 id="nextjs">Next.js and SSR</H2>
+      <List
+        items={[
+          <>
+            Every Halo module starts with <C>'use client'</C>, so you can import it from server components. Halo renders on the client.
+          </>,
+          <>
+            Import <C>@halo-ui/react/styles.css</C> in <C>app/layout.tsx</C> and put <C>{'<Toaster />'}</C> in the root layout's body.
+          </>,
+          <>
+            Call <C>toast()</C> from client code, such as event handlers, or after a server action resolves on the client.
+          </>,
+          <>
+            For the drawer's recess, add <C>data-halo-recess</C> to the element that wraps your page content inside <C>{'<body>'}</C>.
+          </>,
+        ]}
+      />
+      <H2 id="rules">Rules for agents</H2>
+      <List
+        items={[
+          'Import the stylesheet once. Never restyle transform, opacity, or transition on toasts or drawer panels.',
+          'Customize through CSS custom properties, classNames, or a world. Never through !important.',
+          'Keep Drawer.Title in every drawer. Use Drawer.Description when there is supporting text.',
+          'Never put information that exists nowhere else in a toast. Toasts disappear.',
+          'Leave the reduced-motion, reduced-transparency, and higher-contrast handling alone. It is built in.',
+        ]}
       />
       <H2 id="playground">Prompts from the playground</H2>
       <P>
-        Every playground state turns into a prompt with exact code and the rules that keep it accessible. Build the toast you want, switch the output to Agent prompt, and copy.
+        Every playground state turns into a prompt with exact code. Build the toast you want, switch the output to Agent prompt, and copy.
       </P>
     </>
   ),

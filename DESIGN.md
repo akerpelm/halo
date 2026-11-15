@@ -401,3 +401,13 @@ axe-core (WCAG 2.2 AA plus best practices) passes in light and dark, with toasts
 - "World" is the one name for materials.
 - The wall labels hang on the same rigging as the hero and can be flung.
 - The page closes on a display-size line: "Every animation on this page runs on its own springs."
+
+
+## Docs (/docs)
+
+- **Layout:** a three-column reference with the sidebar, a reading column of at most 68ch for prose, and an "On this page" outline at xl. On phones the sidebar becomes one row of page chips, and the site's section row is hidden there so only one row shows.
+- **Header:** on docs pages it shows only Home / Docs / Playground and a version badge; the sidebar owns docs navigation.
+- **Gallery carried in:** each page opens with a live specimen on the hanging rig (without cast light, so it never washes over text). Prop groups are glass plaques on two short wires, in the visitor's current world.
+- **Props:** one semantic table per group, with explicit ARIA table roles, so it restyles into stacked rows on phones without losing semantics. Every row has a `#prop-*` anchor.
+- **Search:** ⌘K, Ctrl+K, or `/` opens a native top-layer dialog. It follows the ARIA combobox and listbox pattern and indexes every page, section, function, option, prop, token, and selector.
+- **Routing:** the History API, with no router dependency. The static-host fallbacks are `public/_redirects` and `vercel.json`.

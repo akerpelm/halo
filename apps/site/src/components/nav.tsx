@@ -13,6 +13,13 @@ const links = [
   ['Customize', '/#customize'],
 ] as const;
 
+/** Inside the docs the sidebar owns navigation; the header only leaves or switches surfaces. */
+const docsLinks = [
+  ['Home', '/'],
+  ['Docs', '/docs/getting-started'],
+  ['Playground', '/#playground'],
+] as const;
+
 export function Mark({ className }: { className?: string }) {
   return (
     <svg viewBox="0 0 28 20" fill="none" aria-hidden className={className}>
@@ -33,7 +40,7 @@ export function Nav() {
           <span className="font-display text-title font-semibold tracking-[-0.02em]">halo</span>
         </Link>
         <ul className="m-0 hidden list-none gap-1 p-0 md:flex">
-          {links.map(([label, href]) => (
+          {(path.startsWith('/docs') ? docsLinks : links).map(([label, href]) => (
             <li key={href}>
               <Link
                 href={href}
@@ -45,6 +52,9 @@ export function Nav() {
             </li>
           ))}
         </ul>
+        {path.startsWith('/docs') && (
+          <span className="hidden rounded-full px-2.5 py-1 font-mono text-caption text-ink-faint shadow-[inset_0_0_0_1px_var(--line)] md:inline">v0.1.0</span>
+        )}
         <div className="ml-auto flex items-center gap-2">
           {/* The select itself is the whole pill, so a press anywhere on it opens the menu. */}
           <div className="relative h-9 rounded-full bg-ink/[0.06] pointer-coarse:h-11 text-label text-ink transition-colors duration-150 hover:bg-ink/[0.1] has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-ink">

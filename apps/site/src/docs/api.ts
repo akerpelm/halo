@@ -54,6 +54,17 @@ export const toasterProps: PropRow[] = [
   { name: 'classNames', type: '{ toast, body, icon, title, description, action, close }', description: 'Classes for each part of every toast.' },
 ];
 
+const pick = (names: string[]) => names.map((n) => toasterProps.find((r) => r.name === n)).filter((r): r is PropRow => Boolean(r));
+
+/** Toaster props in reading-sized groups, each one a plaque. */
+export const toasterGroups: ReadonlyArray<{ id: string; title: string; rows: PropRow[] }> = [
+  { id: 'placement', title: 'Placement', rows: pick(['position', 'offset', 'contained', 'expand', 'visibleToasts', 'gap']) },
+  { id: 'look', title: 'Look', rows: pick(['world', 'theme', 'density', 'radius', 'intent', 'coat', 'icons', 'closeButton', 'classNames']) },
+  { id: 'motion', title: 'Motion', rows: pick(['motion', 'spring']) },
+  { id: 'timing', title: 'Timing', rows: pick(['duration', 'timer']) },
+  { id: 'access', title: 'Accessibility and targeting', rows: pick(['label', 'hotkey', 'id']) },
+];
+
 export const drawerRootProps: PropRow[] = [
   { name: 'open / defaultOpen / onOpenChange', type: 'boolean / boolean / (open) => void', description: 'Controlled or uncontrolled.' },
   { name: 'side', type: "'bottom' | 'top' | 'left' | 'right'", default: "'bottom'", description: 'The edge it comes from.' },

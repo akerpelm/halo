@@ -3,6 +3,8 @@ import { Link } from '../components/link';
 import { cn } from '../lib/cn';
 import { useSettings } from '../lib/settings';
 import { type DocPage, docPages } from './pages';
+import { DocsSearch } from './search';
+import { specimens } from './specimens';
 
 /** Docs: a sidebar of pages, a reading column, and an outline of the current page. */
 export function DocsLayout({ slug }: { slug: string }) {
@@ -17,6 +19,9 @@ export function DocsLayout({ slug }: { slug: string }) {
       <Toaster id="custom" label="Midnight demo notifications" world="midnight" theme={theme} position="bottom-left" />
 
       <nav aria-label="Docs" className="min-w-0 max-lg:mb-8 lg:sticky lg:top-24 lg:self-start">
+        <div className="mb-5">
+          <DocsSearch />
+        </div>
         <p className="m-0 mb-3 text-caption font-medium tracking-[0.02em] text-ink-faint uppercase max-lg:sr-only">Documentation</p>
         <ul className="m-0 flex list-none gap-1.5 overflow-x-auto p-0 [scrollbar-width:none] lg:grid lg:gap-0.5 lg:overflow-visible [&::-webkit-scrollbar]:hidden">
           {docPages.map((p) => (
@@ -37,8 +42,13 @@ export function DocsLayout({ slug }: { slug: string }) {
       </nav>
 
       <article className="min-w-0">
-        <h1 className="m-0 text-[clamp(2.25rem,4.4vw,3.25rem)] leading-[1.05] font-semibold tracking-[-0.03em]">{page.title}</h1>
-        <p className="mt-4 mb-0 max-w-[60ch] text-lead leading-[1.55] text-ink-soft">{page.lede}</p>
+        <header className="grid items-end gap-x-8 md:grid-cols-[minmax(0,1fr)_minmax(0,320px)]">
+          <div className="pb-2">
+            <h1 className="m-0 text-[clamp(2.25rem,4.4vw,3.25rem)] leading-[1.05] font-semibold tracking-[-0.03em]">{page.title}</h1>
+            <p className="mt-4 mb-0 max-w-[60ch] text-lead leading-[1.55] text-ink-soft">{page.lede}</p>
+          </div>
+          {specimens[page.slug]?.()}
+        </header>
         {page.body()}
         <nav aria-label="Previous and next" className="mt-16 grid gap-3 border-t border-line pt-6 sm:grid-cols-2">
           {previous ? (

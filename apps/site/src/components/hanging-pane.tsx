@@ -33,6 +33,10 @@ type HangingPaneProps = {
   paneClassName?: string;
   /** Open held at the top of a swing, then released. The hero does; panes further down don't. */
   swingIn?: boolean;
+  /** Hang a specific world instead of the visitor's current one. */
+  world?: string;
+  /** Cast light onto the wall below. Off on reference pages, where it would wash over text. */
+  light?: boolean;
 };
 
 /**
@@ -47,8 +51,12 @@ export function HangingPane({
   label = 'A pane on a spring. Drag and release it, or press the arrow keys to nudge it.',
   paneClassName = 'p-6 [--halo-radius:28px] sm:p-9',
   swingIn = true,
+  world: worldOverride,
+  light = true,
 }: HangingPaneProps) {
-  const { world, theme } = useSettings();
+  const settings = useSettings();
+  const world = worldOverride ?? settings.world;
+  const theme = settings.theme;
   const reducedMotion = useReducedMotion();
   const stageRef = useRef<HTMLDivElement>(null);
   const anchorRef = useRef<HTMLDivElement>(null);
@@ -183,6 +191,8 @@ export function HangingPane({
 
   const onPointerDown = (event: PointerEvent<HTMLDivElement>) => {
     if (event.pointerType === 'mouse' && event.button !== 0) return;
+    // Controls hung on the pane stay controls: grabbing starts anywhere else.
+    if ((event.target as Element).closest('button, a, input, select, textarea, [data-no-drag]')) return;
     event.currentTarget.setPointerCapture(event.pointerId);
     drag.current = { pointerId: event.pointerId, startX: event.clientX, startY: event.clientY, originX: rig.x.get(), originY: rig.y.get() };
     trackers.x.reset();
@@ -250,7 +260,7 @@ export function HangingPane({
   return (
     <div ref={stageRef} className={cn('pointer-events-none select-none', className)}>
       {/* Light falls on the wall and the wall text alike: multiply tints without washing letters out. */}
-      <div ref={lightRef} aria-hidden className={cn('cast absolute z-10 h-56', anchorClassName)}>
+      <div ref={lightRef} aria-hidden className={cn('cast absolute z-10 h-56', anchorClassName, !light && 'hidden')}>
         <div className="pool top-[96%] left-[2%] h-[60%] w-[50%] bg-coat-a" />
         <div className="pool top-[104%] right-[0%] h-[64%] w-[48%] bg-coat-b" />
         <div className="pool top-[150%] left-[26%] h-[70%] w-[46%] bg-coat-c" />
