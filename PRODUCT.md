@@ -42,4 +42,4 @@ Halo (`halo-ui-react`) is an opinionated, physically-animated component library 
 ## Open decisions
 
 - Published on npm as `halo-ui-react`. The `halo-ui` and `haloui` scopes were taken, and npm blocks `haloui` as too similar to the existing `halo-ui` package.
-- License: not decided (MIT assumed for the scaffold, user to confirm).
+- License: MIT.

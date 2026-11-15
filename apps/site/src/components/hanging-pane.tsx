@@ -30,6 +30,17 @@ type HangingPaneProps = {
   light?: boolean;
 };
 
+function CeilingMount() {
+  return (
+    <g data-mount="">
+      <rect className="rig-plate" x="-9" y="-1" width="18" height="3" rx="1" />
+      <rect className="rig-plate-edge" x="-9" y="1.5" width="18" height="0.75" rx="0.375" />
+      <rect className="rig-barrel" x="-2.75" y="2" width="5.5" height="7" rx="1.5" />
+      <rect className="rig-glint" x="-1.6" y="2.6" width="1.1" height="5.6" rx="0.55" />
+    </g>
+  );
+}
+
 export function HangingPane({
   className,
   anchorClassName,
@@ -69,8 +80,8 @@ export function HangingPane({
 
       const wires = wiresRef.current;
       if (!wires) return;
-      const paths = wires.querySelectorAll('path');
-      const mounts = wires.querySelectorAll('rect');
+      const cables = wires.querySelectorAll('[data-cable]');
+      const mounts = wires.querySelectorAll('[data-mount]');
       const { width, left, top, ceiling: ceilingY } = geometry.current;
       const angle = (state.tilt * Math.PI) / 180;
       const arm = width * 0.34;
@@ -90,9 +101,10 @@ export function HangingPane({
         const ny = (dx / span) * Math.sign(-dy || 1) * side;
         const cx = (ax + bx) / 2 + nx * sag * 2;
         const cy = (ay + by) / 2 + ny * sag * 2;
-        paths[i]?.setAttribute('d', `M${ax},${ay} Q${cx},${cy} ${bx},${by}`);
-        mounts[i]?.setAttribute('x', String(ax - 9));
-        mounts[i]?.setAttribute('y', String(ay - 1));
+        const d = `M${ax},${ay} Q${cx},${cy} ${bx},${by}`;
+        cables[i * 2]?.setAttribute('d', d);
+        cables[i * 2 + 1]?.setAttribute('d', d);
+        mounts[i]?.setAttribute('transform', `translate(${ax} ${ay})`);
       });
     };
 
@@ -239,11 +251,16 @@ export function HangingPane({
         <div className="pool top-[150%] left-[26%] h-[70%] w-[46%] bg-coat-c" />
       </div>
 
-      <svg ref={wiresRef} aria-hidden className="absolute inset-0 z-10 h-full w-full overflow-visible">
-        <path fill="none" stroke="var(--wire)" strokeWidth="1.25" strokeLinecap="round" />
-        <path fill="none" stroke="var(--wire)" strokeWidth="1.25" strokeLinecap="round" />
-        <rect width="18" height="5" rx="2.5" fill="var(--wire)" />
-        <rect width="18" height="5" rx="2.5" fill="var(--wire)" />
+      <svg ref={wiresRef} aria-hidden className="rig absolute inset-0 z-10 h-full w-full overflow-visible">
+        {[0, 1].map((i) => (
+          <g key={i}>
+            <path data-cable="" className="rig-cable" />
+            <path data-cable="" className="rig-sheen" />
+          </g>
+        ))}
+        {[0, 1].map((i) => (
+          <CeilingMount key={i} />
+        ))}
       </svg>
 
       <div ref={anchorRef} className={cn('absolute z-20', anchorClassName)}>
@@ -269,12 +286,7 @@ export function HangingPane({
           onKeyDown={onKeyDown}
         >
           {[16, 84].map((x) => (
-            <span
-              key={x}
-              aria-hidden
-              className="absolute -top-[5px] size-[10px] -translate-x-1/2 rounded-full border-[1.5px] border-wire bg-wall"
-              style={{ left: `${x}%` }}
-            />
+            <span key={x} aria-hidden className="rig rig-clamp" style={{ left: `${x}%` }} />
           ))}
           {world === 'partition' && <div ref={etchRef} aria-hidden className="etched absolute inset-0 -z-10 rounded-[inherit]" />}
           {children ?? (
