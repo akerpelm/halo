@@ -3,7 +3,6 @@ import { cn } from '../lib/cn';
 
 type SelectProps = SelectHTMLAttributes<HTMLSelectElement> & { label: string };
 
-/** A native select (keyboard and screen readers for free) with the chevron inset like every other control. */
 export function Select({ label, className, children, ...props }: SelectProps) {
   const id = useId();
   return (

@@ -439,7 +439,6 @@ toast('Saved', { className: 'ring-2 ring-emerald-500/40' });`}
   ),
 };
 
-
 const recipes: ReadonlyArray<{ id: string; title: string; when: string; prompt: () => string }> = [
   {
     id: 'recipe-toasts',

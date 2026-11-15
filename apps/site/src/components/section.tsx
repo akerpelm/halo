@@ -8,9 +8,7 @@ type SectionProps = {
   aside?: ReactNode;
   children: ReactNode;
   className?: string;
-  /** Heading row on top and content across the full width, for tools that need room. */
   wide?: boolean;
-  /** h1 when the section is a whole page (the playground), h2 inside a longer page. */
   headingLevel?: 'h1' | 'h2';
 };
 

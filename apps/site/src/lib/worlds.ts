@@ -12,7 +12,6 @@ export const worlds: ReadonlyArray<{ value: HaloWorld; name: string; line: strin
   { value: 'vellum', name: 'Vellum', line: 'Matte drafting film. Barely diffused, very crisp, with a printed rule inset from the edge.' },
 ];
 
-/** Worlds defined in this site's CSS, not the library: proof that a world is just a selector. */
 export const customWorlds: ReadonlyArray<{ value: string; name: string; line: string }> = [
   { value: 'midnight', name: 'Midnight', line: 'Example: a world written in this site’s CSS. The library has never heard of it.' },
 ];
@@ -22,6 +21,5 @@ export const allWorlds = [...worlds, ...customWorlds];
 export const worldName = (world: HaloWorldName) =>
   allWorlds.find((w) => w.value === world)?.name ?? world;
 
-/** Dark-only worlds (Midnight sets color-scheme: dark) need the site's dark text tokens on any panel that wears them. */
 export const themeFor = <T extends string>(world: HaloWorldName, theme: T): T | 'dark' =>
   customWorlds.some((w) => w.value === world) ? 'dark' : theme;

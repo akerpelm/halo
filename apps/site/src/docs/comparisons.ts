@@ -1,4 +1,3 @@
-/** Behaviour next to the libraries Halo replaces, each row checked against their source. */
 export const vsSonner: ReadonlyArray<readonly [string, string, string]> = [
   ['Flick speed', 'Distance divided by the whole gesture time, so a slow drag that ends in a flick reads as slow.', 'A line fitted through the last 80 ms of pointer samples.'],
   ['After you let go', 'Fixed CSS transitions: a 200 ms exit, a timed snap-back.', 'A spring that starts at your release speed and keeps going.'],
@@ -18,7 +17,6 @@ export const vsVaul: ReadonlyArray<readonly [string, string, string]> = [
   ['Handle', 'An aria-hidden div. Clicking cycles detents, but the keyboard cannot reach it.', 'A real button. Press it, or use the arrow keys, to change size.'],
 ];
 
-/** How a drawer release becomes motion. */
 export const releaseSteps = [
   ['Sample', 'While you drag, Halo records where the pane is and when, and keeps only the last 80 ms.'],
   ['Project', 'When you let go, it works out where a flick that fast would coast to, the way a scroll view does.'],

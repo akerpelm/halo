@@ -58,7 +58,6 @@ function Group({ title, note, children }: { title: string; note?: ReactNode; chi
   );
 }
 
-/** A group that stays folded until opened, showing its current values so nothing is hidden by surprise. */
 function Fold({ title, current, children }: { title: string; current: string; children: ReactNode }) {
   return (
     <details className="group border-t border-line pt-4">
@@ -76,10 +75,6 @@ function Fold({ title, current, children }: { title: string; current: string; ch
   );
 }
 
-/**
- * Four choices up front, the rest behind "More". The current pick always stays visible,
- * so folding never hides what is selected.
- */
 function Shortlist<T>({
   items,
   isSelected,
@@ -95,7 +90,6 @@ function Shortlist<T>({
 }) {
   const [open, setOpen] = useState(false);
   const extra = items.length - limit;
-  // A selection past the cut takes the last slot, so the row never grows to five.
   const selectedLate = items.findIndex(isSelected) >= limit;
   const shown = open ? items : items.filter((item, index) => index < (selectedLate ? limit - 1 : limit) || isSelected(item));
   return (
@@ -143,19 +137,14 @@ export function ToastBuilder({ config, onChange, output, onOutput }: ToastBuilde
   const { theme } = useSettings();
   const set = (patch: Partial<BuildConfig>) => onChange({ ...config, ...patch });
   const added = layers(config, worldName);
-  // Preview on real changes only. Comparing configs (not counting renders) also holds under StrictMode.
   const previousConfig = useRef(config);
   const lastPreview = useRef<string | number | null>(null);
 
-  // Every change fires a preview, so each layer lands visibly. Debounced so sliders don't spam,
-  // and the previous preview leaves first so its exit is part of the show.
   useEffect(() => {
     const previous = previousConfig.current;
     if (previous === config) return;
     previousConfig.current = config;
 
-    // Only motion and spring need the entrance replayed. Anything else restyles the toast that is
-    // already showing, and refreshing it restarts its clock so it stays up while you tweak.
     const replay = previous.motion !== config.motion || JSON.stringify(previous.spring) !== JSON.stringify(config.spring);
     const showing = lastPreview.current !== null && toast.isActive(lastPreview.current);
     if (showing && !replay && lastPreview.current !== null) {
@@ -169,7 +158,6 @@ export function ToastBuilder({ config, onChange, output, onOutput }: ToastBuilde
         lastPreview.current = playgroundDemos.success();
         return;
       }
-      // Out, then in: the exit gets its own beat instead of colliding with the entrance.
       toast.dismiss(previous);
       fire = window.setTimeout(() => {
         lastPreview.current = playgroundDemos.success();
@@ -181,7 +169,6 @@ export function ToastBuilder({ config, onChange, output, onOutput }: ToastBuilde
     };
   }, [config]);
 
-  // The stage should never sit empty: the first time it scrolls into view, the plain toast lands in it.
   const stageRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const stage = stageRef.current;
@@ -258,7 +245,6 @@ export function ToastBuilder({ config, onChange, output, onOutput }: ToastBuilde
         </div>
       </div>
 
-      {/* On phones this is a flex column, so the stage can move first and stay pinned while the controls scroll. */}
       <div className="flex flex-col lg:grid lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)]">
         <form className="grid content-start gap-6 border-line p-5 max-lg:border-b lg:border-r" onSubmit={(event) => event.preventDefault()} aria-label="Toast layers">
           <Group title="World">
@@ -432,9 +418,7 @@ export function ToastBuilder({ config, onChange, output, onOutput }: ToastBuilde
           </Fold>
         </form>
 
-        {/* A flex column, not a grid: a grid would confine the sticky stage to its own row. */}
         <div className="min-w-0 max-lg:contents lg:flex lg:flex-col lg:gap-5 lg:p-5">
-          {/* The stage: previews land here, beside the controls, never in the page corner. */}
           <div ref={stageRef} data-world={config.world} className="sticky top-16 z-10 h-[300px] overflow-hidden rounded-2xl bg-wall-deep max-lg:order-first max-lg:m-3 max-lg:h-[168px] lg:top-[76px] lg:shadow-[0_0_0_12px_var(--wall)]" aria-label="Preview stage" role="region">
             <span aria-hidden className="cast absolute inset-x-[10%] bottom-[-30%] h-[70%]">
               <span className="pool top-0 left-0 h-full w-[55%] bg-coat-a" />

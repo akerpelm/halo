@@ -25,7 +25,6 @@ export const defaultDrawerConfig: DrawerConfig = {
   spring: { duration: 0.38, bounce: 0.1 },
 };
 
-/** Drawer radius presets in px; 'large' is the library default (28px). */
 export const drawerRadius = { square: 6, soft: 14, round: 20, large: 28 } as const;
 
 export const snapPresets = {
@@ -63,7 +62,6 @@ import '@halo-ui/react/styles.css';
   </Drawer.Content>
 </Drawer.Root>`;
 }
-
 
 export const PRINCIPLES = `Rules that keep Halo correct:
 - Import '@halo-ui/react/styles.css' once. Don't restyle animation with CSS transitions; motion is driven by springs in JS.

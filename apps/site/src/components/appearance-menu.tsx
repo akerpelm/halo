@@ -4,7 +4,6 @@ import { useSettings } from '../lib/settings';
 import { allWorlds, customWorlds, themeFor, worlds } from '../lib/worlds';
 import { Segmented } from './segmented';
 
-/** World and theme in one place, so the header carries one control instead of two. */
 export function AppearanceMenu() {
   const { world, theme, setWorld, setTheme } = useSettings();
   const [open, setOpen] = useState(false);
@@ -13,7 +12,6 @@ export function AppearanceMenu() {
   const buttonRef = useRef<HTMLButtonElement>(null);
   const current = allWorlds.find((w) => w.value === world);
 
-  // Outside click and Escape close it; these are document-level subscriptions while it is open.
   useEffect(() => {
     if (!open) return;
     rootRef.current?.querySelector<HTMLElement>('input:checked, input')?.focus();

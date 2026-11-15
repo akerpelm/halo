@@ -9,10 +9,6 @@ type WallLabelProps = {
   className?: string;
 };
 
-/**
- * The gallery object label, used as the docs idiom: what the piece is,
- * what it's made of, its dimensions (size, entry point, accessibility).
- */
 export function WallLabel({ title, date, medium, rows, className }: WallLabelProps) {
   return (
     <aside className={cn('max-w-[300px] text-label leading-[1.5]', className)} aria-label={`${title} specification`}>

@@ -26,7 +26,6 @@ export function DrawerBuilder({ output, onOutput }: { output: 'code' | 'prompt';
   const set = (patch: Partial<DrawerConfig>) => setConfig((current) => ({ ...current, ...patch }));
 
   return (
-    // Same shape as the toast builder: on phones the stage moves first and stays pinned.
     <div className="flex flex-col lg:grid lg:grid-cols-[320px_1fr]">
       <form className="grid content-start gap-6 border-line p-5 max-lg:border-b lg:border-r" onSubmit={(event) => event.preventDefault()} aria-label="Drawer settings">
         <Segmented

@@ -1,10 +1,6 @@
 import { type SpringInput, createSpringValue, resolveSpring, useReducedMotion } from '@halo-ui/react/spring';
 import { useEffect, useRef, useState } from 'react';
 
-/**
- * A puck that crosses a track on the chosen spring, so you can see the spring itself:
- * how fast it leaves, whether it overshoots, how long it takes to settle.
- */
 export function SpringPreview({ spring }: { spring: SpringInput }) {
   const trackRef = useRef<HTMLDivElement>(null);
   const puckRef = useRef<HTMLSpanElement>(null);
@@ -25,7 +21,6 @@ export function SpringPreview({ spring }: { spring: SpringInput }) {
     else puck.to(side.current, { config: resolveSpring(spring), velocity: 0 });
   };
 
-  // Each newly picked spring plays once. Comparing keys skips mount, StrictMode included.
   const key = JSON.stringify(spring);
   const shown = useRef(key);
   useEffect(() => {

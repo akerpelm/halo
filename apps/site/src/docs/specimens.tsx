@@ -8,7 +8,6 @@ import { useSettings } from '../lib/settings';
 import { worldName } from '../lib/worlds';
 import { LLMS_URL } from '../lib/site';
 
-/** Each docs page opens with its component hung on the site's rigging, live. */
 function Specimen({ children, world, label }: { children: ReactNode; world?: string; label: string }) {
   return (
     <HangingPane

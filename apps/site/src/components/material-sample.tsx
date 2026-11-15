@@ -2,10 +2,6 @@ import type { HaloWorld } from '@halo-ui/react';
 import { useSettings } from '../lib/settings';
 import { Spotlight } from './spotlight';
 
-/**
- * A swatch of each material over a strip of wall, lit from the pointer like a gallery spot.
- * The light also turns the pane, so the dichroic coat shifts hue the way it does in motion.
- */
 export function MaterialSample({ world }: { world: HaloWorld }) {
   const { theme } = useSettings();
   return (

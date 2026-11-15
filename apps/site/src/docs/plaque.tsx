@@ -2,10 +2,6 @@ import type { ReactNode } from 'react';
 import { useSettings } from '../lib/settings';
 import { themeFor } from '../lib/worlds';
 
-/**
- * A group of reference, hung like the landing page's wall labels: a pane of the visitor's
- * current world on two short wires. Static, so a page of them costs nothing to scroll.
- */
 export function Plaque({ id, title, count, children }: { id: string; title: string; count?: number; children: ReactNode }) {
   const { world, theme } = useSettings();
   return (

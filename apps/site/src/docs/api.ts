@@ -1,4 +1,3 @@
-/** One source for every prop table in the docs. Keep it in step with the library's types. */
 export type PropRow = { name: string; type: string; default?: string; description: string };
 
 export const toastFunctions: PropRow[] = [
@@ -56,7 +55,6 @@ export const toasterProps: PropRow[] = [
 
 const pick = (names: string[]) => names.map((n) => toasterProps.find((r) => r.name === n)).filter((r): r is PropRow => Boolean(r));
 
-/** Toaster props in reading-sized groups, each one a plaque. */
 export const toasterGroups: ReadonlyArray<{ id: string; title: string; rows: PropRow[] }> = [
   { id: 'placement', title: 'Placement', rows: pick(['position', 'offset', 'contained', 'expand', 'visibleToasts', 'gap']) },
   { id: 'look', title: 'Look', rows: pick(['world', 'theme', 'density', 'radius', 'intent', 'coat', 'icons', 'closeButton', 'classNames']) },

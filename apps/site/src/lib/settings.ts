@@ -3,7 +3,6 @@ import type { HaloWorldName } from '@halo-ui/react';
 import { allWorlds } from './worlds';
 
 export type SiteTheme = 'light' | 'dark';
-// One world for the whole site: the header menu, the gallery, and the playground all share it.
 type Settings = { world: HaloWorldName; theme: SiteTheme };
 
 const KEY = 'halo-site';
@@ -21,9 +20,7 @@ function commit(next: Partial<Settings>) {
   root.dataset.theme = settings.theme;
   try {
     localStorage.setItem(KEY, JSON.stringify(settings));
-  } catch {
-    // Private mode or blocked storage: the choice just won't persist.
-  }
+  } catch {}
   for (const listener of listeners) listener();
 }
 

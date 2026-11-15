@@ -8,18 +8,12 @@ import { type DocPage, docPages } from './pages';
 
 const item = 'flex min-h-11 items-center rounded-xl px-3 text-body text-[var(--halo-fg)] no-underline';
 
-/**
- * Docs navigation below the desktop breakpoint: a bar that stays under the header, so changing
- * page never means scrolling back to the top. It opens a Halo drawer with every page and this
- * page's sections.
- */
 export function DocsMenu({ page }: { page: DocPage }) {
   const { world, theme } = useSettings();
   const [open, setOpen] = useState(false);
   const close = () => setOpen(false);
 
   return (
-    // Named only during transitions (see styles.css), so the bar's own blur keeps working at rest.
     <div className="sticky top-16 z-30 border-b border-line bg-wall/72 backdrop-blur-xl backdrop-saturate-150 lg:hidden" style={{ '--vt-name': 'docs-menu' } as CSSProperties}>
       <Drawer.Root open={open} onOpenChange={setOpen} world={world} theme={themeFor(world, theme)}>
         <Drawer.Trigger className="mx-auto flex h-12 w-full max-w-[1240px] cursor-pointer items-center gap-2 border-0 bg-transparent px-4 text-left text-ui text-ink sm:px-8">

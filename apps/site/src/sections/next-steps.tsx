@@ -8,7 +8,6 @@ const doors = [
   { title: 'Hand it to an agent', body: 'One plain-text file with the whole API, plus recipes for migrating from Sonner and Vaul.', href: '/docs/agents', cta: 'For agents' },
 ] as const;
 
-/** Where the home page ends: three doors instead of three more sections. */
 export function NextSteps() {
   return (
     <section aria-labelledby="next-steps" className="border-t border-line">

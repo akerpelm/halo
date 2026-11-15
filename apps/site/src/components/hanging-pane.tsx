@@ -19,30 +19,17 @@ const NUDGE = 1400;
 type Rig = { x: SpringValue; y: SpringValue; tilt: SpringValue; lightX: SpringValue; lightY: SpringValue };
 
 type HangingPaneProps = {
-  /** Positions the stage. Wires hang from the stage's top edge. */
   className?: string;
-  /** Positions and sizes the pane inside the stage, at rest. */
   anchorClassName?: string;
-  /** Where the wires are fixed, in px from the stage top (e.g. under a sticky nav). */
   ceiling?: number;
-  /** What hangs. Defaults to the hero's "Grab me" pane with its release-speed readout. */
   children?: ReactNode;
-  /** Accessible name for the pane. */
   label?: string;
-  /** Padding and radius classes for the pane itself. */
   paneClassName?: string;
-  /** Open held at the top of a swing, then released. The hero does; panes further down don't. */
   swingIn?: boolean;
-  /** Hang a specific world instead of the visitor's current one. */
   world?: string;
-  /** Cast light onto the wall below. Off on reference pages, where it would wash over text. */
   light?: boolean;
 };
 
-/**
- * A pane hung from two wires. Grab it, fling it, let go: the release velocity
- * feeds the same spring solver the toast and drawer use.
- */
 export function HangingPane({
   className,
   anchorClassName,
@@ -66,7 +53,6 @@ export function HangingPane({
   const etchRef = useRef<HTMLDivElement>(null);
   const readoutRef = useRef<HTMLSpanElement>(null);
   const drag = useRef<{ pointerId: number; startX: number; startY: number; originX: number; originY: number } | null>(null);
-  // Pane geometry at rest, cached so the frame loop never reads layout.
   const geometry = useRef({ width: 0, left: 0, top: 0, ceiling });
   const [trackers] = useState(() => ({ x: createVelocityTracker(), y: createVelocityTracker() }));
 
@@ -85,7 +71,6 @@ export function HangingPane({
       if (!wires) return;
       const paths = wires.querySelectorAll('path');
       const mounts = wires.querySelectorAll('rect');
-      // Wires run from mounts on the ceiling to eyelets on the pane's rotated top edge.
       const { width, left, top, ceiling: ceilingY } = geometry.current;
       const angle = (state.tilt * Math.PI) / 180;
       const arm = width * 0.34;
@@ -99,10 +84,7 @@ export function HangingPane({
         const dx = bx - ax;
         const dy = by - ay;
         const span = Math.hypot(dx, dy) || 1;
-        // A cable can't compress: pushed closer than its length, it goes slack and bows outward.
-        // Sag from the parabolic cable approximation L ≈ d + 8s²/3d.
         const slack = Math.max(0, restLength - span);
-        // Capped so a big shove reads as slack, not a lasso.
         const sag = Math.min(Math.sqrt((3 * span * slack) / 8), 34);
         const nx = (-dy / span) * Math.sign(-dy || 1) * side;
         const ny = (dx / span) * Math.sign(-dy || 1) * side;
@@ -117,7 +99,6 @@ export function HangingPane({
     const value = (key: keyof typeof state, config = PANE_SPRING) =>
       createSpringValue(0, config, (next) => {
         state[key] = next;
-        // The cast light trails the pane on a softer spring.
         if (key === 'x') light?.lightX.to(next);
         if (key === 'y') light?.lightY.to(next);
         render();
@@ -129,7 +110,6 @@ export function HangingPane({
     return { x: value('x'), y: value('y'), tilt: value('tilt'), lightX, lightY };
   });
 
-  // A layout effect, so the wires are drawn before a page transition snapshots the new page.
   useLayoutEffect(() => {
     const anchor = anchorRef.current;
     const stage = stageRef.current;
@@ -144,10 +124,8 @@ export function HangingPane({
     return () => observer.disconnect();
   }, []);
 
-  // The held moment: the pane waits at the top of its swing, then is released.
   useEffect(() => {
     if (reducedMotion || !swingIn) return;
-    // Held far enough left that the opening swing crosses the headline, frosting real letters.
     rig.x.set(-300);
     rig.y.set(70);
     rig.tilt.set(11);
@@ -159,7 +137,6 @@ export function HangingPane({
     return () => window.clearTimeout(timer);
   }, []);
 
-  // Partition world: the pane is etched glass, and it clears in a disc under the pointer.
   useEffect(() => {
     if (world !== 'partition') return;
     const onMove = (event: globalThis.PointerEvent) => {
@@ -192,7 +169,6 @@ export function HangingPane({
 
   const onPointerDown = (event: PointerEvent<HTMLDivElement>) => {
     if (event.pointerType === 'mouse' && event.button !== 0) return;
-    // Controls hung on the pane stay controls: grabbing starts anywhere else.
     if ((event.target as Element).closest('button, a, input, select, textarea, [data-no-drag]')) return;
     event.currentTarget.setPointerCapture(event.pointerId);
     drag.current = { pointerId: event.pointerId, startX: event.clientX, startY: event.clientY, originX: rig.x.get(), originY: rig.y.get() };
@@ -207,7 +183,6 @@ export function HangingPane({
     const rawX = current.originX + event.clientX - current.startX;
     const rawY = current.originY + event.clientY - current.startY;
     const distance = Math.hypot(rawX, rawY);
-    // The wires resist: the further you pull, the harder it gets.
     const banded = distance === 0 ? 0 : rubberband(distance, REACH, 0.55) / distance;
     const x = rawX * banded;
     const y = rawY * banded;
@@ -230,8 +205,6 @@ export function HangingPane({
     endDrag(event.timeStamp);
   };
 
-  // A drag can end without a pointerup: Safari drops capture outside the window, and the OS can
-  // steal the gesture (app switch, right-click, native drag). Any of those must still let go.
   useEffect(() => {
     const letGo = () => endDrag(performance.now());
     const onVisibility = () => document.hidden && letGo();
@@ -260,7 +233,6 @@ export function HangingPane({
 
   return (
     <div ref={stageRef} className={cn('pointer-events-none select-none', className)}>
-      {/* Light falls on the wall and the wall text alike: multiply tints without washing letters out. */}
       <div ref={lightRef} aria-hidden className={cn('cast absolute z-10 h-56', anchorClassName, !light && 'hidden')}>
         <div className="pool top-[96%] left-[2%] h-[60%] w-[50%] bg-coat-a" />
         <div className="pool top-[104%] right-[0%] h-[64%] w-[48%] bg-coat-b" />
@@ -296,7 +268,6 @@ export function HangingPane({
           onLostPointerCapture={(event) => drag.current?.pointerId === event.pointerId && endDrag(event.timeStamp)}
           onKeyDown={onKeyDown}
         >
-          {/* Eyelets live on the pane, so they rotate with it and the wire always meets them. */}
           {[16, 84].map((x) => (
             <span
               key={x}

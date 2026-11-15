@@ -1,15 +1,9 @@
 @import 'tailwindcss';
-/* Layered so Tailwind utilities can override the material. */
 @import '@halo-ui/react/styles.css' layer(components);
 
 @custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
 @custom-variant partition (&:where([data-world='partition'], [data-world='partition'] *));
 
-/*
- * Two worlds, two lights each.
- * Dichroic: a cool gallery wall with coated panes that throw colour.
- * Partition: the same room behind acid-etched glass, with aluminium mullions and no hue.
- */
 :root,
 [data-world='dichroic'] {
   --wall: oklch(96.4% 0.005 250);
@@ -68,11 +62,9 @@
 }
 
 @theme {
-  /* A spring sampled from Halo's solver, for CSS-only transitions like the switch thumb. */
   --ease-spring: linear(0, 0.091, 0.281, 0.487, 0.667, 0.805, 0.901, 0.963, 0.997, 1.014, 1.02, 1.019, 1.016, 1.012, 1.008, 1.005, 1.003, 1.001, 1, 1);
 }
 
-/* The light each newer world casts. The wall itself stays the gallery's. */
 [data-world='smoked'] {
   --coat-a: oklch(72% 0.11 60);
   --coat-b: oklch(62% 0.1 35);
@@ -103,7 +95,6 @@
   --coat-c: oklch(90% 0.005 250);
 }
 
-/* The type scale. Every UI size in the site is one of these steps. */
 @theme {
   --text-caption: 12px;
   --text-label: 13px;
@@ -189,10 +180,6 @@
   }
 }
 
-/*
- * A custom world, defined the way any Halo user would: one selector of custom properties.
- * Nothing in the library knows about it.
- */
 @layer components {
   [data-halo-world='midnight'] {
     color-scheme: dark;
@@ -208,12 +195,10 @@
   }
 }
 
-/* The recessed page, used by the drawer's `recess` option. */
 [data-halo-recess] {
   background: var(--wall);
 }
 
-/* Light the panes throw on the wall. Pure geometry, blurred once and moved by transform. */
 .pool {
   position: absolute;
   border-radius: 50%;
@@ -223,7 +208,6 @@
   will-change: transform;
 }
 
-/* A gallery spot: lightens what it passes over without washing out the letters under it. */
 .spotlight {
   background: radial-gradient(circle, oklch(100% 0 0 / 0.75), oklch(100% 0 0 / 0) 60%);
   mix-blend-mode: overlay;
@@ -234,10 +218,6 @@
   mix-blend-mode: screen;
 }
 
-/*
- * Page transitions (View Transitions API, driven by React's <ViewTransition>).
- * Surfaces fade with a small rise; docs pages slide in reading order. Both ride Halo's own spring curve.
- */
 @keyframes vt-fade-in {
   from {
     opacity: 0;
@@ -264,7 +244,6 @@
   }
 }
 
-/* Out, then in: the old view is gone before the new one arrives, so pages never double-expose. */
 ::view-transition-old(.surface-out),
 ::view-transition-old(root) {
   animation: vt-fade-out 90ms ease-in both;
@@ -276,7 +255,6 @@
     vt-rise 480ms var(--ease-spring) 90ms both;
 }
 
-/* Docs pages: a short slide in reading order, still out-then-in. */
 ::view-transition-old(.page-to-left) {
   --vt-offset: -14px;
   animation:
@@ -302,13 +280,6 @@
     vt-slide-from 420ms var(--ease-spring) 90ms both;
 }
 
-/* Persistent chrome stays still while content moves. The header uses backdrop-filter, so its old
-   snapshot is hidden to avoid a flash. */
-/*
- * Persistent chrome is named only while a transition runs. A view-transition-name makes its
- * element a backdrop root, which would stop the frosted toasts and the header's menu from
- * blurring the page behind them the rest of the time.
- */
 html:active-view-transition [style*='--vt-name'] {
   view-transition-name: var(--vt-name);
 }
@@ -322,8 +293,6 @@ html:active-view-transition [style*='--vt-name'] {
   animation: none;
   z-index: 100;
 }
-/* Header and sidebar: show only the new snapshot, so the active page swaps at once instead of
-   both highlights showing mid-slide. */
 ::view-transition-old(site-header),
 ::view-transition-old(docs-sidebar),
 ::view-transition-old(docs-menu) {
@@ -334,8 +303,6 @@ html:active-view-transition [style*='--vt-name'] {
 ::view-transition-new(docs-menu) {
   animation: none;
 }
-/* Leaving or entering the docs (a surface switch), the sidebar and outline belong to the page:
-   they leave and arrive with it, out then in. */
 html:active-view-transition-type(surface)::view-transition-old(docs-sidebar),
 html:active-view-transition-type(surface)::view-transition-old(docs-menu),
 html:active-view-transition-type(surface)::view-transition-old(docs-outline) {
@@ -348,7 +315,6 @@ html:active-view-transition-type(surface)::view-transition-new(docs-outline) {
   animation: vt-fade-in 220ms ease-out 90ms both;
 }
 
-/* The outline's content is the page's, so it crossfades quickly rather than overlapping. */
 ::view-transition-old(docs-outline) {
   animation: vt-fade-out 90ms ease-in both;
 }
@@ -369,14 +335,12 @@ html:active-view-transition-type(surface)::view-transition-new(docs-outline) {
   }
 }
 
-/* Menus need a denser frost than ambient panes, or the page reads through them. */
 .appearance-panel,
 .docs-search-panel {
   --halo-surface: color-mix(in oklab, var(--halo-surface-solid) 96%, transparent);
   --halo-blur: 32px;
 }
 
-/* The appearance menu panel springs open. */
 .appearance-panel {
   animation: docs-search-in 420ms var(--ease-spring) both;
   transform-origin: top right;
@@ -387,7 +351,6 @@ html:active-view-transition-type(surface)::view-transition-new(docs-outline) {
   }
 }
 
-/* Docs search: a top-layer dialog whose panel springs in. */
 dialog.docs-search {
   position: fixed;
   inset: 0;
@@ -407,7 +370,6 @@ dialog.docs-search[open] .docs-search-panel {
   }
 }
 
-/* Etched partition: frost everywhere except a clear disc under the pointer. */
 .etched {
   -webkit-backdrop-filter: blur(var(--halo-blur)) saturate(var(--halo-saturate));
   backdrop-filter: blur(var(--halo-blur)) saturate(var(--halo-saturate));
@@ -416,8 +378,6 @@ dialog.docs-search[open] .docs-search-panel {
   mask-image: radial-gradient(circle 84px at var(--mx, -999px) var(--my, -999px), transparent 92%, #000 100%);
 }
 
-/* Aluminium mullions frame the content column; section rules are the transoms between bays.
-   They sit in the gutters at every width, so they never cross text. */
 [data-world='partition'] .mullions {
   --mullion-x: 8px;
   background-image:
@@ -440,8 +400,6 @@ dialog.docs-search[open] .docs-search-panel {
   }
 }
 
-/* Cast light: tints the wall and the letters on it without washing them out.
-   Partition casts no colour, only a soft silhouette shadow. */
 .cast {
   mix-blend-mode: multiply;
 }

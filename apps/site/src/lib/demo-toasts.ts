@@ -2,7 +2,6 @@ import { toast } from '@halo-ui/react/toast';
 
 const wait = (ms: number) => new Promise((resolve) => window.setTimeout(resolve, ms));
 
-/** The site's demo toasts. Pass a toaster id to send them to a specific <Toaster>. */
 export function createDemos(toasterId?: string) {
   const on = { toasterId };
   const demos = {
@@ -46,7 +45,6 @@ export function createDemos(toasterId?: string) {
   };
   return {
     ...demos,
-    /** Re-send the success demo into an existing toast: same content, fresh clock, no entrance. */
     refresh: (id: string | number) =>
       toast.update(id, 'Invite sent', { ...on, type: 'success', description: 'mara@studio.example will get an email shortly' }),
   };
@@ -58,7 +56,6 @@ export const playgroundDemos = createDemos('playground');
 const sequence = [demos.success, demos.promise, demos.error, demos.default, demos.update, demos.info];
 let next = 0;
 
-/** The hero button walks through the toast types, launching each one out of the button itself. */
 export function fireNextDemo(from?: Element) {
   const demo = sequence[next % sequence.length];
   next += 1;
@@ -67,7 +64,6 @@ export function fireNextDemo(from?: Element) {
 
 const sleep = (ms: number) => new Promise((resolve) => window.setTimeout(resolve, ms));
 
-/** A stand-in for a model streaming a reply, word by word. */
 async function* reply() {
   const text = 'Ines moved the onboarding copy into the shared doc and flagged two screens that still use the old pricing table.';
   for (const word of text.split(' ')) {
@@ -76,7 +72,6 @@ async function* reply() {
   }
 }
 
-/** The toast types only Halo has. */
 export const newDemos = {
   launch: (from: Element) => toast.success('Saved', { from, description: 'It flew out of the button you pressed.' }),
   stream: () => toast.stream(reply(), { title: 'Summarising the thread…', success: 'Thread summary' }),

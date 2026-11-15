@@ -3,9 +3,8 @@ import { type PointerEvent, type RefObject, useRef, useState } from 'react';
 import { useSettings } from '../lib/settings';
 import { CountUp } from './count-up';
 
-// Sonner's release rules, reimplemented from its source (src/index.tsx, src/styles.css) for comparison.
 const SONNER_SWIPE_THRESHOLD = 45;
-const SONNER_VELOCITY_THRESHOLD = 0.11; // px per ms, averaged over the whole gesture
+const SONNER_VELOCITY_THRESHOLD = 0.11;
 const SONNER_EXIT = 'transform 200ms ease-out, opacity 200ms ease-out';
 const SONNER_SNAP_BACK = 'transform 400ms ease';
 
@@ -34,10 +33,6 @@ function Chip({ label, chipRef }: { label: string; chipRef: RefObject<HTMLDivEle
   );
 }
 
-/**
- * One gesture drives both chips. On release, each runs its own library's decision on identical input,
- * so the difference you see is the release logic, not your hand.
- */
 export function FlickTest() {
   const reducedMotion = useReducedMotion();
   const laneRef = useRef<HTMLDivElement>(null);
@@ -103,17 +98,14 @@ export function FlickTest() {
     const sign = Math.sign(dx) || 1;
     const off = sign * (lane / 2 + 200);
 
-    // Sonner: average speed over the whole gesture, a 45px distance threshold, fixed-duration CSS.
     const elapsed = Math.max(performance.now() - current.t, 1);
     const averageSpeed = Math.abs(dx) / elapsed;
     const sonnerDismiss = Math.abs(dx) >= SONNER_SWIPE_THRESHOLD || averageSpeed > SONNER_VELOCITY_THRESHOLD;
     if (sonnerDismiss) setSonner(off, SONNER_EXIT, 0);
     else setSonner(0, SONNER_SNAP_BACK);
 
-    // Halo: release speed from the last 80ms, dismissal from where that flick would coast to.
     const velocity = tracker.velocity(event.timeStamp);
     const landing = dx + project(velocity, HALO_DECELERATION);
-    // Same rule as the Toast: dismiss when the flick would carry it past a third of its own width.
     const haloDismiss = Math.abs(landing) > (haloRef.current?.offsetWidth ?? 260) / 3;
     if (reducedMotion) halo.x.set(haloDismiss ? off : 0);
     else halo.x.to(haloDismiss ? off : 0, { velocity });

@@ -12,8 +12,6 @@ import { PlaygroundPage } from './sections/playground-page';
 
 export function App() {
   const { world, theme, setWorld } = useSettings();
-  // The playground's toast, lifted so Worlds can load setups into it and it survives navigation.
-  // Its world is the site's world, so building a toast restyles the whole gallery and vice versa.
   const [layers, setLayers] = useState<Omit<BuildConfig, 'world'>>(PLAIN);
   const build: BuildConfig = { ...layers, world };
   const setBuild = ({ world: next, ...rest }: BuildConfig) => {
@@ -24,7 +22,6 @@ export function App() {
   const surface = path.startsWith('/docs') ? 'docs' : path.startsWith('/playground') ? 'playground' : 'home';
   const docsSlug = surface === 'docs' ? path.split('/')[2] || 'getting-started' : null;
 
-  // Runs before the transition's "new" snapshot, so the incoming page is already at its start.
   useLayoutEffect(() => {
     const target = window.location.hash ? document.getElementById(window.location.hash.slice(1)) : null;
     if (target) target.scrollIntoView({ block: 'start', behavior: 'instant' });
@@ -60,7 +57,6 @@ export function App() {
         </main>
         <Footer />
       </div>
-      {/* Floats above every surface; its own transition name keeps open toasts still during navigation. */}
       <Toaster world={world} theme={theme} duration={3500} style={{ '--vt-name': 'site-toaster' } as CSSProperties} />
     </PathContext.Provider>
   );

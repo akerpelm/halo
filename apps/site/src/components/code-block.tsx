@@ -10,7 +10,6 @@ export function CodeBlock({ code, label, className, copyLabel, wrap = false }: C
         <span className="truncate font-mono text-caption text-ink-faint">{label}</span>
         <CopyButton text={code} label={copyLabel} />
       </figcaption>
-      {/* Focusable so keyboard users can scroll long lines; labelled by the file name. */}
       <pre
         tabIndex={0}
         aria-label={label ? `${label} code` : 'Code'}

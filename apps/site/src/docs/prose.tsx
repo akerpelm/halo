@@ -1,7 +1,6 @@
 import type { ReactNode } from 'react';
 import { cn } from '../lib/cn';
 
-/** A section heading with a copyable anchor, the way docs readers expect. */
 export function H2({ id, children }: { id: string; children: ReactNode }) {
   return (
     <h2 id={id} className="group mt-14 mb-3 scroll-mt-32 text-heading font-semibold tracking-[-0.02em] text-ink lg:scroll-mt-24">
@@ -35,7 +34,6 @@ export function List({ items }: { items: ReactNode[] }) {
   );
 }
 
-/** A tip or caveat. Set off by a hairline and a label, never a coloured side-stripe. */
 export function Note({ title, children }: { title: string; children: ReactNode }) {
   return (
     <aside className="my-6 max-w-[68ch] rounded-2xl bg-wall-deep/70 p-5 shadow-[inset_0_0_0_1px_var(--line)]">

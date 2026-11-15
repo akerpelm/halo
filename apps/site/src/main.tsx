@@ -7,7 +7,6 @@ import { createRoot } from 'react-dom/client';
 import { App } from './app';
 
 const container = document.getElementById('root');
-// index.html always ships #root; failing loudly beats rendering nothing.
 if (!container) throw new Error('Missing #root');
 createRoot(container).render(
   <StrictMode>

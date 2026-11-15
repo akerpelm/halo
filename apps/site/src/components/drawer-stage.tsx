@@ -4,23 +4,16 @@ import { useSettings } from '../lib/settings';
 import { themeFor } from '../lib/worlds';
 import { cn } from '../lib/cn';
 
-/** What "Fit" looks like in the miniature: a sheet sized to its content, or a side panel. */
 const FIT = { vertical: 0.5, horizontal: 0.36 };
 
 const padding = { compact: 'p-2', comfortable: 'p-3', spacious: 'p-4' } as const;
 
-/**
- * A miniature screen showing the drawer at rest: its edge, its tallest detent, the other detents
- * as marks, its corners, and the current world. The real drawer opens from the button inside.
- */
 export function DrawerStage({ config, children, className }: { config: DrawerConfig; children: ReactNode; className?: string }) {
   const { world, theme } = useSettings();
   const vertical = config.side === 'bottom' || config.side === 'top';
   const fit = vertical ? FIT.vertical : FIT.horizontal;
   const snaps = snapPresets[config.snapPoints] ?? [fit];
-  // The drawer opens at its first detent; the larger ones show as marks it can be pulled to.
   const reach = snaps[0] ?? fit;
-  // Half size, like everything else in the miniature.
   const radius = `${drawerRadius[config.radius] / 2}px`;
   const corners: Record<DrawerConfig['side'], CSSProperties> = {
     bottom: { borderTopLeftRadius: radius, borderTopRightRadius: radius },
@@ -28,7 +21,6 @@ export function DrawerStage({ config, children, className }: { config: DrawerCon
     left: { borderTopRightRadius: radius, borderBottomRightRadius: radius },
     right: { borderTopLeftRadius: radius, borderBottomLeftRadius: radius },
   };
-  // The pane fills the stage and slides in from its edge, so changes animate transform only.
   const hidden = `${(1 - reach) * 100}%`;
   const offset: Record<DrawerConfig['side'], string> = {
     bottom: `translateY(${hidden})`,
@@ -65,7 +57,6 @@ export function DrawerStage({ config, children, className }: { config: DrawerCon
         <span className="h-1.5 w-1/2 max-w-60 rounded-full bg-[var(--halo-fg-muted)] opacity-50" />
         <span className="h-1.5 w-2/5 max-w-48 rounded-full bg-[var(--halo-fg-muted)] opacity-50" />
       </div>
-      {/* Floats in the corner away from the drawer's edge, above the miniature. */}
       <div className={cn('absolute z-20', config.side === 'top' ? 'bottom-3' : 'top-3', config.side === 'right' ? 'left-3' : 'right-3')}>{children}</div>
     </div>
   );

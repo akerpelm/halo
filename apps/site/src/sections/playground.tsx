@@ -33,7 +33,6 @@ export function Playground({ build, onBuild }: PlaygroundProps) {
           ]}
         />
       </div>
-      {/* No overflow clipping here: it would stop the stage from sticking. */}
       <div className="rounded-[24px] shadow-[inset_0_0_0_1px_var(--line)]">
         {component === 'toast' ? (
           <ToastBuilder config={build} onChange={onBuild} output={output} onOutput={setOutput} />

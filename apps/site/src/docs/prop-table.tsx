@@ -1,13 +1,7 @@
 import type { PropRow } from './api';
 
-/** A stable anchor for each prop, so any row can be linked to. */
 export const propId = (name: string) => `prop-${name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')}`;
 
-/**
- * A prop reference: one real table, so every row keeps a single linkable id.
- * On phones the same rows restyle into stacked blocks instead of scrolling sideways. Explicit ARIA
- * roles keep it a table for screen readers, since some browsers drop table semantics on display changes.
- */
 export function PropTable({ rows, caption, nameLabel = 'Prop' }: { rows: readonly PropRow[]; caption: string; nameLabel?: string }) {
   const hasDefault = rows.some((r) => r.default);
   return (

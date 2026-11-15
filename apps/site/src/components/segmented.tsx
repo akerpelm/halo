@@ -10,7 +10,6 @@ type SegmentedProps<T extends string> = {
   className?: string;
 };
 
-/** A radio group drawn as a segmented control. Arrow keys move between options natively. */
 export function Segmented<T extends string>({ label, value, options, onChange, hideLabel, className }: SegmentedProps<T>) {
   const name = useId();
   return (

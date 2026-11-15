@@ -4,11 +4,9 @@ type CompareTableProps = {
   rows: ReadonlyArray<readonly [string, string, string]>;
 };
 
-/** Side-by-side behavior, checked against the other library's source. */
 export function CompareTable({ caption, them, rows }: CompareTableProps) {
   return (
     <>
-      {/* Phones: each topic becomes a stacked pair, so no column is ever clipped. */}
       <div className="sm:hidden">
         <p className="mt-0 mb-3 text-label text-ink-faint">{caption}</p>
         <dl className="m-0">

@@ -4,7 +4,6 @@ import type { RadiusPreset } from './config';
 export type SpringChoice = SpringPresetName | { duration: number; bounce: number };
 export type CoatName = 'material' | 'aurora' | 'ember' | 'lagoon' | 'orchid' | 'mono';
 
-/** Everything the playground can layer onto a toast. */
 export type BuildConfig = {
   world: HaloWorldName;
   motion: ToastMotion;
@@ -21,7 +20,6 @@ export type BuildConfig = {
   duration: number;
 };
 
-/** The starting point: the most ordinary toast there is. Everything else is a layer on top. */
 export const PLAIN: BuildConfig = {
   world: 'ink',
   motion: 'fade',
@@ -38,7 +36,6 @@ export const PLAIN: BuildConfig = {
   duration: 4000,
 };
 
-/** One click to everything on. */
 export const MAXED: BuildConfig = {
   ...PLAIN,
   world: 'dichroic',
@@ -52,7 +49,6 @@ export const MAXED: BuildConfig = {
   radius: 'round',
 };
 
-/** What the library does with no props at all, so generated code only lists real choices. */
 const LIBRARY_DEFAULTS: BuildConfig = {
   world: 'dichroic',
   motion: 'rise',
@@ -103,7 +99,6 @@ const sameSpring = (a: SpringChoice, b: SpringChoice) =>
 const springName = (s: SpringChoice) =>
   typeof s === 'string' ? (springChoices.find((c) => c.value === s)?.name ?? s) : `Custom ${s.duration}s / ${s.bounce}`;
 
-/** The layers added on top of PLAIN, each with a label and how to peel it back off. */
 export function layers(config: BuildConfig, worldName: (w: HaloWorldName) => string) {
   const list: Array<{ key: keyof BuildConfig; label: string }> = [];
   if (config.world !== PLAIN.world) list.push({ key: 'world', label: `${worldName(config.world)} glass` });

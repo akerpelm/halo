@@ -22,7 +22,6 @@ const files = [
   ['Copy deck', '3 drafts'],
 ] as const;
 
-/** A realistic share sheet, so the demo shows snap points, scrolling, and focus with real content. */
 export function DemoDrawer({ config = defaultDrawerConfig, trigger, tone = 'quiet', size = 'lg' }: DemoDrawerProps) {
   const { world, theme } = useSettings();
   const snaps = snapPresets[config.snapPoints];

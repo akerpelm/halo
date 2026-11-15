@@ -1,16 +1,11 @@
-// Adapted from React Bits "Magnet" (installed via the shadcn CLI, then owned).
-// Kept: nearest-magnet arbitration and the falloff curve. Changed: motion runs on Halo's spring engine.
 import { type SpringInput, createSpringValue, resolveSpring, useReducedMotion } from '@halo-ui/react/spring';
 import { type ReactNode, useEffect, useRef } from 'react';
 import { cn } from '../lib/cn';
 
 type MagnetProps = {
   children: ReactNode;
-  /** How far outside the element, in px, the cursor starts to pull it. */
   padding?: number;
-  /** The offset is the cursor distance divided by this. Higher moves less. */
   strength?: number;
-  /** Hard cap on travel in px. */
   maxOffset?: number;
   spring?: SpringInput;
   className?: string;
@@ -34,7 +29,6 @@ function distanceOutside(rect: DOMRect, point: Point) {
   return { dx, dy, outside: Math.hypot(Math.max(0, Math.abs(dx) - rect.width / 2), Math.max(0, Math.abs(dy) - rect.height / 2)) };
 }
 
-/** Only the nearest magnet in range pulls, so neighbouring buttons never fight. */
 function arbitrate() {
   let owner: Entry | null = null;
   let nearest = Number.POSITIVE_INFINITY;
@@ -70,7 +64,6 @@ function listen() {
   };
 }
 
-/** Leans its child toward the cursor on a spring, then lets it settle back with a little give. */
 export function Magnet({ children, padding = 60, strength = 4, maxOffset = 10, spring = { duration: 0.5, bounce: 0.4 }, className }: MagnetProps) {
   const wrapperRef = useRef<HTMLSpanElement>(null);
   const innerRef = useRef<HTMLSpanElement>(null);

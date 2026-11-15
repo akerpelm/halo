@@ -2,7 +2,6 @@ import { type SpringInput, resolveSpring, sampleSpring, settlingTime } from '@ha
 
 type SpringCurveProps = { spring: SpringInput; className?: string };
 
-/** The step response of a spring, drawn from the same solver the components use. */
 export function SpringCurve({ spring, className }: SpringCurveProps) {
   const config = resolveSpring(spring);
   const samples = sampleSpring(config, 80, 2.5);

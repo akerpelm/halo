@@ -1,22 +1,14 @@
-// Adapted from React Bits "SpotlightCard" (installed via the shadcn CLI, then owned).
-// Kept: a light that trails the pointer and fades in near the surface. Dropped: its own card surface,
-// themes, beam shape, and grain. Changed: the trailing and fading run on Halo's spring engine.
 import { createSpringValue, resolveSpring, useReducedMotion } from '@halo-ui/react/spring';
 import { type HTMLAttributes, type PointerEvent, useRef, useState } from 'react';
 import { cn } from '../lib/cn';
 
 type SpotlightProps = HTMLAttributes<HTMLDivElement> & {
-  /** Radius of the light in px. */
   size?: number;
 };
 
 const TRAIL = resolveSpring({ duration: 0.45, bounce: 0 });
 const FADE = resolveSpring('smooth');
 
-/**
- * Lights whatever is inside it from the pointer, like a gallery spot moving across a work.
- * The light also drives --halo-shift, so a dichroic edge turns as the light moves.
- */
 export function Spotlight({ size = 220, className, children, ...props }: SpotlightProps) {
   const rootRef = useRef<HTMLDivElement>(null);
   const lightRef = useRef<HTMLDivElement>(null);

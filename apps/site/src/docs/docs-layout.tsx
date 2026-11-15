@@ -8,7 +8,6 @@ import { type DocPage, docPages } from './pages';
 import { DocsMenu } from './docs-menu';
 import { specimens } from './specimens';
 
-/** Docs: a sidebar of pages, a reading column, and an outline of the current page. */
 export function DocsLayout({ slug }: { slug: string }) {
   const { theme } = useSettings();
   const index = Math.max(0, docPages.findIndex((p) => p.slug === slug));
@@ -44,7 +43,6 @@ export function DocsLayout({ slug }: { slug: string }) {
 
       <PageTransition key={page.slug}>
       <article className="min-w-0">
-        {/* The title spans the full width so it never wraps beside the specimen; the lede shares the row with it. */}
         <header className="grid items-start gap-x-8 md:grid-cols-[minmax(0,1fr)_minmax(0,320px)]">
           <div className="pb-2 md:contents">
             <h1 className="m-0 md:col-span-2 text-[clamp(2.25rem,4.4vw,3.25rem)] leading-[1.05] font-semibold tracking-[-0.03em]">{page.title}</h1>
