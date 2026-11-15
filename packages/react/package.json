@@ -99,7 +99,8 @@
     "build": "tsup && cp src/styles.css dist/styles.css",
     "dev": "tsup --watch --onSuccess 'cp src/styles.css dist/styles.css'",
     "test": "vitest run",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "pnpm build && pnpm test"
   },
   "peerDependencies": {
     "react": ">=18.2",
