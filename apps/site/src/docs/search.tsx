@@ -9,7 +9,10 @@ import { propId } from './prop-table';
 type Entry = { label: string; kind: 'Page' | 'Section' | 'Function' | 'Option' | 'Prop' | 'Part' | 'Token' | 'Selector'; href: string; hint: string };
 
 function buildIndex(): Entry[] {
-  const entries: Entry[] = [];
+  const entries: Entry[] = [
+    { label: 'Home', kind: 'Page', href: '/', hint: 'The showcase: flick test, worlds, and what only Halo does.' },
+    { label: 'Playground', kind: 'Page', href: '/playground', hint: 'Start from a plain toast and layer it up. Take the code or an agent prompt.' },
+  ];
   for (const page of docPages) {
     entries.push({ label: page.title, kind: 'Page', href: `/docs/${page.slug}`, hint: page.lede });
     for (const s of page.sections) entries.push({ label: s.title, kind: 'Section', href: `/docs/${page.slug}#${s.id}`, hint: page.title });
@@ -92,14 +95,15 @@ export function DocsSearch() {
       <button
         type="button"
         onClick={open}
-        className="flex h-10 w-full cursor-pointer items-center gap-2 rounded-full bg-ink/[0.06] pr-2 pl-3.5 text-ui text-ink-soft transition-colors duration-150 hover:bg-ink/[0.1] hover:text-ink pointer-coarse:h-11 dark:bg-ink/[0.09]"
+        aria-label="Search the docs"
+        className="flex h-9 w-full cursor-pointer items-center gap-2 rounded-full bg-ink/[0.06] pr-2 pl-3.5 max-sm:justify-center max-sm:px-0 text-ui text-ink-soft transition-colors duration-150 hover:bg-ink/[0.1] hover:text-ink pointer-coarse:h-11 dark:bg-ink/[0.09]"
       >
         <svg aria-hidden width="14" height="14" viewBox="0 0 16 16" fill="none">
           <circle cx="7" cy="7" r="5.25" stroke="currentColor" strokeWidth="1.5" />
           <path d="m11 11 3.5 3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
         </svg>
-        <span className="flex-1 text-left">Search docs</span>
-        <kbd className="rounded-md px-1.5 py-0.5 font-sans text-caption text-ink-faint shadow-[inset_0_0_0_1px_var(--line)]">{isMac ? '⌘K' : 'Ctrl K'}</kbd>
+        <span className="flex-1 text-left max-sm:sr-only">Search</span>
+        <kbd className="rounded-md px-1.5 py-0.5 font-sans text-caption text-ink-faint shadow-[inset_0_0_0_1px_var(--line)] max-sm:hidden">{isMac ? '⌘K' : 'Ctrl K'}</kbd>
       </button>
 
       <dialog

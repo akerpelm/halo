@@ -1,9 +1,9 @@
 import { Toaster } from '@halo-ui/react/toast';
 import { Link } from '../components/link';
+import { PageTransition } from '../components/page-transition';
 import { cn } from '../lib/cn';
 import { useSettings } from '../lib/settings';
 import { type DocPage, docPages } from './pages';
-import { DocsSearch } from './search';
 import { specimens } from './specimens';
 
 /** Docs: a sidebar of pages, a reading column, and an outline of the current page. */
@@ -16,12 +16,9 @@ export function DocsLayout({ slug }: { slug: string }) {
 
   return (
     <div className="mx-auto grid max-w-[1240px] grid-cols-[minmax(0,1fr)] gap-x-12 px-4 pt-6 pb-24 sm:px-8 lg:grid-cols-[200px_minmax(0,1fr)] lg:pt-10 xl:grid-cols-[200px_minmax(0,1fr)_180px]">
-      <Toaster id="custom" label="Midnight demo notifications" world="midnight" theme={theme} position="bottom-left" />
+      <Toaster id="custom" label="Midnight demo notifications" world="midnight" theme={theme} position="bottom-left" style={{ viewTransitionName: 'custom-toaster' }} />
 
-      <nav aria-label="Docs" className="min-w-0 max-lg:mb-8 lg:sticky lg:top-24 lg:self-start">
-        <div className="mb-5">
-          <DocsSearch />
-        </div>
+      <nav aria-label="Docs" className="min-w-0 max-lg:mb-8 lg:sticky lg:top-24 lg:self-start" style={{ viewTransitionName: 'docs-sidebar' }}>
         <p className="m-0 mb-3 text-caption font-medium tracking-[0.02em] text-ink-faint uppercase max-lg:sr-only">Documentation</p>
         <ul className="m-0 flex list-none gap-1.5 overflow-x-auto p-0 [scrollbar-width:none] lg:grid lg:gap-0.5 lg:overflow-visible [&::-webkit-scrollbar]:hidden">
           {docPages.map((p) => (
@@ -41,6 +38,7 @@ export function DocsLayout({ slug }: { slug: string }) {
         </ul>
       </nav>
 
+      <PageTransition key={page.slug}>
       <article className="min-w-0">
         <header className="grid items-end gap-x-8 md:grid-cols-[minmax(0,1fr)_minmax(0,320px)]">
           <div className="pb-2">
@@ -67,8 +65,9 @@ export function DocsLayout({ slug }: { slug: string }) {
           )}
         </nav>
       </article>
+      </PageTransition>
 
-      <nav aria-label="On this page" className="hidden xl:sticky xl:top-24 xl:block xl:self-start">
+      <nav aria-label="On this page" className="hidden xl:sticky xl:top-24 xl:block xl:self-start" style={{ viewTransitionName: 'docs-outline' }}>
         <p className="m-0 mb-3 text-caption font-medium tracking-[0.02em] text-ink-faint uppercase">On this page</p>
         <ul className="m-0 grid list-none gap-1.5 border-l border-line p-0">
           {page.sections.map((s) => (

@@ -1,28 +1,32 @@
 import { Toaster } from '@halo-ui/react/toast';
-import { useState } from 'react';
+import { useLayoutEffect, useState } from 'react';
 import { Nav } from './components/nav';
+import { SurfaceTransition } from './components/page-transition';
 import { DocsLayout } from './docs/docs-layout';
-import { usePath } from './lib/router';
 import { type BuildConfig, PLAIN } from './lib/build';
+import { PathContext, usePath } from './lib/router';
 import { useSettings } from './lib/settings';
-import { Agents } from './sections/agents';
-import { Directions } from './sections/directions';
-import { DrawerSection } from './sections/drawer-section';
 import { Footer } from './sections/footer';
-import { Hero } from './sections/hero';
-import { MakeItYours } from './sections/make-it-yours';
-import { Playground } from './sections/playground';
-import { ToastSection } from './sections/toast-section';
+import { Home } from './sections/home';
+import { PlaygroundPage } from './sections/playground-page';
 
 export function App() {
   const { world, theme } = useSettings();
-  // The playground's toast, lifted so Directions can load setups into it.
+  // The playground's toast, lifted so Worlds can load setups into it and it survives navigation.
   const [build, setBuild] = useState<BuildConfig>(PLAIN);
   const path = usePath();
-  const docsSlug = path.startsWith('/docs') ? (path.split('/')[2] ?? 'getting-started') : null;
+  const surface = path.startsWith('/docs') ? 'docs' : path.startsWith('/playground') ? 'playground' : 'home';
+  const docsSlug = surface === 'docs' ? path.split('/')[2] || 'getting-started' : null;
+
+  // Runs before the transition's "new" snapshot, so the incoming page is already at its start.
+  useLayoutEffect(() => {
+    const target = window.location.hash ? document.getElementById(window.location.hash.slice(1)) : null;
+    if (target) target.scrollIntoView({ block: 'start', behavior: 'instant' });
+    else window.scrollTo({ top: 0, behavior: 'instant' });
+  }, [path]);
 
   return (
-    <>
+    <PathContext.Provider value={path}>
       <a
         href="#main"
         className="fixed top-3 left-3 z-50 -translate-y-20 rounded-full bg-ink px-4 py-2 text-ui text-wall no-underline focus-visible:translate-y-0"
@@ -32,23 +36,26 @@ export function App() {
       <div data-halo-recess className="mullions min-h-dvh">
         <Nav />
         <main id="main">
-          {docsSlug !== null ? (
-            <DocsLayout slug={docsSlug || 'getting-started'} />
-          ) : (
-            <>
-              <Hero />
-              <ToastSection />
-              <DrawerSection />
-              <Directions onOpenToast={setBuild} />
-              <Playground build={build} onBuild={setBuild} />
-              <MakeItYours />
-              <Agents />
-            </>
+          {surface === 'home' && (
+            <SurfaceTransition>
+              <Home onOpenToast={setBuild} />
+            </SurfaceTransition>
+          )}
+          {surface === 'docs' && docsSlug && (
+            <SurfaceTransition>
+              <DocsLayout slug={docsSlug} />
+            </SurfaceTransition>
+          )}
+          {surface === 'playground' && (
+            <SurfaceTransition>
+              <PlaygroundPage build={build} onBuild={setBuild} />
+            </SurfaceTransition>
           )}
         </main>
         <Footer />
       </div>
-      <Toaster world={world} theme={theme} />
-    </>
+      {/* Floats above every surface; its own transition name keeps open toasts still during navigation. */}
+      <Toaster world={world} theme={theme} style={{ viewTransitionName: 'site-toaster' }} />
+    </PathContext.Provider>
   );
 }

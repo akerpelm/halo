@@ -1,3 +1,6 @@
 {
-  "rewrites": [{ "source": "/docs/:path*", "destination": "/index.html" }]
+  "rewrites": [
+    { "source": "/docs/:path*", "destination": "/index.html" },
+    { "source": "/playground", "destination": "/index.html" }
+  ]
 }

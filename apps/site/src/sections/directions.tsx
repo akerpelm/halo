@@ -6,6 +6,7 @@ import { MaterialSample } from '../components/material-sample';
 import { Section } from '../components/section';
 import { type BuildConfig, PLAIN, builderPrompt } from '../lib/build';
 import { type DrawerConfig, PRINCIPLES, defaultDrawerConfig, drawerPrompt, llmsUrl } from '../lib/config';
+import { navigate } from '../lib/router';
 import { useSettings } from '../lib/settings';
 import { worldName, worlds } from '../lib/worlds';
 
@@ -111,7 +112,7 @@ export function Directions({ onOpenToast }: DirectionsProps) {
                   size="sm"
                   onClick={() => {
                     onOpenToast(d.config);
-                    document.getElementById('playground')?.scrollIntoView({ block: 'start' });
+                    navigate('/playground');
                   }}
                 >
                   Open in playground

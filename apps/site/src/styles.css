@@ -234,6 +234,129 @@
   mix-blend-mode: screen;
 }
 
+/*
+ * Page transitions (View Transitions API, driven by React's <ViewTransition>).
+ * Surfaces fade with a small rise; docs pages slide in reading order. Both ride Halo's own spring curve.
+ */
+@keyframes vt-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes vt-fade-out {
+  to {
+    opacity: 0;
+  }
+}
+@keyframes vt-rise {
+  from {
+    transform: translateY(14px);
+  }
+}
+@keyframes vt-slide-from {
+  from {
+    transform: translateX(var(--vt-offset));
+  }
+}
+@keyframes vt-slide-to {
+  to {
+    transform: translateX(var(--vt-offset));
+  }
+}
+
+::view-transition-old(.surface-out) {
+  animation: vt-fade-out 160ms ease-in both;
+}
+::view-transition-new(.surface-in) {
+  animation:
+    vt-fade-in 260ms ease-out 80ms both,
+    vt-rise 520ms var(--ease-spring) 80ms both;
+}
+
+::view-transition-new(.page-from-right) {
+  --vt-offset: 48px;
+  animation:
+    vt-fade-in 220ms ease-out 60ms both,
+    vt-slide-from 480ms var(--ease-spring) both;
+}
+::view-transition-old(.page-to-left) {
+  --vt-offset: -48px;
+  animation:
+    vt-fade-out 160ms ease-in both,
+    vt-slide-to 480ms var(--ease-spring) both;
+}
+::view-transition-new(.page-from-left) {
+  --vt-offset: -48px;
+  animation:
+    vt-fade-in 220ms ease-out 60ms both,
+    vt-slide-from 480ms var(--ease-spring) both;
+}
+::view-transition-old(.page-to-right) {
+  --vt-offset: 48px;
+  animation:
+    vt-fade-out 160ms ease-in both,
+    vt-slide-to 480ms var(--ease-spring) both;
+}
+
+/* Persistent chrome stays still while content moves. The header uses backdrop-filter, so its old
+   snapshot is hidden to avoid a flash. */
+::view-transition-group(site-header),
+::view-transition-group(docs-sidebar),
+::view-transition-group(docs-outline),
+::view-transition-group(site-toaster),
+::view-transition-group(custom-toaster) {
+  animation: none;
+  z-index: 100;
+}
+/* Header and sidebar: show only the new snapshot, so the active page swaps at once instead of
+   both highlights showing mid-slide. */
+::view-transition-old(site-header),
+::view-transition-old(docs-sidebar) {
+  display: none;
+}
+::view-transition-new(site-header),
+::view-transition-new(docs-sidebar) {
+  animation: none;
+}
+/* The outline's content is the page's, so it crossfades quickly rather than overlapping. */
+::view-transition-old(docs-outline) {
+  animation: vt-fade-out 120ms ease-in both;
+}
+::view-transition-new(docs-outline) {
+  animation: vt-fade-in 200ms ease-out 80ms both;
+}
+::view-transition-group(site-toaster),
+::view-transition-group(custom-toaster) {
+  z-index: 200;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(*),
+  ::view-transition-new(*),
+  ::view-transition-group(*) {
+    animation-duration: 0s !important;
+    animation-delay: 0s !important;
+  }
+}
+
+/* Menus need a denser frost than ambient panes, or the page reads through them. */
+.appearance-panel,
+.docs-search-panel {
+  --halo-surface: color-mix(in oklab, var(--halo-surface-solid) 96%, transparent);
+  --halo-blur: 32px;
+}
+
+/* The appearance menu panel springs open. */
+.appearance-panel {
+  animation: docs-search-in 420ms var(--ease-spring) both;
+  transform-origin: top right;
+}
+@media (prefers-reduced-motion: reduce) {
+  .appearance-panel {
+    animation: none;
+  }
+}
+
 /* Docs search: a top-layer dialog whose panel springs in. */
 dialog.docs-search {
   position: fixed;

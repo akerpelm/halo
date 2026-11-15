@@ -1,24 +1,7 @@
-import type { HaloWorld } from '@halo-ui/react';
-import { useSettings } from '../lib/settings';
-import { usePath } from '../lib/router';
-import { worlds } from '../lib/worlds';
+import { DocsSearch } from '../docs/search';
+import { useCurrentPath } from '../lib/router';
+import { AppearanceMenu } from './appearance-menu';
 import { Link } from './link';
-
-const links = [
-  ['Docs', '/docs/getting-started'],
-  ['Toast', '/#toast'],
-  ['Drawer', '/#drawer'],
-  ['Worlds', '/#directions'],
-  ['Playground', '/#playground'],
-  ['Customize', '/#customize'],
-] as const;
-
-/** Inside the docs the sidebar owns navigation; the header only leaves or switches surfaces. */
-const docsLinks = [
-  ['Home', '/'],
-  ['Docs', '/docs/getting-started'],
-  ['Playground', '/#playground'],
-] as const;
 
 export function Mark({ className }: { className?: string }) {
   return (
@@ -29,85 +12,40 @@ export function Mark({ className }: { className?: string }) {
   );
 }
 
+/** Three surfaces, one search, one appearance menu. Sections belong to the page, not the header. */
+const surfaces = [
+  ['Docs', '/docs/getting-started', '/docs'],
+  ['Playground', '/playground', '/playground'],
+] as const;
+
 export function Nav() {
-  const { world, theme, setWorld, setTheme } = useSettings();
-  const path = usePath();
+  const path = useCurrentPath();
   return (
-    <header className="sticky top-0 z-40 bg-wall/72 backdrop-blur-xl backdrop-saturate-150">
-      <nav aria-label="Main" className="mx-auto flex h-16 max-w-[1240px] items-center gap-6 px-4 sm:px-8">
-        <Link href="/" className="flex items-center gap-2 rounded-md text-ink no-underline pointer-coarse:min-h-11">
+    <header className="sticky top-0 z-40 bg-wall/72 backdrop-blur-xl backdrop-saturate-150" style={{ viewTransitionName: 'site-header' }}>
+      <nav aria-label="Main" className="mx-auto flex h-16 max-w-[1240px] items-center gap-2 px-4 sm:gap-6 sm:px-8">
+        <Link href="/" aria-label="Halo, home" className="flex items-center gap-2 rounded-md text-ink no-underline pointer-coarse:min-h-11">
           <Mark className="h-5 w-7" />
           <span className="font-display text-title font-semibold tracking-[-0.02em]">halo</span>
         </Link>
-        <ul className="m-0 hidden list-none gap-1 p-0 md:flex">
-          {(path.startsWith('/docs') ? docsLinks : links).map(([label, href]) => (
+        <ul className="m-0 flex list-none gap-0.5 p-0">
+          {surfaces.map(([label, href, prefix]) => (
             <li key={href}>
               <Link
                 href={href}
-                aria-current={href.startsWith('/docs') && path.startsWith('/docs') ? 'page' : undefined}
-                className="rounded-full px-3 py-1.5 text-ui text-ink-soft no-underline transition-colors duration-150 hover:text-ink aria-[current=page]:font-medium aria-[current=page]:text-ink"
+                aria-current={path.startsWith(prefix) ? 'page' : undefined}
+                className="inline-flex min-h-9 items-center rounded-full px-3 text-ui text-ink-soft no-underline transition-colors duration-150 hover:text-ink aria-[current=page]:bg-ink/[0.06] aria-[current=page]:font-medium aria-[current=page]:text-ink pointer-coarse:min-h-11 dark:aria-[current=page]:bg-ink/[0.09]"
               >
                 {label}
               </Link>
             </li>
           ))}
         </ul>
-        {path.startsWith('/docs') && (
-          <span className="hidden rounded-full px-2.5 py-1 font-mono text-caption text-ink-faint shadow-[inset_0_0_0_1px_var(--line)] md:inline">v0.1.0</span>
-        )}
         <div className="ml-auto flex items-center gap-2">
-          {/* The select itself is the whole pill, so a press anywhere on it opens the menu. */}
-          <div className="relative h-9 rounded-full bg-ink/[0.06] pointer-coarse:h-11 text-label text-ink transition-colors duration-150 hover:bg-ink/[0.1] has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-ink">
-            <span aria-hidden className="pointer-events-none absolute top-1/2 left-3.5 -translate-y-1/2 text-ink-faint">
-              World
-            </span>
-            <select
-              aria-label="Visual world"
-              value={world}
-              onChange={(event) => setWorld(event.target.value as HaloWorld)}
-              className="h-full w-full cursor-pointer appearance-none rounded-full bg-transparent pr-8 pl-[58px] font-medium text-ink outline-none"
-            >
-              {worlds.map((w) => (
-                <option key={w.value} value={w.value}>
-                  {w.name}
-                </option>
-              ))}
-            </select>
-            <svg aria-hidden width="10" height="10" viewBox="0 0 10 10" className="pointer-events-none absolute top-1/2 right-3.5 -translate-y-1/2 text-ink-soft">
-              <path d="m2 3.5 3 3 3-3" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
+          <div className="w-10 sm:w-56">
+            <DocsSearch />
           </div>
-          <button
-            type="button"
-            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-            aria-label={theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
-            className="grid size-9 cursor-pointer place-items-center rounded-full pointer-coarse:size-11 text-ink-soft transition-colors duration-150 hover:bg-ink/[0.07] hover:text-ink"
-          >
-            <svg width="17" height="17" viewBox="0 0 20 20" fill="none" aria-hidden>
-              {theme === 'dark' ? (
-                <>
-                  <circle cx="10" cy="10" r="3.6" stroke="currentColor" strokeWidth="1.5" />
-                  <path d="M10 2v2M10 16v2M2 10h2M16 10h2M4.3 4.3l1.4 1.4M14.3 14.3l1.4 1.4M4.3 15.7l1.4-1.4M14.3 5.7l1.4-1.4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-                </>
-              ) : (
-                <path d="M16.5 12.4A7 7 0 0 1 7.6 3.5a7 7 0 1 0 8.9 8.9Z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" />
-              )}
-            </svg>
-          </button>
+          <AppearanceMenu />
         </div>
-      </nav>
-      {/* Phones: the same sections as a scrolling row, so a long page is never a dead end.
-          Docs pages have their own row of pages instead, so only one row ever shows. */}
-      <nav aria-label="Sections" className={path.startsWith('/docs') ? 'hidden' : 'md:hidden'}>
-        <ul className="m-0 flex list-none gap-1.5 overflow-x-auto px-4 pb-2.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-          {links.map(([label, href]) => (
-            <li key={href} className="flex-none">
-              <Link href={href} className="inline-flex min-h-11 items-center rounded-full bg-ink/[0.06] px-4 text-label text-ink no-underline dark:bg-ink/[0.09]">
-                {label}
-              </Link>
-            </li>
-          ))}
-        </ul>
       </nav>
     </header>
   );

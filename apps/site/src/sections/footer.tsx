@@ -1,4 +1,6 @@
 import { InstallChip } from '../components/install-chip';
+import { Link } from '../components/link';
+import { docPages } from '../docs/pages';
 import { Mark } from '../components/nav';
 
 export function Footer() {
@@ -12,15 +14,39 @@ export function Footer() {
           <InstallChip />
         </div>
       </div>
-      <div className="mx-auto flex max-w-[1240px] flex-wrap items-center justify-between gap-4 border-t border-line px-4 py-8 text-ui text-ink-faint sm:px-8">
-        <p className="m-0 flex items-center gap-2">
-          <Mark className="h-4 w-6" />
-          <span>Halo 0.1.0</span>
-        </p>
-        <a href="#top" className="inline-flex min-h-6 items-center text-ink-soft hover:text-ink pointer-coarse:min-h-11">
-          Back to top
-        </a>
-      </div>
+      <nav aria-label="Site map" className="mx-auto grid max-w-[1240px] gap-8 border-t border-line px-4 py-10 text-ui sm:grid-cols-3 sm:px-8">
+        <div>
+          <p className="m-0 mb-3 flex items-center gap-2 text-ink">
+            <Mark className="h-4 w-6" />
+            <span className="font-medium">Halo 0.1.0</span>
+          </p>
+          <p className="m-0 text-ink-faint">Spring-physics toast and drawer for React.</p>
+        </div>
+        <ul className="m-0 grid list-none gap-1.5 p-0">
+          {docPages.map((p) => (
+            <li key={p.slug}>
+              <Link href={`/docs/${p.slug}`} className="inline-flex min-h-6 items-center text-ink-soft no-underline hover:text-ink pointer-coarse:min-h-11">
+                {p.title}
+              </Link>
+            </li>
+          ))}
+        </ul>
+        <ul className="m-0 grid list-none content-start gap-1.5 p-0">
+          {(
+            [
+              ['Home', '/'],
+              ['Playground', '/playground'],
+              ['llms.txt', '/llms.txt'],
+            ] as const
+          ).map(([label, href]) => (
+            <li key={href}>
+              <Link href={href} className="inline-flex min-h-6 items-center text-ink-soft no-underline hover:text-ink pointer-coarse:min-h-11">
+                {label}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </nav>
     </footer>
   );
 }

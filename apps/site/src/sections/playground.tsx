@@ -7,6 +7,7 @@ import { ToastBuilder } from './toast-builder';
 
 type PlaygroundProps = { build: BuildConfig; onBuild: (config: BuildConfig) => void };
 
+
 export function Playground({ build, onBuild }: PlaygroundProps) {
   const [component, setComponent] = useState<'toast' | 'drawer'>('toast');
   const [output, setOutput] = useState<'code' | 'prompt'>('code');
@@ -14,6 +15,7 @@ export function Playground({ build, onBuild }: PlaygroundProps) {
   return (
     <Section
       id="playground"
+      headingLevel="h1"
       wide
       title="Playground"
       lede={

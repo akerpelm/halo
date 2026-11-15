@@ -411,3 +411,23 @@ axe-core (WCAG 2.2 AA plus best practices) passes in light and dark, with toasts
 - **Props:** one semantic table per group, with explicit ARIA table roles, so it restyles into stacked rows on phones without losing semantics. Every row has a `#prop-*` anchor.
 - **Search:** ⌘K, Ctrl+K, or `/` opens a native top-layer dialog. It follows the ARIA combobox and listbox pattern and indexes every page, section, function, option, prop, token, and selector.
 - **Routing:** the History API, with no router dependency. The static-host fallbacks are `public/_redirects` and `vercel.json`.
+
+
+## Information architecture
+
+- **Three surfaces:** Home (`/`, the scrolled showcase), Docs (`/docs/*`), and Playground (`/playground`).
+- **The header carries only:** the logo (home), Docs, Playground, a site-wide ⌘K search, and one Appearance menu that holds the world and the theme. Section links don't go in the header: Home is a story you scroll, and the docs cover each component.
+- **Wayfinding below the fold:** the footer is a site map (every docs page, Home, Playground, llms.txt), and Home has a "Start plain. Build it up." band into the playground.
+- **Phones:** one header row. The docs keep their own row of page chips.
+
+## Page transitions
+
+React `<ViewTransition>` with `addTransitionType`. The path lives in React state so every navigation runs in a transition.
+- **Surface switches** (`surface`): the old surface fades out in 160ms, and the new one fades in with a 14px rise on `--ease-spring`. Surfaces are lateral, so there is no directional slide.
+- **Docs to docs** (`page-next` / `page-prev`, by sidebar order): content slides 48px with a crossfade, inside the persistent layout.
+- **Back and forward** animate too. The update starts just after `popstate`, because React finishes popstate updates synchronously, which would skip the transition.
+- **Persistent pieces:**
+  - The header and the docs sidebar show only their new snapshot, so the active item swaps at once and the header's backdrop blur never flashes.
+  - The outline crossfades quickly.
+  - Toasters float above at z 200 and never move with the page.
+- **Reduced motion:** every view-transition animation runs at 0s.
