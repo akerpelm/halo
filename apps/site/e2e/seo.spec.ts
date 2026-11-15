@@ -22,6 +22,16 @@ for (const route of routes) {
   });
 }
 
+test('every route has its own 1200x630 Open Graph image', async ({ request }) => {
+  for (const route of routes) {
+    const image = await request.get(route.ogImage);
+    expect(image.status(), route.ogImage).toBe(200);
+    expect(image.headers()['content-type']).toBe('image/png');
+    const png = await image.body();
+    expect([png.readUInt32BE(16), png.readUInt32BE(20)]).toEqual([1200, 630]);
+  }
+});
+
 test('robots.txt points at the sitemap, which lists every route', async ({ request }) => {
   const robots = await (await request.get('/robots.txt')).text();
   expect(robots.trimEnd().endsWith('Sitemap: https://haloui.dev/sitemap.xml')).toBe(true);

@@ -42,6 +42,7 @@ pnpm typecheck
 pnpm build
 pnpm --filter haloui-site test:e2e   # Playwright browser checks against a preview build
 pnpm --filter halo-ui-react size     # after a library build: rewrite sizes.json and the README size table
+pnpm --filter haloui-site og         # regenerate public/og/*.png after changing a route title
 ```
 
 pnpm 10, Node 22 (`.node-version`). Run builds one after another: a stale `tsup --watch` from an earlier `pnpm dev` can empty `dist` mid-build. Restart `pnpm dev` after changing `tsup.config.ts`.
