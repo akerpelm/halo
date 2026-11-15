@@ -2,6 +2,7 @@ import { CodeBlock } from '../components/code-block';
 import { CompareTable } from '../components/compare-table';
 import { DemoDrawer } from '../components/demo-drawer';
 import { Section } from '../components/section';
+import { CountUp } from '../components/count-up';
 import { WallLabel } from '../components/wall-label';
 import { defaultDrawerConfig, drawerCode } from '../lib/config';
 import { useSettings } from '../lib/settings';
@@ -31,7 +32,7 @@ export function DrawerSection() {
           medium="Native dialog, spring steel, projected detents"
           rows={[
             ['Import', <code key="i">@halo-ui/react/drawer</code>],
-            ['Weight', '4.8 kB min+gzip, with springs'],
+            ['Weight', <span key="w"><CountUp value={4.8} decimals={1} suffix=" kB" /> min+gzip, with springs</span>],
             ['Edges', 'Bottom, top, left, right'],
             ['Detents', 'Viewport fractions or px'],
             ['Keyboard', 'Handle is a button, arrows step'],

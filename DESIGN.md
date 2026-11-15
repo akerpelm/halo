@@ -322,3 +322,11 @@ All movement in response to gesture or state runs on the library's analytic spri
 `density` (`compact` | `comfortable` | `spacious`) moves padding, inner gap, and type size together through `--halo-pad-y`, `--halo-pad-x`, `--halo-pad-end`, `--halo-inner-gap`, and `--halo-font-size`. Comfortable is 14/16/14px padding, a 12px gap, and 14px type. Compact is 9/12/10, 9, and 13. Spacious is 18/20/18, 14, and 15.
 
 `radius` is a preset (`square` 6, `soft` 12, `round` 18, `pill` 999) or px, written to `--halo-radius`. Drawers write `--halo-drawer-radius` instead, capped at 40px, with a default of 28. The edge ring and the time-left arc inherit the radius, so they stay concentric at every setting.
+
+
+## Borrowed motion (owned)
+
+Three site-only pieces started from React Bits. They were installed with the shadcn CLI and then rewritten as house code on Halo's spring engine, so every animation still comes from one solver and `motion` is not a dependency:
+- `Magnet` (components/magnet.tsx): the hero actions lean up to 10px toward the cursor and settle with bounce 0.4. Only the nearest magnet pulls.
+- `Spotlight` (components/spotlight.tsx): a gallery spot trails the pointer across each world sample (overlay blend in light themes, screen in dark) and turns the pane's `--halo-shift`.
+- `CountUp` (components/count-up.tsx): measurements spring to their value when they enter view and glide between values. Screen readers get the final value immediately.

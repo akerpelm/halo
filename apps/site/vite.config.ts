@@ -10,6 +10,7 @@ export default defineConfig({
   // Point at library source so edits hot-reload without a rebuild.
   resolve: {
     alias: [
+      { find: /^@\//, replacement: `${fileURLToPath(new URL('./src/', import.meta.url))}` },
       { find: '@halo-ui/react/styles.css', replacement: lib('styles.css') },
       { find: '@halo-ui/react/spring', replacement: lib('core/index.ts') },
       { find: '@halo-ui/react/toast', replacement: lib('toast/index.ts') },

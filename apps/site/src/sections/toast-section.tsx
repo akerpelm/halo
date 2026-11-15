@@ -4,6 +4,7 @@ import { CodeBlock } from '../components/code-block';
 import { CompareTable } from '../components/compare-table';
 import { FlickTest } from '../components/flick-test';
 import { Section } from '../components/section';
+import { CountUp } from '../components/count-up';
 import { WallLabel } from '../components/wall-label';
 import { demos } from '../lib/demo-toasts';
 
@@ -62,8 +63,8 @@ export function ToastSection() {
           medium="Frosted pane, spring steel, two live regions"
           rows={[
             ['Import', <code key="i">@halo-ui/react/toast</code>],
-            ['Weight', '5.7 kB min+gzip, with springs'],
-            ['Styles', '2.9 kB, shared with Drawer'],
+            ['Weight', <span key="w"><CountUp value={5.7} decimals={1} suffix=" kB" /> min+gzip, with springs</span>],
+            ['Styles', <span key="s"><CountUp value={2.9} decimals={1} suffix=" kB" />, shared with Drawer</span>],
             ['Peers', 'React 18.2 or newer'],
             ['Motion', 'Transform and opacity only'],
           ]}

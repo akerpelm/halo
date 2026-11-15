@@ -38,12 +38,16 @@ export function Nav() {
           ))}
         </ul>
         <div className="ml-auto flex items-center gap-2">
-          <label className="relative flex h-9 items-center rounded-full bg-ink/[0.06] pr-8 pl-3.5 text-[13px] text-ink transition-colors duration-150 hover:bg-ink/[0.1] has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-ink has-[:focus-visible]:outline-offset-2">
-            <span className="mr-1.5 text-ink-faint">World</span>
+          {/* The select itself is the whole pill, so a press anywhere on it opens the menu. */}
+          <div className="relative h-9 rounded-full bg-ink/[0.06] text-[13px] text-ink transition-colors duration-150 hover:bg-ink/[0.1] has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-ink">
+            <span aria-hidden className="pointer-events-none absolute top-1/2 left-3.5 -translate-y-1/2 text-ink-faint">
+              World
+            </span>
             <select
+              aria-label="Visual world"
               value={world}
               onChange={(event) => setWorld(event.target.value as HaloWorld)}
-              className="cursor-pointer appearance-none bg-transparent font-medium text-ink outline-none"
+              className="h-full w-full cursor-pointer appearance-none rounded-full bg-transparent pr-8 pl-[58px] font-medium text-ink outline-none"
             >
               {worlds.map((w) => (
                 <option key={w.value} value={w.value}>
@@ -51,10 +55,10 @@ export function Nav() {
                 </option>
               ))}
             </select>
-            <svg aria-hidden width="10" height="10" viewBox="0 0 10 10" className="pointer-events-none absolute right-3.5 text-ink-soft">
+            <svg aria-hidden width="10" height="10" viewBox="0 0 10 10" className="pointer-events-none absolute top-1/2 right-3.5 -translate-y-1/2 text-ink-soft">
               <path d="m2 3.5 3 3 3-3" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
-          </label>
+          </div>
           <button
             type="button"
             onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}

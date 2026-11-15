@@ -341,7 +341,8 @@
 
 .halo-toast-body {
   display: flex;
-  align-items: flex-start;
+  /* One-line toasts sit on the true centre line; with a description, the icon aligns to the title. */
+  align-items: center;
   gap: var(--halo-inner-gap);
   padding: var(--halo-pad-y) var(--halo-pad-end) var(--halo-pad-y) var(--halo-pad-x);
   transition: opacity 180ms ease;
@@ -375,10 +376,12 @@
   color: var(--halo-fg-muted);
 }
 
+.halo-toast-body:has(.halo-toast-description) {
+  align-items: flex-start;
+}
 .halo-toast-text {
   flex: 1;
   min-width: 0;
-  padding-top: 1px;
   line-height: 1.38;
   overflow-wrap: anywhere;
 }

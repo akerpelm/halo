@@ -2,6 +2,7 @@ import { Button } from '../components/button';
 import { DemoDrawer } from '../components/demo-drawer';
 import { HangingPane } from '../components/hanging-pane';
 import { InstallChip } from '../components/install-chip';
+import { Magnet } from '../components/magnet';
 import { fireNextDemo } from '../lib/demo-toasts';
 
 export function Hero() {
@@ -19,10 +20,14 @@ export function Hero() {
           to an AI agent.
         </p>
         <div className="mt-9 flex flex-wrap items-center gap-3">
-          <Button tone="primary" size="lg" onClick={fireNextDemo}>
-            Fire a toast
-          </Button>
-          <DemoDrawer trigger="Open the drawer" />
+          <Magnet>
+            <Button tone="primary" size="lg" onClick={fireNextDemo}>
+              Fire a toast
+            </Button>
+          </Magnet>
+          <Magnet>
+            <DemoDrawer trigger="Open the drawer" />
+          </Magnet>
           <InstallChip />
         </div>
       </div>

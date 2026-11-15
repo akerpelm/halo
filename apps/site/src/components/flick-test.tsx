@@ -1,6 +1,7 @@
 import { createSpringValue, createVelocityTracker, project, resolveSpring, useReducedMotion } from '@halo-ui/react/spring';
 import { type PointerEvent, type RefObject, useRef, useState } from 'react';
 import { useSettings } from '../lib/settings';
+import { CountUp } from './count-up';
 
 // Sonner's release rules, reimplemented from its source (src/index.tsx, src/styles.css) for comparison.
 const SONNER_SWIPE_THRESHOLD = 45;
@@ -12,7 +13,7 @@ const HALO_SPRING = resolveSpring('snappy');
 const HALO_DECELERATION = 0.995;
 const RESPAWN_MS = 900;
 
-type Verdict = { speed: string; outcome: string };
+type Verdict = { speed: number; speedNote: string; outcome: string };
 
 function Chip({ label, chipRef }: { label: string; chipRef: RefObject<HTMLDivElement | null> }) {
   const { world, theme } = useSettings();
@@ -120,7 +121,8 @@ export function FlickTest() {
 
     setVerdicts({
       sonner: {
-        speed: `${Math.round(averageSpeed * 1000).toLocaleString('en-US')} px/s, averaged over the drag`,
+        speed: Math.round(averageSpeed * 1000),
+        speedNote: 'px/s, averaged over the drag',
         outcome: sonnerDismiss
           ? Math.abs(dx) >= SONNER_SWIPE_THRESHOLD && averageSpeed <= SONNER_VELOCITY_THRESHOLD
             ? `Dismissed: it passed 45 px, whatever you meant. Exit takes a fixed 200 ms.`
@@ -128,7 +130,8 @@ export function FlickTest() {
           : 'Snapped back over a fixed 400 ms.',
       },
       halo: {
-        speed: `${Math.round(Math.abs(velocity)).toLocaleString('en-US')} px/s at the moment you let go`,
+        speed: Math.round(Math.abs(velocity)),
+        speedNote: 'px/s at the moment you let go',
         outcome: haloDismiss ? 'Dismissed, and it kept your speed on the way out.' : 'Kept. It sprang back carrying your speed.',
       },
     });
@@ -164,7 +167,9 @@ export function FlickTest() {
         {verdicts ? (
           (['sonner', 'halo'] as const).map((key) => (
             <p key={key} className="m-0">
-              <span className="block font-mono text-[12px] text-ink-faint tabular-nums">{verdicts[key].speed}</span>
+              <span className="block font-mono text-[12px] text-ink-faint">
+                <CountUp value={verdicts[key].speed} /> {verdicts[key].speedNote}
+              </span>
               <span className={key === 'halo' ? 'text-ink' : 'text-ink-soft'}>{verdicts[key].outcome}</span>
             </p>
           ))

@@ -3,6 +3,7 @@
   "compilerOptions": {
     "types": ["vite/client", "node"],
     "paths": {
+      "@/*": ["./src/*"],
       "@halo-ui/react": ["../../packages/react/src/index.ts"],
       "@halo-ui/react/spring": ["../../packages/react/src/core/index.ts"],
       "@halo-ui/react/toast": ["../../packages/react/src/toast/index.ts"],
