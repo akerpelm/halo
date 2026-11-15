@@ -29,7 +29,7 @@ function Chip({ label, chipRef }: { label: string; chipRef: RefObject<HTMLDivEle
         <circle cx="10" cy="10" r="8.25" stroke="currentColor" strokeWidth="1.5" />
         <path d="m6.5 10.2 2.3 2.3 4.7-4.9" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
-      <span className="text-[14px] font-semibold">{label}</span>
+      <span className="text-ui font-semibold">{label}</span>
     </div>
   );
 }
@@ -156,18 +156,18 @@ export function FlickTest() {
       >
         {lanes.map((lane) => (
           <div key={lane.key} className="relative h-44 overflow-hidden bg-wall-deep" ref={lane.key === 'halo' ? laneRef : undefined}>
-            <p className="absolute top-3 left-4 m-0 text-[12px] text-ink-faint">
+            <p className="absolute top-3 left-4 m-0 text-caption text-ink-faint">
               <span className="font-semibold text-ink">{lane.title}</span> · {lane.note}
             </p>
             <Chip label="Drag me sideways" chipRef={lane.ref} />
           </div>
         ))}
       </div>
-      <figcaption className="mt-4 grid gap-4 text-[14px] leading-[1.5] sm:grid-cols-2" aria-live="polite">
+      <figcaption className="mt-4 grid gap-4 text-ui leading-[1.5] sm:grid-cols-2" aria-live="polite">
         {verdicts ? (
           (['sonner', 'halo'] as const).map((key) => (
             <p key={key} className="m-0">
-              <span className="block font-mono text-[12px] text-ink-faint">
+              <span className="block font-mono text-caption text-ink-faint">
                 <CountUp value={verdicts[key].speed} /> {verdicts[key].speedNote}
               </span>
               <span className={key === 'halo' ? 'text-ink' : 'text-ink-soft'}>{verdicts[key].outcome}</span>

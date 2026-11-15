@@ -60,8 +60,8 @@ type DirectionsProps = { onOpenToast: (config: BuildConfig) => void };
 function Row({ name, line, actions }: { name: string; line: string; actions: ReactNode }) {
   return (
     <li className="grid gap-3 border-b border-line py-5 last:border-0 sm:grid-cols-[160px_1fr_auto] sm:items-center sm:gap-6">
-      <h4 className="m-0 font-display text-[19px] font-semibold tracking-[-0.015em]">{name}</h4>
-      <p className="m-0 text-[15px] leading-[1.5] text-ink-soft">{line}</p>
+      <h4 className="m-0 font-display text-title font-semibold tracking-[-0.015em]">{name}</h4>
+      <p className="m-0 text-body leading-[1.5] text-ink-soft">{line}</p>
       <div className="flex flex-wrap items-center gap-1">{actions}</div>
     </li>
   );
@@ -87,18 +87,18 @@ export function Directions({ onOpenToast }: DirectionsProps) {
           <li key={value} className="flex flex-col gap-4">
             <MaterialSample world={value} />
             <div className="flex items-center justify-between gap-4">
-              <h3 className="m-0 text-[22px] font-semibold tracking-[-0.02em]">{name}</h3>
+              <h3 className="m-0 text-title font-semibold tracking-[-0.02em]">{name}</h3>
               <Button size="sm" tone={world === value ? 'primary' : 'quiet'} aria-pressed={world === value} onClick={() => setWorld(value)}>
                 {world === value ? 'In use' : 'Use'}
               </Button>
             </div>
-            <p className="m-0 text-[15px] leading-[1.55] text-ink-soft">{line}</p>
-            <code className="mt-auto text-[13px] text-ink-faint">world="{value}"</code>
+            <p className="m-0 text-body leading-[1.55] text-ink-soft">{line}</p>
+            <code className="mt-auto text-label text-ink-faint">world="{value}"</code>
           </li>
         ))}
       </ul>
 
-      <h3 className="mt-16 mb-1 text-[24px] font-semibold tracking-[-0.02em]">Toast setups</h3>
+      <h3 className="mt-16 mb-1 text-heading font-semibold tracking-[-0.02em]">Toast setups</h3>
       <ul className="m-0 list-none p-0">
         {toastDirections.map((d) => (
           <Row
@@ -123,7 +123,7 @@ export function Directions({ onOpenToast }: DirectionsProps) {
         ))}
       </ul>
 
-      <h3 className="mt-14 mb-1 text-[24px] font-semibold tracking-[-0.02em]">Drawer setups</h3>
+      <h3 className="mt-14 mb-1 text-heading font-semibold tracking-[-0.02em]">Drawer setups</h3>
       <ul className="m-0 list-none p-0">
         {drawerDirections.map((d) => (
           <Row

@@ -192,6 +192,12 @@ All three are self-hosted through `@fontsource-variable` packages imported in th
 
 **Character:** Gallery wall text. Funnel Display is set large, semibold, and tightly tracked for headings and object-label titles; Funnel Sans carries everything you read at length. Mono is reserved for code, the install command, and live numeric readouts.
 
+### Scale
+
+UI text uses seven Tailwind tokens defined in `apps/site/src/styles.css` `@theme`. Ad-hoc pixel sizes are not used:
+`text-caption` 12px · `text-label` 13px · `text-ui` 14px · `text-body` 15px · `text-lead` 17px · `text-title` 20px · `text-heading` 24px.
+Display and section headlines stay fluid `clamp()` sizes (below). The only fixed size off the scale is the decorative 120px glyph behind the material samples.
+
 ### Hierarchy
 - **Display** (600, clamp(3rem, 7.6vw, 6rem), 0.94, -0.035em): The hero wall text only, capped at 15ch.
 - **Headline** (600, clamp(2.25rem, 4.4vw, 3.5rem), 1, -0.03em): One per section, top of the left column.
@@ -363,3 +369,13 @@ The recess zooms the page out around the centre of the viewport (`transform-orig
 ## Hidden toasts
 
 Toasts past `visibleToasts` are `inert` with `pointer-events: none`, so an invisible toast can never block the page or take focus.
+
+
+## Accessibility floor (audited)
+
+axe-core (WCAG 2.2 AA plus best practices) passes in light and dark, with toasts and an open drawer.
+- Faint text measures at least 4.5:1 on both walls.
+- Code blocks are focusable so long lines can be scrolled by keyboard.
+- Every toaster has a distinct landmark name, and only the unnamed one takes the Alt+T shortcut.
+- Every target is at least 24px. On coarse pointers, site controls grow to 44px, and toast actions and close buttons get a 44px hit area through an invisible `::after` that doesn't change the look.
+- There is no horizontal overflow from 320px up.

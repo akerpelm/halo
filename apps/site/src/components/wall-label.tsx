@@ -15,8 +15,8 @@ type WallLabelProps = {
  */
 export function WallLabel({ title, date, medium, rows, className }: WallLabelProps) {
   return (
-    <aside className={cn('max-w-[300px] text-[13px] leading-[1.5]', className)} aria-label={`${title} specification`}>
-      <p className="m-0 font-display text-[17px] font-semibold text-ink">
+    <aside className={cn('max-w-[300px] text-label leading-[1.5]', className)} aria-label={`${title} specification`}>
+      <p className="m-0 font-display text-lead font-semibold text-ink">
         <span>{title}</span>, <span className="font-normal text-ink-soft">{date}</span>
       </p>
       <p className="m-0 mt-0.5 text-ink-soft italic">{medium}</p>

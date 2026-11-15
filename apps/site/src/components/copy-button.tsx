@@ -16,7 +16,7 @@ export function CopyButton({ text, label = 'Copy', className }: CopyButtonProps)
     <button
       type="button"
       className={cn(
-        'inline-flex h-7 cursor-pointer items-center gap-1.5 rounded-full px-2.5 text-[12px] font-medium text-ink-soft transition-colors duration-150 hover:bg-ink/[0.07] hover:text-ink',
+        'inline-flex h-7 cursor-pointer items-center gap-1.5 rounded-full px-2.5 pointer-coarse:h-11 text-caption font-medium text-ink-soft transition-colors duration-150 hover:bg-ink/[0.07] hover:text-ink',
         className,
       )}
       onClick={async () => {

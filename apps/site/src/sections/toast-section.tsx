@@ -51,7 +51,7 @@ export function ToastSection() {
         <>
           <p className="m-0">One function you can call from anywhere. Toasts stack as a deck, fan out on hover or focus, and leave when you fling them.</p>
           <p className="m-0 mt-4">
-            Press <kbd className="rounded-md bg-ink/[0.07] px-1.5 py-0.5 text-[14px]">Alt</kbd>+<kbd className="rounded-md bg-ink/[0.07] px-1.5 py-0.5 text-[14px]">T</kbd> to
+            Press <kbd className="rounded-md bg-ink/[0.07] px-1.5 py-0.5 text-ui">Alt</kbd>+<kbd className="rounded-md bg-ink/[0.07] px-1.5 py-0.5 text-ui">T</kbd> to
             jump to the stack. Esc or Delete dismisses the focused toast.
           </p>
         </>
@@ -71,14 +71,14 @@ export function ToastSection() {
         />
       }
     >
-      <h3 className="m-0 text-[24px] font-semibold tracking-[-0.02em]">Flick test</h3>
-      <p className="mt-2 mb-6 max-w-[60ch] text-[15px] leading-[1.55] text-ink-soft">
+      <h3 className="m-0 text-heading font-semibold tracking-[-0.02em]">Flick test</h3>
+      <p className="mt-2 mb-6 max-w-[60ch] text-body leading-[1.55] text-ink-soft">
         One gesture drives both chips. When you let go, each library decides what happens, using its own rules on exactly the same
         input.
       </p>
       <FlickTest />
 
-      <h3 className="mt-16 mb-6 text-[24px] font-semibold tracking-[-0.02em]">Try every type</h3>
+      <h3 className="mt-16 mb-6 text-heading font-semibold tracking-[-0.02em]">Try every type</h3>
       <div className="flex flex-wrap gap-2" role="group" aria-label="Show an example toast">
         {triggers.map(([label, fire]) => (
           <Button key={label} size="md" onClick={() => fire()}>

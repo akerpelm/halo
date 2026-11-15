@@ -8,13 +8,13 @@ export function Select({ label, className, children, ...props }: SelectProps) {
   const id = useId();
   return (
     <div className={cn('grid gap-2', className)}>
-      <label htmlFor={id} className="text-[13px] text-ink-soft">
+      <label htmlFor={id} className="text-label text-ink-soft">
         {label}
       </label>
       <div className="relative">
         <select
           id={id}
-          className="h-10 w-full cursor-pointer appearance-none rounded-full border-0 bg-ink/[0.06] pr-10 pl-4 text-[14px] text-ink transition-colors duration-150 hover:bg-ink/[0.1] dark:bg-ink/[0.09]"
+          className="h-10 w-full cursor-pointer appearance-none pointer-coarse:h-11 rounded-full border-0 bg-ink/[0.06] pr-10 pl-4 text-ui text-ink transition-colors duration-150 hover:bg-ink/[0.1] dark:bg-ink/[0.09]"
           {...props}
         >
           {children}

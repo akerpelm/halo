@@ -50,8 +50,8 @@ const tile =
 function Group({ title, note, children }: { title: string; note?: ReactNode; children: ReactNode }) {
   return (
     <fieldset className="m-0 grid min-w-0 gap-3 border-0 border-t border-line p-0 pt-5">
-      <legend className="float-left mb-1 w-full p-0 font-display text-[16px] font-semibold tracking-[-0.01em] text-ink">{title}</legend>
-      {note && <p className="m-0 -mt-1 text-[12.5px] leading-snug text-ink-faint">{note}</p>}
+      <legend className="float-left mb-1 w-full p-0 font-display text-body font-semibold tracking-[-0.01em] text-ink">{title}</legend>
+      {note && <p className="m-0 -mt-1 text-label leading-snug text-ink-faint">{note}</p>}
       {children}
     </fieldset>
   );
@@ -140,10 +140,10 @@ export function ToastBuilder({ config, onChange, output, onOutput }: ToastBuilde
 
   return (
     <>
-      <Toaster id="playground" theme={theme} {...toToasterProps(config)} />
+      <Toaster id="playground" label="Playground notifications" theme={theme} {...toToasterProps(config)} />
 
       <div className="flex flex-wrap items-center gap-2 border-b border-line p-5" aria-live="polite">
-        <p className="m-0 mr-2 text-[14px] text-ink">
+        <p className="m-0 mr-2 text-ui text-ink">
           {added.length === 0 ? (
             <span>A plain toast. Add a layer below.</span>
           ) : (
@@ -158,7 +158,7 @@ export function ToastBuilder({ config, onChange, output, onOutput }: ToastBuilde
               <button
                 type="button"
                 onClick={() => set({ [layer.key]: PLAIN[layer.key] } as Partial<BuildConfig>)}
-                className="inline-flex h-7 cursor-pointer items-center gap-1.5 rounded-full bg-ink/[0.07] pr-2 pl-3 text-[12.5px] text-ink transition-colors duration-150 hover:bg-ink/[0.12]"
+                className="inline-flex h-7 pointer-coarse:h-11 cursor-pointer items-center gap-1.5 rounded-full bg-ink/[0.07] pr-2 pl-3 text-label text-ink transition-colors duration-150 hover:bg-ink/[0.12]"
                 aria-label={`Remove ${layer.label}`}
               >
                 {layer.label}
@@ -191,9 +191,9 @@ export function ToastBuilder({ config, onChange, output, onOutput }: ToastBuilde
                   <span data-world={w.value} className="grid h-12 place-items-center rounded-xl bg-wall-deep">
                     <span data-halo-world={w.value} data-theme={theme} className="halo halo-surface block h-6 w-[70%] [--halo-radius:8px]" />
                   </span>
-                  <span className="flex items-baseline justify-between gap-2 text-[13px] font-medium text-ink">
+                  <span className="grid text-label leading-tight font-medium text-ink">
                     {w.name}
-                    {customWorlds.includes(w as (typeof customWorlds)[number]) && <span className="text-[11px] font-normal text-ink-faint">Your CSS</span>}
+                    {customWorlds.includes(w as (typeof customWorlds)[number]) && <span className="text-caption font-normal whitespace-nowrap text-ink-faint">Your CSS</span>}
                   </span>
                 </button>
               ))}
@@ -204,8 +204,8 @@ export function ToastBuilder({ config, onChange, output, onOutput }: ToastBuilde
             <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
               {motions.map((m) => (
                 <button key={m.value} type="button" aria-pressed={config.motion === m.value} onClick={() => set({ motion: m.value })} className={tile}>
-                  <span className="text-[13px] font-medium text-ink">{m.name}</span>
-                  <span className="text-[12px] leading-snug text-ink-faint">{m.line}</span>
+                  <span className="text-label font-medium text-ink">{m.name}</span>
+                  <span className="text-caption leading-snug text-ink-faint">{m.line}</span>
                 </button>
               ))}
             </div>
@@ -217,12 +217,12 @@ export function ToastBuilder({ config, onChange, output, onOutput }: ToastBuilde
               {springChoices.map((s) => (
                 <button key={s.value} type="button" aria-pressed={config.spring === s.value} onClick={() => set({ spring: s.value })} className={cn(tile, 'p-2.5 text-ink')}>
                   <MiniCurve preset={s.value} />
-                  <span className="text-[12.5px] font-medium">{s.name}</span>
+                  <span className="text-label font-medium">{s.name}</span>
                 </button>
               ))}
             </div>
             <details className="group" open={customSpring !== null}>
-              <summary className="cursor-pointer text-[13px] text-ink-soft select-none hover:text-ink">Custom spring</summary>
+              <summary className="flex min-h-6 cursor-pointer items-center text-label text-ink-soft select-none hover:text-ink pointer-coarse:min-h-11">Custom spring</summary>
               <div className="mt-3 grid gap-4">
                 <SpringCurve spring={customSpring ?? resolveSpring(config.spring)} />
                 <Slider
@@ -260,7 +260,7 @@ export function ToastBuilder({ config, onChange, output, onOutput }: ToastBuilde
                   ) : (
                     <CoatSwatch colors={coats[name as Exclude<CoatName, 'material'>].colors} />
                   )}
-                  <span className="text-[13px] font-medium text-ink">{name === 'material' ? 'Material' : coats[name as Exclude<CoatName, 'material'>].name}</span>
+                  <span className="text-label font-medium text-ink">{name === 'material' ? 'Material' : coats[name as Exclude<CoatName, 'material'>].name}</span>
                 </button>
               ))}
             </div>
@@ -342,7 +342,7 @@ export function ToastBuilder({ config, onChange, output, onOutput }: ToastBuilde
 
         <div className="grid min-w-0 content-start gap-5 p-5 lg:sticky lg:top-16 lg:self-start">
           <div>
-            <p className="m-0 mb-3 text-[13px] text-ink-soft">Every change fires a preview. Or fire your own:</p>
+            <p className="m-0 mb-3 text-label text-ink-soft">Every change fires a preview. Or fire your own:</p>
             <div className="flex flex-wrap gap-2">
               <Button tone="primary" size="sm" onClick={() => playgroundDemos.success()}>
                 Success

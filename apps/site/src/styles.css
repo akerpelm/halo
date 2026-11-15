@@ -16,7 +16,7 @@
   --wall-deep: oklch(92.6% 0.007 250);
   --ink: oklch(19% 0.02 262);
   --ink-soft: oklch(40% 0.018 262);
-  --ink-faint: oklch(52% 0.014 262);
+  --ink-faint: oklch(47% 0.014 262);
   --line: oklch(84% 0.008 255);
   --wire: oklch(62% 0.01 255);
   --coat-a: oklch(80% 0.14 198);
@@ -90,6 +90,17 @@
 }
 [data-world='ink'] {
   --pool: 0;
+}
+
+/* The type scale. Every UI size in the site is one of these steps. */
+@theme {
+  --text-caption: 12px;
+  --text-label: 13px;
+  --text-ui: 14px;
+  --text-body: 15px;
+  --text-lead: 17px;
+  --text-title: 20px;
+  --text-heading: 24px;
 }
 
 @theme inline {

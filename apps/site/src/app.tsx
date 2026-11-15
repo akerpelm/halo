@@ -21,7 +21,7 @@ export function App() {
     <>
       <a
         href="#toast"
-        className="fixed top-3 left-3 z-50 -translate-y-20 rounded-full bg-ink px-4 py-2 text-[14px] text-wall no-underline focus-visible:translate-y-0"
+        className="fixed top-3 left-3 z-50 -translate-y-20 rounded-full bg-ink px-4 py-2 text-ui text-wall no-underline focus-visible:translate-y-0"
       >
         Skip to the docs
       </a>

@@ -283,12 +283,12 @@ export function HangingPane({ className, anchorClassName, ceiling = 0 }: Hanging
             </svg>
             <div className="min-w-0">
               <p className="m-0 font-display text-[clamp(1.2rem,2.4vw,1.75rem)] leading-tight font-semibold tracking-[-0.015em]">Grab me, then let go.</p>
-              <p className="m-0 mt-2 text-[16px] leading-normal text-[var(--halo-fg-muted)]">
+              <p className="m-0 mt-2 text-body leading-normal text-[var(--halo-fg-muted)]">
                 The speed you let go at carries straight into the spring. Nothing here runs on a timer.
               </p>
             </div>
           </div>
-          <p className="m-0 mt-5 flex items-baseline justify-between border-t border-[color-mix(in_oklch,var(--halo-fg)_10%,transparent)] pt-3 text-[12px] text-[var(--halo-fg-muted)]">
+          <p className="m-0 mt-5 flex items-baseline justify-between border-t border-[color-mix(in_oklch,var(--halo-fg)_10%,transparent)] pt-3 text-caption text-[var(--halo-fg-muted)]">
             <span>Last release</span>
             <span ref={readoutRef} className="font-mono text-[var(--halo-fg)] tabular-nums">
               0 px/s

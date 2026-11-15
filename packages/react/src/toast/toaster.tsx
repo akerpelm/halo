@@ -65,6 +65,8 @@ export type ToasterProps = {
 };
 
 const PEEK = 10;
+const DEFAULT_HOTKEY = ['altKey', 'KeyT'];
+const NO_HOTKEY: string[] = [];
 
 function coatStyle(coat: ToasterProps['coat']): CSSProperties {
   if (!coat) return {};
@@ -84,8 +86,8 @@ export function Toaster({
   density = 'comfortable',
   radius,
   classNames,
-  hotkey = ['altKey', 'KeyT'],
-  label = 'Notifications',
+  hotkey: hotkeyProp,
+  label: labelProp,
   closeButton = true,
   timer = 'icon',
   motion = 'rise',
@@ -117,6 +119,9 @@ export function Toaster({
   const assertiveRef = useRef<HTMLDivElement>(null);
   const focusBeforeRef = useRef<HTMLElement | null>(null);
 
+  // A second toaster gets its own landmark name and no shortcut by default, so neither collides.
+  const hotkey = hotkeyProp ?? (toasterId ? NO_HOTKEY : DEFAULT_HOTKEY);
+  const label = labelProp ?? (toasterId ? `Notifications: ${toasterId}` : 'Notifications');
   const [vertical, horizontal] = position.split('-') as ['top' | 'bottom', 'left' | 'center' | 'right'];
   const edge = vertical === 'bottom' ? 1 : -1;
   const live = toasts.filter((t) => !t.dismissed);
@@ -182,7 +187,7 @@ export function Toaster({
 
   return (
     <section
-      aria-label={`${label} (${hotkeyLabel})`}
+      aria-label={hotkey.length ? `${label} (${hotkeyLabel})` : label}
       tabIndex={-1}
       className={['halo', 'halo-toaster', className].filter(Boolean).join(' ')}
       data-halo-world={world}

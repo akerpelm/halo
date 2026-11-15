@@ -24,14 +24,14 @@ export function Agents() {
       <dl className="m-0 grid gap-8 sm:grid-cols-3">
         {files.map(([term, detail]) => (
           <div key={term}>
-            <dt className="font-display text-[19px] font-semibold tracking-[-0.015em]">{term}</dt>
-            <dd className="m-0 mt-2 text-[15px] leading-[1.55] text-ink-soft">{detail}</dd>
+            <dt className="font-display text-title font-semibold tracking-[-0.015em]">{term}</dt>
+            <dd className="m-0 mt-2 text-body leading-[1.55] text-ink-soft">{detail}</dd>
           </div>
         ))}
       </dl>
       <CodeBlock className="mt-12" label="Paste into your agent" code={oneLiner()} copyLabel="Copy prompt" wrap />
-      <p className="mt-4 mb-0 text-[14px] text-ink-faint">
-        <a href="/llms.txt" className="text-ink-soft hover:text-ink">
+      <p className="mt-4 mb-0 text-ui text-ink-faint">
+        <a href="/llms.txt" className="inline-flex min-h-6 items-center text-ink-soft hover:text-ink pointer-coarse:min-h-11">
           Open llms.txt
         </a>
       </p>

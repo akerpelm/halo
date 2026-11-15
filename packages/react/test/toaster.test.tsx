@@ -146,3 +146,16 @@ describe('hidden toasts', () => {
     expect(screen.getByText('three').closest('li')?.hasAttribute('data-hidden')).toBe(false);
   });
 });
+
+describe('several toasters on one page', () => {
+  it('gives a named toaster its own landmark name and no shared shortcut', () => {
+    render(
+      <>
+        <Toaster />
+        <Toaster id="side" />
+      </>,
+    );
+    expect(screen.getByRole('region', { name: 'Notifications (alt+T)' })).toBeTruthy();
+    expect(screen.getByRole('region', { name: 'Notifications: side' })).toBeTruthy();
+  });
+});

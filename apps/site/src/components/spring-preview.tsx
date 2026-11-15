@@ -43,7 +43,7 @@ export function SpringPreview({ spring }: { spring: SpringInput }) {
       <button
         type="button"
         onClick={play}
-        className="h-9 cursor-pointer rounded-full bg-ink/[0.06] px-3.5 text-[13px] text-ink transition-colors duration-150 hover:bg-ink/[0.11] dark:bg-ink/[0.09]"
+        className="h-9 cursor-pointer rounded-full bg-ink/[0.06] px-3.5 pointer-coarse:h-11 text-label text-ink transition-colors duration-150 hover:bg-ink/[0.11] dark:bg-ink/[0.09]"
       >
         Replay
       </button>

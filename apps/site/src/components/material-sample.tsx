@@ -29,7 +29,7 @@ export function MaterialSample({ world }: { world: HaloWorld }) {
           <circle cx="10" cy="10" r="8.25" stroke="currentColor" strokeWidth="1.5" />
           <path d="m6.5 10.2 2.3 2.3 4.7-4.9" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
-        <span className="min-w-0 text-[14px] leading-snug">
+        <span className="min-w-0 text-ui leading-snug">
           <span className="block font-semibold">Invite sent</span>
           <span className="block truncate text-[var(--halo-fg-muted)]">mara@studio.example</span>
         </span>

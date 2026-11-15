@@ -5,8 +5,8 @@ type ToggleProps = { label: string; checked: boolean; onChange: (checked: boolea
 export function Toggle({ label, checked, onChange }: ToggleProps) {
   const id = useId();
   return (
-    <div className="flex items-center justify-between gap-4 text-[13px]">
-      <label htmlFor={id} className="cursor-pointer text-ink-soft">
+    <div className="flex items-center justify-between gap-4 text-label pointer-coarse:min-h-11">
+      <label htmlFor={id} className="flex-1 cursor-pointer py-1 text-ink-soft">
         {label}
       </label>
       <button
@@ -15,7 +15,7 @@ export function Toggle({ label, checked, onChange }: ToggleProps) {
         role="switch"
         aria-checked={checked}
         onClick={() => onChange(!checked)}
-        className="group relative h-6 w-10 flex-none cursor-pointer rounded-full bg-ink/[0.12] transition-colors duration-200 aria-checked:bg-ink"
+        className="group relative h-6 w-10 flex-none pointer-coarse:after:absolute pointer-coarse:after:-inset-2.5 pointer-coarse:after:content-[''] cursor-pointer rounded-full bg-ink/[0.12] transition-colors duration-200 aria-checked:bg-ink"
       >
         <span
           aria-hidden

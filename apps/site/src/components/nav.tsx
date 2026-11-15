@@ -25,14 +25,14 @@ export function Nav() {
   return (
     <header className="sticky top-0 z-40 bg-wall/72 backdrop-blur-xl backdrop-saturate-150">
       <nav aria-label="Main" className="mx-auto flex h-16 max-w-[1240px] items-center gap-6 px-4 sm:px-8">
-        <a href="#top" className="flex items-center gap-2 rounded-md text-ink no-underline">
+        <a href="#top" className="flex items-center gap-2 rounded-md text-ink no-underline pointer-coarse:min-h-11">
           <Mark className="h-5 w-7" />
-          <span className="font-display text-[19px] font-semibold tracking-[-0.02em]">halo</span>
+          <span className="font-display text-title font-semibold tracking-[-0.02em]">halo</span>
         </a>
         <ul className="m-0 hidden list-none gap-1 p-0 md:flex">
           {links.map(([label, href]) => (
             <li key={href}>
-              <a href={href} className="rounded-full px-3 py-1.5 text-[14px] text-ink-soft no-underline transition-colors duration-150 hover:text-ink">
+              <a href={href} className="rounded-full px-3 py-1.5 text-ui text-ink-soft no-underline transition-colors duration-150 hover:text-ink">
                 {label}
               </a>
             </li>
@@ -40,7 +40,7 @@ export function Nav() {
         </ul>
         <div className="ml-auto flex items-center gap-2">
           {/* The select itself is the whole pill, so a press anywhere on it opens the menu. */}
-          <div className="relative h-9 rounded-full bg-ink/[0.06] text-[13px] text-ink transition-colors duration-150 hover:bg-ink/[0.1] has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-ink">
+          <div className="relative h-9 rounded-full bg-ink/[0.06] pointer-coarse:h-11 text-label text-ink transition-colors duration-150 hover:bg-ink/[0.1] has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-ink">
             <span aria-hidden className="pointer-events-none absolute top-1/2 left-3.5 -translate-y-1/2 text-ink-faint">
               World
             </span>
@@ -64,7 +64,7 @@ export function Nav() {
             type="button"
             onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
             aria-label={theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
-            className="grid size-9 cursor-pointer place-items-center rounded-full text-ink-soft transition-colors duration-150 hover:bg-ink/[0.07] hover:text-ink"
+            className="grid size-9 cursor-pointer place-items-center rounded-full pointer-coarse:size-11 text-ink-soft transition-colors duration-150 hover:bg-ink/[0.07] hover:text-ink"
           >
             <svg width="17" height="17" viewBox="0 0 20 20" fill="none" aria-hidden>
               {theme === 'dark' ? (

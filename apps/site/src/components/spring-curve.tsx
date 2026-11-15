@@ -22,7 +22,7 @@ export function SpringCurve({ spring, className }: SpringCurveProps) {
         <line x1="0" x2={width} y1={scaleY(0)} y2={scaleY(0)} stroke="var(--line)" />
         <path d={path} fill="none" stroke="var(--ink)" strokeWidth="1.75" strokeLinejoin="round" />
       </svg>
-      <figcaption id="spring-curve-caption" className="mt-2 flex justify-between text-[12px] text-ink-faint tabular-nums">
+      <figcaption id="spring-curve-caption" className="mt-2 flex justify-between text-caption text-ink-faint tabular-nums">
         <span>Settles in {Math.round(seconds * 1000)} ms</span>
         <span>{overshoot < 0.5 ? 'No overshoot' : `${overshoot.toFixed(0)}% overshoot`}</span>
       </figcaption>

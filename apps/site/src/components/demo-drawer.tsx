@@ -49,18 +49,18 @@ export function DemoDrawer({ config = defaultDrawerConfig, trigger, tone = 'quie
         <Drawer.Scroll className="-mx-2 px-2">
           <ul className="m-0 list-none p-0">
             {files.map(([name, meta]) => (
-              <li key={name} className="flex items-center justify-between gap-4 border-b border-[color-mix(in_oklch,var(--halo-fg)_8%,transparent)] py-3.5 text-[15px] last:border-0">
+              <li key={name} className="flex items-center justify-between gap-4 border-b border-[color-mix(in_oklch,var(--halo-fg)_8%,transparent)] py-3.5 text-body last:border-0">
                 <span className="truncate">{name}</span>
-                <span className="flex-none text-[13px] text-[var(--halo-fg-muted)] tabular-nums">{meta}</span>
+                <span className="flex-none text-label text-[var(--halo-fg-muted)] tabular-nums">{meta}</span>
               </li>
             ))}
           </ul>
         </Drawer.Scroll>
         <div className="flex gap-2 pt-4 pb-6">
-          <Drawer.Close className="h-11 flex-1 cursor-pointer rounded-full border-0 bg-[var(--halo-control)] font-sans text-[15px] font-medium text-[var(--halo-control-fg)]">
+          <Drawer.Close className="h-11 flex-1 cursor-pointer rounded-full border-0 bg-[var(--halo-control)] font-sans text-body font-medium text-[var(--halo-control-fg)]">
             Copy link
           </Drawer.Close>
-          <Drawer.Close className="h-11 cursor-pointer rounded-full border-0 bg-[color-mix(in_oklch,var(--halo-fg)_8%,transparent)] px-5 font-sans text-[15px] font-medium text-[var(--halo-fg)]">
+          <Drawer.Close className="h-11 cursor-pointer rounded-full border-0 bg-[color-mix(in_oklch,var(--halo-fg)_8%,transparent)] px-5 font-sans text-body font-medium text-[var(--halo-fg)]">
             {config.dismissible ? 'Cancel' : 'Done'}
           </Drawer.Close>
         </div>

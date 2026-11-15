@@ -21,7 +21,7 @@ export function Section({ id, title, lede, aside, children, className, wide = fa
           <h2 id={headingId} className="m-0 text-[clamp(2.25rem,4.4vw,3.5rem)] leading-[1] font-semibold tracking-[-0.03em]">
             {title}
           </h2>
-          <div className="mt-5 max-w-[40ch] text-[17px] leading-[1.55] text-ink-soft">{lede}</div>
+          <div className="mt-5 max-w-[40ch] text-lead leading-[1.55] text-ink-soft">{lede}</div>
           {aside && <div className={wide ? 'lg:col-start-2 lg:row-start-1 lg:row-span-2' : 'mt-10'}>{aside}</div>}
         </div>
         <div className={wide ? 'min-w-0 lg:col-span-12' : 'min-w-0 lg:col-span-8'}>{children}</div>

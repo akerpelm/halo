@@ -14,11 +14,11 @@ export function Slider({ label, value, min, max, step, format = String, onChange
   const id = useId();
   return (
     <div>
-      <div className="mb-1.5 flex items-baseline justify-between text-[13px]">
+      <div className="mb-1.5 flex items-baseline justify-between text-label">
         <label htmlFor={id} className="text-ink-soft">
           {label}
         </label>
-        <output htmlFor={id} className="font-mono text-[12px] text-ink tabular-nums">
+        <output htmlFor={id} className="font-mono text-caption text-ink tabular-nums">
           {format(value)}
         </output>
       </div>
@@ -30,7 +30,7 @@ export function Slider({ label, value, min, max, step, format = String, onChange
         step={step}
         value={value}
         onChange={(event) => onChange(Number(event.target.value))}
-        className="w-full cursor-pointer"
+        className="h-6 w-full cursor-pointer pointer-coarse:h-11"
       />
     </div>
   );

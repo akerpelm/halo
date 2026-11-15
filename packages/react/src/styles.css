@@ -486,6 +486,23 @@
   }
 }
 
+/* Touch: grow the hit area past the visible button so it reaches 44px, without changing the look. */
+@media (pointer: coarse) {
+  .halo-toast-action,
+  .halo-toast-close {
+    position: relative;
+  }
+  .halo-toast-action::after,
+  .halo-toast-close::after {
+    content: '';
+    position: absolute;
+    inset: -10px;
+  }
+  .halo-drawer-handle {
+    height: 44px;
+  }
+}
+
 .halo-toast-action:focus-visible,
 .halo-toast-close:focus-visible {
   outline: 2px solid var(--halo-focus);

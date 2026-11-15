@@ -78,10 +78,10 @@ export function MakeItYours() {
         </>
       }
     >
-      <Toaster id="custom" world="midnight" theme={theme} position="bottom-left" />
+      <Toaster id="custom" label="Midnight demo notifications" world="midnight" theme={theme} position="bottom-left" />
 
-      <h3 className="m-0 text-[24px] font-semibold tracking-[-0.02em]">Write a world</h3>
-      <p className="mt-2 mb-5 max-w-[60ch] text-[15px] leading-[1.55] text-ink-soft">
+      <h3 className="m-0 text-heading font-semibold tracking-[-0.02em]">Write a world</h3>
+      <p className="mt-2 mb-5 max-w-[60ch] text-body leading-[1.55] text-ink-soft">
         Midnight lives in this site’s stylesheet. The library has never heard of it.
       </p>
       <div className="mb-5">
@@ -93,14 +93,14 @@ export function MakeItYours() {
 
       <div className="mt-14 grid gap-10 xl:grid-cols-2">
         <div className="min-w-0">
-          <h3 className="m-0 text-[24px] font-semibold tracking-[-0.02em]">Extend one</h3>
-          <p className="mt-2 mb-5 text-[15px] leading-[1.55] text-ink-soft">Every value is a custom property, so standard cascade rules apply.</p>
+          <h3 className="m-0 text-heading font-semibold tracking-[-0.02em]">Extend one</h3>
+          <p className="mt-2 mb-5 text-body leading-[1.55] text-ink-soft">Every value is a custom property, so standard cascade rules apply.</p>
           <CodeBlock label="extend.css" code={extendWorld} />
         </div>
         <div className="min-w-0">
-          <h3 className="m-0 text-[24px] font-semibold tracking-[-0.02em]">Style with Tailwind</h3>
-          <p className="mt-2 mb-5 text-[15px] leading-[1.55] text-ink-soft">
-            <code className="text-[14px]">classNames</code> reaches every part. Per-toast <code className="text-[14px]">className</code> works too.
+          <h3 className="m-0 text-heading font-semibold tracking-[-0.02em]">Style with Tailwind</h3>
+          <p className="mt-2 mb-5 text-body leading-[1.55] text-ink-soft">
+            <code className="text-ui">classNames</code> reaches every part. Per-toast <code className="text-ui">className</code> works too.
           </p>
           <CodeBlock label="app.tsx" code={tailwind} />
         </div>
@@ -114,12 +114,12 @@ export function MakeItYours() {
           ] as const
         ).map(([title, rows]) => (
           <div key={title} className="min-w-0">
-            <h3 className="m-0 mb-3 text-[20px] font-semibold tracking-[-0.015em]">{title}</h3>
+            <h3 className="m-0 mb-3 text-title font-semibold tracking-[-0.015em]">{title}</h3>
             <dl className="m-0">
               {rows.map(([term, detail]) => (
                 <div key={term} className="grid gap-1 border-b border-line py-3 last:border-0 sm:grid-cols-[minmax(0,15rem)_1fr] sm:gap-4">
-                  <dt className="font-mono text-[12.5px] break-words text-ink">{term}</dt>
-                  <dd className="m-0 text-[14px] leading-[1.5] text-ink-soft">{detail}</dd>
+                  <dt className="font-mono text-label break-words text-ink">{term}</dt>
+                  <dd className="m-0 text-ui leading-[1.5] text-ink-soft">{detail}</dd>
                 </div>
               ))}
             </dl>

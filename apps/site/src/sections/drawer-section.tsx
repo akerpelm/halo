@@ -21,7 +21,7 @@ export function DrawerSection() {
       title="Drawer"
       lede={
         <p className="m-0">
-          A sheet from any edge, built on the native <code className="text-[15px]">&lt;dialog&gt;</code>. That gives you the top layer, a real focus
+          A sheet from any edge, built on the native <code className="text-body">&lt;dialog&gt;</code>. That gives you the top layer, a real focus
           trap, and Esc for free, with no portal and no Radix underneath.
         </p>
       }
@@ -50,9 +50,9 @@ export function DrawerSection() {
       <ol className="m-0 mt-12 grid list-none gap-8 p-0 sm:grid-cols-3" aria-label="How a release becomes motion">
         {steps.map(([title, body], index) => (
           <li key={title}>
-            <p className="m-0 font-mono text-[12px] text-ink-faint tabular-nums">{index + 1}</p>
-            <h3 className="m-0 mt-2 text-[20px] font-semibold tracking-[-0.015em]">{title}</h3>
-            <p className="m-0 mt-2 text-[15px] leading-[1.55] text-ink-soft">{body}</p>
+            <p className="m-0 font-mono text-caption text-ink-faint tabular-nums">{index + 1}</p>
+            <h3 className="m-0 mt-2 text-title font-semibold tracking-[-0.015em]">{title}</h3>
+            <p className="m-0 mt-2 text-body leading-[1.55] text-ink-soft">{body}</p>
           </li>
         ))}
       </ol>
