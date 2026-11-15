@@ -1,4 +1,4 @@
-import { Drawer } from '@halo-ui/react/drawer';
+import { Drawer } from 'haloui/drawer';
 import { type CSSProperties, useState } from 'react';
 import { Link } from '../components/link';
 import { cn } from '../lib/cn';

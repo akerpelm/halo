@@ -2,10 +2,10 @@
 
 Spring-physics Toast and Drawer for React, and the site that shows them off: docs, worlds, a playground, and agent prompts.
 
-**[haloui.dev](https://haloui.dev)** · [`@halo-ui/react` on npm](https://www.npmjs.com/package/@halo-ui/react)
+**[haloui.dev](https://haloui.dev)** · [`haloui` on npm](https://www.npmjs.com/package/haloui)
 
 ```
-packages/react   @halo-ui/react, the library (tsup, no runtime dependencies besides React)
+packages/react   haloui, the library (tsup, no runtime dependencies besides React)
 apps/site        haloui.dev: showcase, docs, and playground (Vite, React, Tailwind v4)
 ```
 

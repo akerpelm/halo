@@ -1,4 +1,4 @@
-import { Drawer } from '@halo-ui/react/drawer';
+import { Drawer } from 'haloui/drawer';
 import type { ReactNode } from 'react';
 import { type DrawerConfig, defaultDrawerConfig, drawerRadius, snapPresets } from '../lib/config';
 import { useSettings } from '../lib/settings';

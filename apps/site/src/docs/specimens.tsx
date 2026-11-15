@@ -60,7 +60,7 @@ export const specimens: Record<string, () => ReactNode> = {
     <Specimen label="Install">
       <Line title="One package">No dependencies besides React.</Line>
       <div className="mt-3 flex items-center gap-2 font-mono text-label text-[var(--halo-fg)]">
-        npm i @halo-ui/react <CopyButton text="npm i @halo-ui/react" />
+        npm i haloui <CopyButton text="npm i haloui" />
       </div>
     </Specimen>
   ),

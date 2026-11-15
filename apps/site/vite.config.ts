@@ -10,11 +10,11 @@ export default defineConfig({
   resolve: {
     alias: [
       { find: /^@\//, replacement: `${fileURLToPath(new URL('./src/', import.meta.url))}` },
-      { find: '@halo-ui/react/styles.css', replacement: lib('styles.css') },
-      { find: '@halo-ui/react/spring', replacement: lib('spring/index.ts') },
-      { find: '@halo-ui/react/toast', replacement: lib('toast/index.ts') },
-      { find: '@halo-ui/react/drawer', replacement: lib('drawer/index.ts') },
-      { find: /^@halo-ui\/react$/, replacement: lib('index.ts') },
+      { find: 'haloui/styles.css', replacement: lib('styles.css') },
+      { find: 'haloui/spring', replacement: lib('spring/index.ts') },
+      { find: 'haloui/toast', replacement: lib('toast/index.ts') },
+      { find: 'haloui/drawer', replacement: lib('drawer/index.ts') },
+      { find: /^haloui$/, replacement: lib('index.ts') },
     ],
   },
 });

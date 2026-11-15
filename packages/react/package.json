@@ -1,5 +1,5 @@
 {
-  "name": "@halo-ui/react",
+  "name": "haloui",
   "version": "0.1.0",
   "description": "Spring-physics toast and drawer for React. Frosted glass, accessible by default, built for agents.",
   "license": "MIT",

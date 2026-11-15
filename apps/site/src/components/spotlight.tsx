@@ -1,4 +1,4 @@
-import { createSpringValue, resolveSpring, useReducedMotion } from '@halo-ui/react/spring';
+import { createSpringValue, resolveSpring, useReducedMotion } from 'haloui/spring';
 import { type HTMLAttributes, type PointerEvent, useRef, useState } from 'react';
 import { cn } from '../lib/cn';
 

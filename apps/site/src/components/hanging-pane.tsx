@@ -6,7 +6,7 @@ import {
   resolveSpring,
   rubberband,
   useReducedMotion,
-} from '@halo-ui/react/spring';
+} from 'haloui/spring';
 import { type KeyboardEvent, type PointerEvent, type ReactNode, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { cn } from '../lib/cn';
 import { useSettings } from '../lib/settings';

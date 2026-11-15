@@ -1,4 +1,4 @@
-import { createSpringValue, resolveSpring, useReducedMotion } from '@halo-ui/react/spring';
+import { createSpringValue, resolveSpring, useReducedMotion } from 'haloui/spring';
 import { useEffect, useRef, useState } from 'react';
 
 type CountUpProps = {

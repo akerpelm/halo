@@ -1,4 +1,4 @@
-import { type SpringInput, createSpringValue, resolveSpring, useReducedMotion } from '@halo-ui/react/spring';
+import { type SpringInput, createSpringValue, resolveSpring, useReducedMotion } from 'haloui/spring';
 import { type ReactNode, useEffect, useRef } from 'react';
 import { cn } from '../lib/cn';
 

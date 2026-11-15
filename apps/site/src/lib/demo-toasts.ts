@@ -1,4 +1,4 @@
-import { toast } from '@halo-ui/react/toast';
+import { toast } from 'haloui/toast';
 
 const wait = (ms: number) => new Promise((resolve) => window.setTimeout(resolve, ms));
 

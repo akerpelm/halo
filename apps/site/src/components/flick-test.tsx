@@ -1,4 +1,4 @@
-import { createSpringValue, createVelocityTracker, project, resolveSpring, useReducedMotion } from '@halo-ui/react/spring';
+import { createSpringValue, createVelocityTracker, project, resolveSpring, useReducedMotion } from 'haloui/spring';
 import { type PointerEvent, type RefObject, useRef, useState } from 'react';
 import { useSettings } from '../lib/settings';
 import { CountUp } from './count-up';

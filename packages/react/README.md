@@ -1,17 +1,17 @@
-# @halo-ui/react
+# haloui
 
 A spring-physics **Toast** and **Drawer** for React. Frosted glass, accessible by default, no dependencies besides React.
 
 **[Docs and playground →](https://haloui.dev)**
 
 ```sh
-npm i @halo-ui/react
+npm i haloui
 ```
 
 ```tsx
-import { Toaster, toast } from '@halo-ui/react/toast';
-import { Drawer } from '@halo-ui/react/drawer';
-import '@halo-ui/react/styles.css';
+import { Toaster, toast } from 'haloui/toast';
+import { Drawer } from 'haloui/drawer';
+import 'haloui/styles.css';
 
 <Toaster />;
 toast.success('Invite sent', { description: 'They will get an email shortly' });
@@ -43,9 +43,9 @@ toast.success('Invite sent', { description: 'They will get an email shortly' });
 
 | Entry | Min + gzip |
 | --- | --- |
-| `@halo-ui/react/toast` | 8.4 kB (includes springs) |
-| `@halo-ui/react/drawer` | 5.9 kB (includes springs) |
-| `@halo-ui/react/spring` | 1.9 kB |
+| `haloui/toast` | 8.4 kB (includes springs) |
+| `haloui/drawer` | 5.9 kB (includes springs) |
+| `haloui/spring` | 1.9 kB |
 | `styles.css` | 4.6 kB |
 
 ## Make it yours
@@ -64,7 +64,7 @@ A world is one CSS selector. Write your own and pass its name to `world`:
 
 Halo's token selectors use `:where()`, so they have zero specificity and any selector you write wins.
 
-Extend a built-in world with the same selector (`[data-halo-world='dichroic'] { --halo-radius: 12px }`). With Tailwind, import the stylesheet into a layer (`@import '@halo-ui/react/styles.css' layer(components);`) and use `classNames` for each part, or arbitrary properties like `className="[--halo-blur:8px]"`.
+Extend a built-in world with the same selector (`[data-halo-world='dichroic'] { --halo-radius: 12px }`). With Tailwind, import the stylesheet into a layer (`@import 'haloui/styles.css' layer(components);`) and use `classNames` for each part, or arbitrary properties like `className="[--halo-blur:8px]"`.
 
 The full API, written for both people and AI agents, is at [haloui.dev/llms.txt](https://haloui.dev/llms.txt).
 

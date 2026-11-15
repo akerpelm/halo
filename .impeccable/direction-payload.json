@@ -11,7 +11,7 @@
       "thesis": "Every component is a pane of coated glass hung in a bright room. Move it and the colored light it throws moves with it, so motion shows up as light. The category default it refuses is the dark neon dev-tool page.",
       "palette": ["#eef1f4", "#d9dee5", "#1a1d24", "#3fd0c9", "#e06bd8", "#f2c14e"],
       "materials": ["frosted pane with a dichroic edge", "cast spectral light on a matte wall", "hairline steel suspension"],
-      "viewport": "A bright cool-white wall. Three live panes hang in space: a toast stack, a half-open drawer, and a spring curve. Each casts a cyan, magenta, or amber light pool that follows it on a spring. The headline 'Surfaces that move like they weigh something.' is set large at the left, with a working `npm i @halo-ui/react` copy chip and 'Fire a toast' as the primary action. Pressing it drops a real toast into the stack.",
+      "viewport": "A bright cool-white wall. Three live panes hang in space: a toast stack, a half-open drawer, and a spring curve. Each casts a cyan, magenta, or amber light pool that follows it on a spring. The headline 'Surfaces that move like they weigh something.' is set large at the left, with a working `npm i haloui` copy chip and 'Fire a toast' as the primary action. Pressing it drops a real toast into the stack.",
       "risk": "Glass on white can wash out. Contrast has to come from type weight and the cast light, not from borders.",
       "raised": [
         {"from": "challenger-wuxia", "raise": "Each section holds one frozen moment, a spring caught at its overshoot peak, and interacting releases it."},

@@ -1,4 +1,4 @@
-import { type SpringInput, resolveSpring, sampleSpring, settlingTime } from '@halo-ui/react/spring';
+import { type SpringInput, resolveSpring, sampleSpring, settlingTime } from 'haloui/spring';
 
 type SpringCurveProps = { spring: SpringInput; className?: string };
 

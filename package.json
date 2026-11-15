@@ -4,7 +4,7 @@
   "type": "module",
   "packageManager": "pnpm@10.18.0",
   "scripts": {
-    "dev": "pnpm --filter @halo-ui/react build && pnpm -r --parallel dev",
+    "dev": "pnpm --filter haloui build && pnpm -r --parallel dev",
     "build": "pnpm -r build",
     "test": "pnpm -r test",
     "typecheck": "pnpm -r typecheck"
