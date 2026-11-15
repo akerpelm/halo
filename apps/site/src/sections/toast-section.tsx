@@ -103,6 +103,7 @@ export function ToastSection() {
             ['Stack layout', 'Transitions on transform, opacity, and height.', 'Transform and opacity only. Height clips are offset inside the spring.'],
             ['Hidden toasts', 'Timers run for toasts tucked behind the deck.', 'A toast only counts down while it is visible.'],
             ['Screen readers', 'One polite live region for every type.', 'Polite and assertive regions. Errors interrupt, and every type is announced by name.'],
+            ['Entrances', 'One slide-in.', 'Six, all on springs: rise, fade, drop, hinge, focus, and bloom. Each exit reverses its entrance.'],
             ['Time left', 'Not shown.', 'The status icon empties like a timer, and freezes while you read. Or put the ring on the close button.'],
           ]}
         />

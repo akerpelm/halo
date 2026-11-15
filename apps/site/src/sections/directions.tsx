@@ -1,33 +1,42 @@
-import { toast } from '@halo-ui/react/toast';
 import type { ReactNode } from 'react';
 import { Button } from '../components/button';
 import { CopyButton } from '../components/copy-button';
 import { DemoDrawer } from '../components/demo-drawer';
 import { MaterialSample } from '../components/material-sample';
 import { Section } from '../components/section';
-import { type DrawerConfig, type ToastConfig, defaultDrawerConfig, defaultToastConfig, drawerPrompt, toastPrompt } from '../lib/config';
+import { type BuildConfig, PLAIN, builderPrompt } from '../lib/build';
+import { type DrawerConfig, PRINCIPLES, defaultDrawerConfig, drawerPrompt, llmsUrl } from '../lib/config';
 import { useSettings } from '../lib/settings';
 import { worldName, worlds } from '../lib/worlds';
 
-type ToastDirection = { name: string; line: string; config: ToastConfig };
+type ToastDirection = { name: string; line: string; config: BuildConfig };
 type DrawerDirection = { name: string; line: string; config: DrawerConfig };
 
 const toastDirections: ToastDirection[] = [
-  { name: 'Deck', line: 'The default. A collapsed stack that fans out on hover, and each status icon empties like a timer.', config: defaultToastConfig },
+  {
+    name: 'Deck',
+    line: 'The library default. Dichroic glass that rises in, a collapsed stack, and an icon timer.',
+    config: { ...PLAIN, world: 'dichroic', motion: 'rise', spring: 'snappy', icons: true, timer: 'icon', closeButton: true, radius: 'round', duration: 5000 },
+  },
   {
     name: 'Fan',
-    line: 'Always expanded, from the top center. For dashboards where several updates matter at once.',
-    config: { ...defaultToastConfig, position: 'top-center', expand: true, visibleToasts: 4, gap: 10 },
+    line: 'Always fanned out from the top centre, in etched Partition glass. For dashboards.',
+    config: { ...PLAIN, world: 'partition', motion: 'drop', spring: 'snappy', icons: true, timer: 'close', closeButton: true, radius: 'round', position: 'top-center', expand: true },
   },
   {
     name: 'Hush',
-    line: 'No timer and no close button. Bottom center and critically damped, for calm writing tools.',
-    config: { ...defaultToastConfig, position: 'bottom-center', timer: false, closeButton: false, duration: 4000, spring: { duration: 0.45, bounce: 0 } },
+    line: 'Vapor glass that pulls into focus, no timer, critically damped. For calm writing tools.',
+    config: { ...PLAIN, world: 'vapor', motion: 'focus', spring: 'gentle', icons: true, radius: 'round', position: 'bottom-center' },
   },
   {
-    name: 'Spring-loaded',
-    line: 'More bounce, a quicker clock, and the countdown around the close button. For playful products.',
-    config: { ...defaultToastConfig, position: 'top-right', duration: 3500, timer: 'close', spring: { duration: 0.5, bounce: 0.32 } },
+    name: 'Showtime',
+    line: 'Blooms out of a capsule on a jelly spring, with tinted glass. For playful products.',
+    config: { ...PLAIN, world: 'dichroic', motion: 'bloom', spring: 'jelly', coat: 'orchid', tint: true, icons: true, timer: 'icon', closeButton: true, radius: 'pill' },
+  },
+  {
+    name: 'Signage',
+    line: 'Smoked glass that swings down on a hinge, top right. For media and night modes.',
+    config: { ...PLAIN, world: 'smoked', motion: 'hinge', spring: 'pop', icons: true, timer: 'icon', closeButton: true, radius: 'soft', position: 'top-right' },
   },
 ];
 
@@ -46,7 +55,7 @@ const drawerDirections: DrawerDirection[] = [
   },
 ];
 
-type DirectionsProps = { onApplyToast: (config: ToastConfig) => void };
+type DirectionsProps = { onOpenToast: (config: BuildConfig) => void };
 
 function Row({ name, line, actions }: { name: string; line: string; actions: ReactNode }) {
   return (
@@ -58,7 +67,7 @@ function Row({ name, line, actions }: { name: string; line: string; actions: Rea
   );
 }
 
-export function Directions({ onApplyToast }: DirectionsProps) {
+export function Directions({ onOpenToast }: DirectionsProps) {
   const { world, setWorld } = useSettings();
   return (
     <Section
@@ -101,13 +110,13 @@ export function Directions({ onApplyToast }: DirectionsProps) {
                 <Button
                   size="sm"
                   onClick={() => {
-                    onApplyToast(d.config);
-                    toast.success(`${d.name} applied`, { description: 'Every toast on this page now uses it.' });
+                    onOpenToast(d.config);
+                    document.getElementById('playground')?.scrollIntoView({ block: 'start' });
                   }}
                 >
-                  Try it
+                  Open in playground
                 </Button>
-                <CopyButton text={toastPrompt(d.config, world)} label="Copy prompt" />
+                <CopyButton text={builderPrompt(d.config, PRINCIPLES, llmsUrl())} label="Copy prompt" />
               </>
             }
           />

@@ -1,7 +1,7 @@
 import { Toaster } from '@halo-ui/react/toast';
 import { useState } from 'react';
 import { Nav } from './components/nav';
-import { type ToastConfig, defaultToastConfig } from './lib/config';
+import { type BuildConfig, PLAIN } from './lib/build';
 import { useSettings } from './lib/settings';
 import { Agents } from './sections/agents';
 import { Directions } from './sections/directions';
@@ -13,7 +13,8 @@ import { ToastSection } from './sections/toast-section';
 
 export function App() {
   const { world, theme } = useSettings();
-  const [toastConfig, setToastConfig] = useState<ToastConfig>(defaultToastConfig);
+  // The playground's toast, lifted so Directions can load setups into it.
+  const [build, setBuild] = useState<BuildConfig>(PLAIN);
 
   return (
     <>
@@ -29,13 +30,13 @@ export function App() {
           <Hero />
           <ToastSection />
           <DrawerSection />
-          <Directions onApplyToast={setToastConfig} />
-          <Playground toastConfig={toastConfig} onToastConfig={setToastConfig} />
+          <Directions onOpenToast={setBuild} />
+          <Playground build={build} onBuild={setBuild} />
           <Agents />
         </main>
         <Footer />
       </div>
-      <Toaster {...toastConfig} world={world} theme={theme} />
+      <Toaster world={world} theme={theme} />
     </>
   );
 }

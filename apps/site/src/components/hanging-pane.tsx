@@ -191,13 +191,32 @@ export function HangingPane({ className, anchorClassName, ceiling = 0 }: Hanging
     if (!reducedMotion) rig.tilt.to(clamp(-trackers.x.velocity(event.timeStamp) * 0.006, -14, 14));
   };
 
-  const onPointerUp = (event: PointerEvent<HTMLDivElement>) => {
-    const current = drag.current;
-    if (!current || current.pointerId !== event.pointerId) return;
+  const endDrag = (time: number) => {
+    if (!drag.current) return;
     drag.current = null;
-    delete event.currentTarget.dataset.grabbing;
-    release(trackers.x.velocity(event.timeStamp), trackers.y.velocity(event.timeStamp));
+    delete paneRef.current?.dataset.grabbing;
+    release(trackers.x.velocity(time), trackers.y.velocity(time));
   };
+
+  const onPointerUp = (event: PointerEvent<HTMLDivElement>) => {
+    if (drag.current?.pointerId !== event.pointerId) return;
+    endDrag(event.timeStamp);
+  };
+
+  // A drag can end without a pointerup: Safari drops capture outside the window, and the OS can
+  // steal the gesture (app switch, right-click, native drag). Any of those must still let go.
+  useEffect(() => {
+    const letGo = () => endDrag(performance.now());
+    const onVisibility = () => document.hidden && letGo();
+    window.addEventListener('pointerup', letGo);
+    window.addEventListener('blur', letGo);
+    document.addEventListener('visibilitychange', onVisibility);
+    return () => {
+      window.removeEventListener('pointerup', letGo);
+      window.removeEventListener('blur', letGo);
+      document.removeEventListener('visibilitychange', onVisibility);
+    };
+  }, []);
 
   const onKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
     const impulses: Record<string, [number, number]> = {
@@ -244,6 +263,7 @@ export function HangingPane({ className, anchorClassName, ceiling = 0 }: Hanging
           onPointerMove={onPointerMove}
           onPointerUp={onPointerUp}
           onPointerCancel={onPointerUp}
+          onLostPointerCapture={(event) => drag.current?.pointerId === event.pointerId && endDrag(event.timeStamp)}
           onKeyDown={onKeyDown}
         >
           {/* Eyelets live on the pane, so they rotate with it and the wire always meets them. */}

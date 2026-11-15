@@ -60,6 +60,14 @@ function Loading() {
 
 export type ToastTimer = 'close' | 'icon' | 'edge' | false;
 
+/**
+ * How a toast enters and leaves. Every style is one spring from 0 to 1, read differently.
+ * rise: lifts in from the edge. fade: opacity only. drop: falls in from above and lands.
+ * hinge: swings down from its top edge like a hung sign. focus: pulls into focus from a blur.
+ * bloom: grows out of a capsule at its centre.
+ */
+export type ToastMotion = 'rise' | 'fade' | 'drop' | 'hinge' | 'focus' | 'bloom';
+
 /** A ring that empties over `duration`, anticlockwise from the top, like a kitchen timer. */
 export function TimerRing({ duration, restartKey }: { duration: number; restartKey: number }) {
   return (

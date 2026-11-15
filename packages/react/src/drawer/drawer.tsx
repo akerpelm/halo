@@ -517,6 +517,8 @@ function Content({ children, className, overlay = true, style, ...props }: Drawe
         onPointerMove={onPointerMove}
         onPointerUp={(event) => onPointerEnd(event, false)}
         onPointerCancel={(event) => onPointerEnd(event, true)}
+        // Capture can vanish without a pointerup (app switch, OS gesture); settle as if released.
+        onLostPointerCapture={(event) => onPointerEnd(event, true)}
       >
         <DrawerStepContext.Provider value={{ stepSnap, dragged: draggedRef }}>{children}</DrawerStepContext.Provider>
       </div>

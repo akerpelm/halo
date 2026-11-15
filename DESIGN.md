@@ -330,3 +330,18 @@ Three site-only pieces started from React Bits. They were installed with the sha
 - `Magnet` (components/magnet.tsx): the hero actions lean up to 10px toward the cursor and settle with bounce 0.4. Only the nearest magnet pulls.
 - `Spotlight` (components/spotlight.tsx): a gallery spot trails the pointer across each world sample (overlay blend in light themes, screen in dark) and turns the pane's `--halo-shift`.
 - `CountUp` (components/count-up.tsx): measurements spring to their value when they enter view and glide between values. Screen readers get the final value immediately.
+
+
+## Entrances and exits
+
+The Toaster's `motion` prop picks how toasts arrive and leave. Every style is one reveal spring from 0 to 1, layered over the stack springs, and each exit plays its entrance in reverse on a no-bounce spring.
+- `rise` (default): lifts 28px in from the anchored edge, scaling from 0.96.
+- `fade`: opacity only. This is also what reduced-motion users always get.
+- `drop`: falls 72px from the far side and lands on the spring.
+- `hinge`: swings down from the top edge (rotateX from −78°, perspective 700px).
+- `focus`: pulls into focus from a 12px blur and a 1.07 scale.
+- `bloom`: grows out of a centred capsule with a clip-path inset.
+
+## Playground as builder
+
+The playground starts from PLAIN: Ink, fade, smooth spring, no icons, timer, or close button, and soft corners. Each choice is shown as a removable layer chip. Every change previews out, then in. Directions load into it as presets.

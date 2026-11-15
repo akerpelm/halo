@@ -339,6 +339,20 @@
   pointer-events: none;
 }
 
+/* Type-tinted glass: the surface takes a wash of the type colour, the edge stays the material's. */
+.halo-toast[data-tint][data-type='success'] {
+  background: color-mix(in oklch, var(--halo-success) 14%, var(--halo-surface));
+}
+.halo-toast[data-tint][data-type='error'] {
+  background: color-mix(in oklch, var(--halo-error) 14%, var(--halo-surface));
+}
+.halo-toast[data-tint][data-type='warning'] {
+  background: color-mix(in oklch, var(--halo-warning) 16%, var(--halo-surface));
+}
+.halo-toast[data-tint][data-type='info'] {
+  background: color-mix(in oklch, var(--halo-info) 14%, var(--halo-surface));
+}
+
 .halo-toast-body {
   display: flex;
   /* One-line toasts sit on the true centre line; with a description, the icon aligns to the title. */

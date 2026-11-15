@@ -2,7 +2,7 @@ import { type PointerEvent, type RefObject, useEffect, useLayoutEffect, useRef, 
 import { PIXEL_PRECISION, type SpringValue, createSpringValue } from '../core/animator';
 import { createVelocityTracker, project, rubberband } from '../core/gesture';
 import { type SpringConfig, resolveSpring } from '../core/spring';
-import { CloseIcon, TimerRing, type ToastTimer, TypeIcon } from './icons';
+import { CloseIcon, TimerRing, type ToastMotion, type ToastTimer, TypeIcon } from './icons';
 import { type ToastRecord, toast as toastApi } from './store';
 
 type Axis = 'x' | 'y';
@@ -25,6 +25,9 @@ type ToastItemProps = {
   reducedMotion: boolean;
   closeButton: boolean;
   timer: ToastTimer;
+  motionStyle: ToastMotion;
+  icons: boolean;
+  tint: boolean;
   onHeight: (id: ToastRecord['id'], height: number) => void;
   onRemove: (id: ToastRecord['id']) => void;
   onInteract: (interacting: boolean) => void;
@@ -42,19 +45,54 @@ const TYPE_LABEL: Record<ToastRecord['type'], string> = {
 };
 
 const FADE = resolveSpring('smooth');
+const EXIT = resolveSpring({ duration: 0.3, bounce: 0 });
 const DISMISS_DECELERATION = 0.995;
 
-type Motion = { x: SpringValue; y: SpringValue; dy: SpringValue; scale: SpringValue; opacity: SpringValue };
+type Motion = { x: SpringValue; y: SpringValue; dy: SpringValue; scale: SpringValue; opacity: SpringValue; reveal: SpringValue };
 
-function useToastMotion(element: RefObject<HTMLLIElement | null>, width: RefObject<number>, config: SpringConfig) {
+const unit = (n: number) => Math.max(0, Math.min(1, n));
+
+/** One reveal value (0 hidden, 1 shown) read by each motion style. Overshoot past 1 is kept for transforms. */
+function revealStyle(style: ToastMotion, p: number, edge: 1 | -1) {
+  const q = 1 - p;
+  switch (style) {
+    case 'fade':
+      return { transform: '', opacity: unit(p), filter: '', clip: '' };
+    case 'drop':
+      return { transform: `translate3d(0, ${-edge * q * 72}px, 0)`, opacity: unit(p * 2.5), filter: '', clip: '' };
+    case 'hinge':
+      return { transform: `perspective(700px) rotateX(${q * -78}deg)`, opacity: unit(p * 1.6), filter: '', clip: '' };
+    case 'focus':
+      return { transform: `scale(${1 + q * 0.07})`, opacity: unit(p), filter: q > 0.002 ? `blur(${(unit(q) * 12).toFixed(2)}px)` : '', clip: '' };
+    case 'bloom':
+      return {
+        transform: '',
+        opacity: unit(p * 4),
+        filter: '',
+        clip: q > 0.002 ? `inset(0 ${(unit(q) * 42).toFixed(2)}% round var(--halo-radius))` : '',
+      };
+    default:
+      return { transform: `translate3d(0, ${edge * q * 28}px, 0) scale(${0.96 + 0.04 * p})`, opacity: unit(p), filter: '', clip: '' };
+  }
+}
+
+function useToastMotion(
+  element: RefObject<HTMLLIElement | null>,
+  width: RefObject<number>,
+  config: SpringConfig,
+  settings: RefObject<{ style: ToastMotion; edge: 1 | -1 }>,
+) {
   const [motion] = useState<Motion>(() => {
-    const state = { x: 0, y: 0, dy: 0, scale: 1, opacity: 0 };
+    const state = { x: 0, y: 0, dy: 0, scale: 1, opacity: 1, reveal: 0 };
     // Springs write straight to the DOM inside the shared frame loop. React never re-renders mid-animation.
     const render = () => {
       const el = element.current;
       if (!el) return;
-      el.style.transform = `translate3d(${state.x}px, ${state.y + state.dy}px, 0) scale(${state.scale})`;
-      el.style.opacity = String(Math.max(0, Math.min(1, state.opacity)));
+      const reveal = revealStyle(settings.current.style, state.reveal, settings.current.edge);
+      el.style.transform = `translate3d(${state.x}px, ${state.y + state.dy}px, 0) scale(${state.scale}) ${reveal.transform}`;
+      el.style.opacity = String(unit(state.opacity) * reveal.opacity);
+      el.style.filter = reveal.filter;
+      el.style.clipPath = reveal.clip;
       el.style.setProperty('--halo-shift', (state.x / (width.current || 1)).toFixed(3));
     };
     const value = (key: keyof typeof state, initial: number) =>
@@ -65,9 +103,16 @@ function useToastMotion(element: RefObject<HTMLLIElement | null>, width: RefObje
           state[key] = next;
           render();
         },
-        key === 'scale' || key === 'opacity' ? undefined : PIXEL_PRECISION,
+        key === 'scale' || key === 'opacity' || key === 'reveal' ? undefined : PIXEL_PRECISION,
       );
-    return { x: value('x', 0), y: value('y', 0), dy: value('dy', 0), scale: value('scale', 1), opacity: value('opacity', 0) };
+    return {
+      x: value('x', 0),
+      y: value('y', 0),
+      dy: value('dy', 0),
+      scale: value('scale', 1),
+      opacity: value('opacity', 1),
+      reveal: value('reveal', 0),
+    };
   });
   return motion;
 }
@@ -88,6 +133,9 @@ export function ToastItem({
   reducedMotion,
   closeButton,
   timer,
+  motionStyle,
+  icons,
+  tint,
   onHeight,
   onRemove,
   onInteract,
@@ -104,7 +152,9 @@ export function ToastItem({
   const dismissedRef = useRef(t.dismissed);
   const drag = useRef<{ x: number; y: number; axis: Axis | null; pointerId: number; armed: boolean } | null>(null);
   const [tracker] = useState(createVelocityTracker);
-  const motion = useToastMotion(ref, width, config);
+  const motionSettings = useRef({ style: motionStyle, edge });
+  motionSettings.current = { style: reducedMotion ? 'fade' : motionStyle, edge };
+  const motion = useToastMotion(ref, width, config, motionSettings);
 
   const dismissible = t.dismissible !== false;
   const clamped = !expanded && index > 0;
@@ -135,9 +185,11 @@ export function ToastItem({
     });
     observer.observe(li);
     observer.observe(body);
-    // Enter from just past the anchored edge.
-    motion.y.set(edge * 28);
-    motion.scale.set(0.96);
+    // Enter through the chosen motion style. Hidden-behind-the-deck toasts start invisible.
+    motion.opacity.set(visible ? 1 : 0);
+    motion.reveal.set(0);
+    if (reducedMotion) motion.reveal.to(1, { config: FADE });
+    else motion.reveal.to(1, { config });
     return () => observer.disconnect();
   }, []);
 
@@ -159,7 +211,8 @@ export function ToastItem({
   useLayoutEffect(() => {
     if (!t.dismissed || exiting.current) return;
     exiting.current = true;
-    Promise.all([fade(0), go(motion.scale, motion.scale.get() * 0.94), go(motion.y, motion.y.get() + edge * 14)]).then(() => {
+    // Leave through the same motion style, reversed, without bounce so it never overshoots past hidden.
+    motion.reveal.to(0, { config: reducedMotion ? FADE : EXIT }).then(() => {
       if (dismissedRef.current) onRemove(t.id);
       else exiting.current = false;
     });
@@ -281,7 +334,7 @@ export function ToastItem({
   };
 
   const typeLabel = TYPE_LABEL[t.type];
-  const icon = t.icon ?? (t.type === 'default' ? null : <TypeIcon type={t.type} />);
+  const icon = t.icon ?? (t.type === 'default' || !icons ? null : <TypeIcon type={t.type} />);
   // Which timer to draw, if any. Untimed toasts (loading, Infinity) never show one, and a toast
   // with no icon moves its ring to the close button rather than drawing an empty circle.
   const ring = !timed ? false : timer === 'icon' && !icon ? 'close' : timer;
@@ -296,12 +349,15 @@ export function ToastItem({
       data-clamped={clamped || undefined}
       data-dismissed={t.dismissed || undefined}
       data-timer-paused={!running || undefined}
+      data-tint={tint || undefined}
       className={['halo-toast', 'halo-surface', t.className].filter(Boolean).join(' ')}
       style={{ height: clamped ? frontHeight : undefined, zIndex: 1000 - lastIndex.current }}
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}
       onPointerUp={(event) => release(event, false)}
       onPointerCancel={(event) => release(event, true)}
+      // Capture can vanish without a pointerup (app switch, OS gesture); treat it as a cancel.
+      onLostPointerCapture={(event) => release(event, true)}
       onKeyDown={(event) => {
         if (!dismissible) return;
         const onSelf = event.target === event.currentTarget;

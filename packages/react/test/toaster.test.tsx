@@ -81,3 +81,23 @@ describe('timers', () => {
     vi.useRealTimers();
   });
 });
+
+describe('appearance props', () => {
+  it('hides type icons when icons is false', () => {
+    render(<Toaster icons={false} timer={false} />);
+    act(() => {
+      toast.success('Saved');
+    });
+    expect(screen.getByText('Saved').closest('li')?.querySelector('.halo-toast-icon')).toBeNull();
+  });
+
+  it('marks tinted toasts and passes coat colours as custom properties', () => {
+    render(<Toaster tint coat={['red', 'green', 'blue']} />);
+    act(() => {
+      toast.error('Nope');
+    });
+    expect(screen.getByText('Nope').closest('li')?.hasAttribute('data-tint')).toBe(true);
+    const region = screen.getByRole('region') as HTMLElement;
+    expect(region.style.getPropertyValue('--halo-coat-b')).toBe('green');
+  });
+});

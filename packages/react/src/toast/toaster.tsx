@@ -3,7 +3,7 @@ import { type HaloDensity, type HaloRadius, appearanceStyle } from '../core/appe
 import { type SpringInput, resolveSpring } from '../core/spring';
 import { useReducedMotion } from '../core/use-media-query';
 import { toastStore } from './store';
-import type { ToastTimer } from './icons';
+import type { ToastMotion, ToastTimer } from './icons';
 import { ToastItem } from './toast-item';
 
 export type ToastPosition = 'top-left' | 'top-center' | 'top-right' | 'bottom-left' | 'bottom-center' | 'bottom-right';
@@ -40,6 +40,14 @@ export type ToasterProps = {
    * Every style freezes while the stack is hovered, focused, or touched.
    */
   timer?: ToastTimer;
+  /** How toasts enter and leave: `rise` (default), `fade`, `drop`, `hinge`, `focus`, or `bloom`. */
+  motion?: ToastMotion;
+  /** Show the type icons (success, error, and so on). */
+  icons?: boolean;
+  /** Tint each toast's glass with its type colour. */
+  tint?: boolean;
+  /** Override the three dichroic coat colours, e.g. `['#3fd0c9', '#e06bd8', '#f2c14e']`. */
+  coat?: readonly [string, string, string];
   /** Distance from the viewport edge in px. */
   offset?: number;
   className?: string;
@@ -47,6 +55,11 @@ export type ToasterProps = {
 };
 
 const PEEK = 10;
+
+function coatStyle(coat: ToasterProps['coat']): CSSProperties {
+  if (!coat) return {};
+  return { '--halo-coat-a': coat[0], '--halo-coat-b': coat[1], '--halo-coat-c': coat[2] } as CSSProperties;
+}
 
 export function Toaster({
   id: toasterId,
@@ -64,6 +77,10 @@ export function Toaster({
   label = 'Notifications',
   closeButton = true,
   timer = 'icon',
+  motion = 'rise',
+  icons = true,
+  tint = false,
+  coat,
   offset = 24,
   className,
   style,
@@ -162,7 +179,7 @@ export function Toaster({
       data-density={density}
       data-y={vertical}
       data-x={horizontal}
-      style={{ '--halo-offset': `${offset}px`, '--halo-gap': `${gap}px`, ...appearanceStyle('--halo-radius', radius), ...style } as CSSProperties}
+      style={{ '--halo-offset': `${offset}px`, '--halo-gap': `${gap}px`, ...appearanceStyle('--halo-radius', radius), ...coatStyle(coat), ...style } as CSSProperties}
     >
       <div ref={politeRef} className="halo-sr-only" aria-live="polite" aria-atomic="true" />
       <div ref={assertiveRef} className="halo-sr-only" aria-live="assertive" aria-atomic="true" />
@@ -197,6 +214,9 @@ export function Toaster({
                 reducedMotion={reducedMotion}
                 closeButton={closeButton}
                 timer={timer}
+                motionStyle={motion}
+                icons={icons}
+                tint={tint}
                 onHeight={reportHeight}
                 onRemove={remove}
                 onInteract={setInteracting}

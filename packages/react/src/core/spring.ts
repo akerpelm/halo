@@ -35,6 +35,14 @@ export const springPresets = {
   smooth: { duration: 0.45, bounce: 0 },
   bouncy: { duration: 0.5, bounce: 0.32 },
   gentle: { duration: 0.7, bounce: 0.12 },
+  /** Quick and firm, with no overshoot at all. */
+  stiff: { duration: 0.22, bounce: 0 },
+  /** Short and springy: a single confident overshoot. */
+  pop: { duration: 0.36, bounce: 0.3 },
+  /** Wobbles visibly before settling. */
+  jelly: { duration: 0.62, bounce: 0.5 },
+  /** Slow and unhurried, for calm products. */
+  lazy: { duration: 0.95, bounce: 0.06 },
 } as const satisfies Record<string, { duration: number; bounce: number }>;
 
 const DEFAULT_CONFIG: SpringConfig = { stiffness: 400, damping: 38, mass: 1 };

@@ -50,7 +50,11 @@ Toast options:
 - visibleToasts: number (default 3)
 - gap: number in px (default 12)
 - duration: ms (default 5000)
-- spring: 'snappy' | 'smooth' | 'bouncy' | 'gentle' | { duration, bounce } | { stiffness, damping, mass } (default 'snappy')
+- spring: 'snappy' | 'smooth' | 'bouncy' | 'gentle' | 'stiff' | 'pop' | 'jelly' | 'lazy' | { duration, bounce } | { stiffness, damping, mass } (default 'snappy')
+- motion: 'rise' | 'fade' | 'drop' | 'hinge' | 'focus' | 'bloom' (default 'rise'). How toasts enter and leave. rise lifts in from the edge, fade is opacity only, drop falls in from above, hinge swings down from its top edge, focus pulls in from a blur, bloom grows out of a capsule. Reduced-motion users always get fade.
+- icons: boolean (default true). Show the type icons.
+- tint: boolean (default false). Wash each toast's glass with its type colour.
+- coat: [string, string, string]. Override the three dichroic coat colours.
 - world: 'dichroic' | 'partition' | 'smoked' | 'vapor' | 'crystal' | 'ink' (default 'dichroic'). dichroic: clear with a coated, hue-shifting edge. partition: etched, neutral. smoked: bronze-tinted, always dark. vapor: most diffuse. crystal: clear and bevelled, little blur. ink: solid, no blur (cheapest to render).
 - theme: 'light' | 'dark' | 'system' (default 'system')
 - density: 'compact' | 'comfortable' | 'spacious' (default 'comfortable'). Padding, gaps, and type size move together.
