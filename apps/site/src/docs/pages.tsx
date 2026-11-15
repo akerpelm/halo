@@ -2,12 +2,15 @@ import { toast } from '@halo-ui/react/toast';
 import type { ReactNode } from 'react';
 import { Button } from '../components/button';
 import { CodeBlock } from '../components/code-block';
+import { CompareTable } from '../components/compare-table';
 import { DemoDrawer } from '../components/demo-drawer';
 import { MaterialSample } from '../components/material-sample';
 import { SpringCurve } from '../components/spring-curve';
 import { coats, motions, springChoices } from '../lib/build';
 import { demos, newDemos } from '../lib/demo-toasts';
+import { defaultDrawerConfig } from '../lib/config';
 import { worlds } from '../lib/worlds';
+import { releaseSteps, vsSonner, vsVaul } from './comparisons';
 import { drawerParts, drawerRootProps, selectors, toastFunctions, toastOptions, toasterGroups, tokens } from './api';
 import { Plaque } from './plaque';
 import { PropTable } from './prop-table';
@@ -111,6 +114,7 @@ const toastPage: DocPage = {
     { id: 'toaster', title: 'Toaster props' },
     { id: 'only-in-halo', title: 'Only in Halo' },
     { id: 'accessibility', title: 'Keyboard and screen readers' },
+    { id: 'vs-sonner', title: 'Next to Sonner' },
   ],
   body: () => (
     <>
@@ -193,6 +197,8 @@ toast.update(id, 'Export ready', { type: 'success' });`}
           'Toasts past the visible count are inert: they never block clicks or take focus.',
         ]}
       />
+      <H2 id="vs-sonner">Next to Sonner</H2>
+      <CompareTable caption="How Halo behaves next to Sonner, checked against Sonner's source." them="Sonner" rows={vsSonner} />
     </>
   ),
 };
@@ -207,6 +213,7 @@ const drawerPage: DocPage = {
     { id: 'parts', title: 'Parts' },
     { id: 'detents', title: 'Detents' },
     { id: 'recess', title: 'Pushing the page back' },
+    { id: 'vs-vaul', title: 'Next to Vaul' },
   ],
   body: () => (
     <>
@@ -237,8 +244,12 @@ const drawerPage: DocPage = {
         Snap points are viewport fractions or pixel strings, smallest first. When you let go, Halo picks the detent nearest where your flick would coast to, and hands your speed to the spring.
       </P>
       <CodeBlock label="detents.tsx" code={`<Drawer.Root snapPoints={[0.28, 0.6, '720px']} defaultSnapPoint={0.6}>`} />
+      <List items={releaseSteps.map(([title, body]) => <><strong>{title}.</strong> {body}</>)} />
       <Try>
         <DemoDrawer trigger="Two detents" size="sm" />
+        <DemoDrawer trigger="Three detents" size="sm" config={{ ...defaultDrawerConfig, snapPoints: 'three' }} />
+        <DemoDrawer trigger="Side panel" size="sm" config={{ ...defaultDrawerConfig, side: 'right', snapPoints: 'none', recess: false }} />
+        <DemoDrawer trigger="Must choose" size="sm" tone="outline" config={{ ...defaultDrawerConfig, snapPoints: 'none', dismissible: false }} />
       </Try>
       <H2 id="recess">Pushing the page back</H2>
       <P>
@@ -253,6 +264,8 @@ const drawerPage: DocPage = {
       <Note title="Why there is no portal">
         The native dialog renders in the browser's top layer, above everything, wherever it sits in your tree. No z-index fights, and focus is trapped by the platform.
       </Note>
+      <H2 id="vs-vaul">Next to Vaul</H2>
+      <CompareTable caption="How Halo behaves next to Vaul, checked against Vaul's source. Vaul's README now says it is unmaintained." them="Vaul" rows={vsVaul} />
     </>
   ),
 };

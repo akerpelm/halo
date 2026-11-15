@@ -11,9 +11,15 @@ import { Home } from './sections/home';
 import { PlaygroundPage } from './sections/playground-page';
 
 export function App() {
-  const { world, theme } = useSettings();
+  const { world, theme, setWorld } = useSettings();
   // The playground's toast, lifted so Worlds can load setups into it and it survives navigation.
-  const [build, setBuild] = useState<BuildConfig>(PLAIN);
+  // Its world is the site's world, so building a toast restyles the whole gallery and vice versa.
+  const [layers, setLayers] = useState<Omit<BuildConfig, 'world'>>(PLAIN);
+  const build: BuildConfig = { ...layers, world };
+  const setBuild = ({ world: next, ...rest }: BuildConfig) => {
+    setLayers(rest);
+    if (next !== world) setWorld(next);
+  };
   const path = usePath();
   const surface = path.startsWith('/docs') ? 'docs' : path.startsWith('/playground') ? 'playground' : 'home';
   const docsSlug = surface === 'docs' ? path.split('/')[2] || 'getting-started' : null;
@@ -55,7 +61,7 @@ export function App() {
         <Footer />
       </div>
       {/* Floats above every surface; its own transition name keeps open toasts still during navigation. */}
-      <Toaster world={world} theme={theme} style={{ viewTransitionName: 'site-toaster' }} />
+      <Toaster world={world} theme={theme} duration={3500} style={{ viewTransitionName: 'site-toaster' }} />
     </PathContext.Provider>
   );
 }

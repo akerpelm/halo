@@ -264,38 +264,42 @@
   }
 }
 
-::view-transition-old(.surface-out) {
-  animation: vt-fade-out 160ms ease-in both;
+/* Out, then in: the old view is gone before the new one arrives, so pages never double-expose. */
+::view-transition-old(.surface-out),
+::view-transition-old(root) {
+  animation: vt-fade-out 90ms ease-in both;
 }
-::view-transition-new(.surface-in) {
+::view-transition-new(.surface-in),
+::view-transition-new(root) {
   animation:
-    vt-fade-in 260ms ease-out 80ms both,
-    vt-rise 520ms var(--ease-spring) 80ms both;
+    vt-fade-in 220ms ease-out 90ms both,
+    vt-rise 480ms var(--ease-spring) 90ms both;
 }
 
-::view-transition-new(.page-from-right) {
-  --vt-offset: 48px;
-  animation:
-    vt-fade-in 220ms ease-out 60ms both,
-    vt-slide-from 480ms var(--ease-spring) both;
-}
+/* Docs pages: a short slide in reading order, still out-then-in. */
 ::view-transition-old(.page-to-left) {
-  --vt-offset: -48px;
+  --vt-offset: -14px;
   animation:
-    vt-fade-out 160ms ease-in both,
-    vt-slide-to 480ms var(--ease-spring) both;
-}
-::view-transition-new(.page-from-left) {
-  --vt-offset: -48px;
-  animation:
-    vt-fade-in 220ms ease-out 60ms both,
-    vt-slide-from 480ms var(--ease-spring) both;
+    vt-fade-out 90ms ease-in both,
+    vt-slide-to 90ms ease-in both;
 }
 ::view-transition-old(.page-to-right) {
-  --vt-offset: 48px;
+  --vt-offset: 14px;
   animation:
-    vt-fade-out 160ms ease-in both,
-    vt-slide-to 480ms var(--ease-spring) both;
+    vt-fade-out 90ms ease-in both,
+    vt-slide-to 90ms ease-in both;
+}
+::view-transition-new(.page-from-right) {
+  --vt-offset: 14px;
+  animation:
+    vt-fade-in 200ms ease-out 90ms both,
+    vt-slide-from 420ms var(--ease-spring) 90ms both;
+}
+::view-transition-new(.page-from-left) {
+  --vt-offset: -14px;
+  animation:
+    vt-fade-in 200ms ease-out 90ms both,
+    vt-slide-from 420ms var(--ease-spring) 90ms both;
 }
 
 /* Persistent chrome stays still while content moves. The header uses backdrop-filter, so its old
@@ -318,12 +322,24 @@
 ::view-transition-new(docs-sidebar) {
   animation: none;
 }
+/* Leaving or entering the docs (a surface switch), the sidebar and outline belong to the page:
+   they leave and arrive with it, out then in. */
+html:active-view-transition-type(surface)::view-transition-old(docs-sidebar),
+html:active-view-transition-type(surface)::view-transition-old(docs-outline) {
+  display: block;
+  animation: vt-fade-out 90ms ease-in both;
+}
+html:active-view-transition-type(surface)::view-transition-new(docs-sidebar),
+html:active-view-transition-type(surface)::view-transition-new(docs-outline) {
+  animation: vt-fade-in 220ms ease-out 90ms both;
+}
+
 /* The outline's content is the page's, so it crossfades quickly rather than overlapping. */
 ::view-transition-old(docs-outline) {
-  animation: vt-fade-out 120ms ease-in both;
+  animation: vt-fade-out 90ms ease-in both;
 }
 ::view-transition-new(docs-outline) {
-  animation: vt-fade-in 200ms ease-out 80ms both;
+  animation: vt-fade-in 200ms ease-out 90ms both;
 }
 ::view-transition-group(site-toaster),
 ::view-transition-group(custom-toaster) {

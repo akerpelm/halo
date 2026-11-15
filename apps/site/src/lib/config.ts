@@ -1,4 +1,4 @@
-import type { DrawerSide, HaloDensity, HaloWorld } from '@halo-ui/react';
+import type { DrawerSide, HaloDensity, HaloWorldName } from '@halo-ui/react';
 
 export type RadiusPreset = 'square' | 'soft' | 'round' | 'pill';
 
@@ -36,7 +36,7 @@ export const snapPresets = {
 const springLiteral = (s: SpringSetting) => `{ duration: ${s.duration}, bounce: ${s.bounce} }`;
 const sameSpring = (a: SpringSetting, b: SpringSetting) => a.duration === b.duration && a.bounce === b.bounce;
 
-export function drawerCode(config: DrawerConfig, world: HaloWorld) {
+export function drawerCode(config: DrawerConfig, world: HaloWorldName) {
   const snaps = snapPresets[config.snapPoints];
   const attrs: string[] = [];
   if (config.side !== 'bottom') attrs.push(`side="${config.side}"`);
@@ -72,7 +72,7 @@ export const PRINCIPLES = `Rules that keep Halo correct:
 - Errors announce assertively by default. Pass { important: true } only for messages that must interrupt.
 - Respect user settings: the components already honor prefers-reduced-motion, prefers-reduced-transparency, and prefers-contrast. Don't override them.`;
 
-export function drawerPrompt(config: DrawerConfig, world: HaloWorld) {
+export function drawerPrompt(config: DrawerConfig, world: HaloWorldName) {
   return `Add a Halo drawer to this React app.
 
 1. Install: npm i @halo-ui/react

@@ -17,5 +17,11 @@ export const customWorlds: ReadonlyArray<{ value: string; name: string; line: st
   { value: 'midnight', name: 'Midnight', line: 'Example: a world written in this site’s CSS. The library has never heard of it.' },
 ];
 
+export const allWorlds = [...worlds, ...customWorlds];
+
 export const worldName = (world: HaloWorldName) =>
-  [...worlds, ...customWorlds].find((w) => w.value === world)?.name ?? world;
+  allWorlds.find((w) => w.value === world)?.name ?? world;
+
+/** Dark-only worlds (Midnight sets color-scheme: dark) need the site's dark text tokens on any panel that wears them. */
+export const themeFor = <T extends string>(world: HaloWorldName, theme: T): T | 'dark' =>
+  customWorlds.some((w) => w.value === world) ? 'dark' : theme;

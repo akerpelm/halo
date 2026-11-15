@@ -352,10 +352,13 @@ The Toaster's `motion` prop picks how toasts arrive and leave. Every style is on
 
 The playground starts from PLAIN: Ink, fade, smooth spring, no icons, timer, or close button, and soft corners. Each choice is shown as a removable layer chip. Every change previews out, then in. Directions load into it as presets.
 
+- **One world setting.** The builder's world is the site's world (the header Appearance menu). Picking one in either place restyles the whole gallery. The menu lists the nine library worlds, then Midnight under "Written in this site's CSS". Dark-only custom worlds give their panels the site's dark text tokens (`themeFor`).
+- **The fold.** A compact header (h1, one line, the Toast/Drawer toggle) so the stage is in the first viewport. The stage is sticky: beside the controls on desktop, and pinned under the nav as a 168px mini-stage above them on phones. The column is a flex column, not a grid, so the stage can stick across it.
+
 
 ## Extending: custom worlds
 
-A world is a single `[data-halo-world='name']` selector of custom properties. The library reads `--halo-world-edge` for the edge ring, and only Dichroic and Crystal (whose edges follow `--halo-shift`) declare their edge on the pane. The site proves this with **Midnight**, defined only in `apps/site/src/styles.css` inside `@layer components`, which you can pick in the builder and fire from "Make it yours". Per-part styling uses the Toaster's `classNames`, and the stylesheet is imported into a cascade layer so Tailwind utilities win.
+A world is a single `[data-halo-world='name']` selector of custom properties. The library reads `--halo-world-edge` for the edge ring, and only Dichroic and Crystal (whose edges follow `--halo-shift`) declare their edge on the pane. The site proves this with **Midnight**, defined only in `apps/site/src/styles.css` inside `@layer components`, which you can pick in the header menu or the builder, and fire from the Customize docs. Per-part styling uses the Toaster's `classNames`, and the stylesheet is imported into a cascade layer so Tailwind utilities win.
 
 ## Push-back
 
@@ -415,19 +418,20 @@ axe-core (WCAG 2.2 AA plus best practices) passes in light and dark, with toasts
 
 ## Information architecture
 
-- **Three surfaces:** Home (`/`, the scrolled showcase), Docs (`/docs/*`), and Playground (`/playground`).
+- **Three surfaces:** Home (`/`, a short showcase: hero, flick test, Only in Halo, Worlds, then three doors onward), Docs (`/docs/*`), and Playground (`/playground`).
 - **The header carries only:** the logo (home), Docs, Playground, a site-wide ⌘K search, and one Appearance menu that holds the world and the theme. Section links don't go in the header: Home is a story you scroll, and the docs cover each component.
-- **Wayfinding below the fold:** the footer is a site map (every docs page, Home, Playground, llms.txt), and Home has a "Start plain. Build it up." band into the playground.
+- **Wayfinding below the fold:** the footer is a site map (every docs page, Home, Playground, llms.txt), and Home ends on "Where next": the playground, the drawer, and agents. Reference (every toast type, the Sonner and Vaul comparisons, all demo drawers) lives in the docs.
 - **Phones:** one header row. The docs keep their own row of page chips.
 
 ## Page transitions
 
 React `<ViewTransition>` with `addTransitionType`. The path lives in React state so every navigation runs in a transition.
-- **Surface switches** (`surface`): the old surface fades out in 160ms, and the new one fades in with a 14px rise on `--ease-spring`. Surfaces are lateral, so there is no directional slide.
-- **Docs to docs** (`page-next` / `page-prev`, by sidebar order): content slides 48px with a crossfade, inside the persistent layout.
+- **Out, then in.** The old view fades out in 90ms before the new one starts, so two pages never double-expose.
+- **Surface switches** (`surface`): the new surface fades in with a rise on `--ease-spring` after that 90ms. Surfaces are lateral, so there is no directional slide. The docs sidebar and outline leave and arrive with the page here.
+- **Docs to docs** (`page-next` / `page-prev`, by sidebar order): content slides 14px, out then in, inside the persistent layout.
 - **Back and forward** animate too. The update starts just after `popstate`, because React finishes popstate updates synchronously, which would skip the transition.
 - **Persistent pieces:**
-  - The header and the docs sidebar show only their new snapshot, so the active item swaps at once and the header's backdrop blur never flashes.
+  - The header (and, between docs pages, the sidebar) show only their new snapshot, so the active item swaps at once and the header's backdrop blur never flashes.
   - The outline crossfades quickly.
   - Toasters float above at z 200 and never move with the page.
 - **Reduced motion:** every view-transition animation runs at 0s.

@@ -1,12 +1,14 @@
 import { useSyncExternalStore } from 'react';
-import { type HaloWorld, haloWorlds } from '@halo-ui/react';
+import type { HaloWorldName } from '@halo-ui/react';
+import { allWorlds } from './worlds';
 
 export type SiteTheme = 'light' | 'dark';
-type Settings = { world: HaloWorld; theme: SiteTheme };
+// One world for the whole site: the header menu, the gallery, and the playground all share it.
+type Settings = { world: HaloWorldName; theme: SiteTheme };
 
 const KEY = 'halo-site';
 const root = document.documentElement;
-const savedWorld = haloWorlds.find((w) => w === root.dataset.world);
+const savedWorld = allWorlds.find((w) => w.value === root.dataset.world)?.value;
 let settings: Settings = {
   world: savedWorld ?? 'dichroic',
   theme: root.dataset.theme === 'dark' ? 'dark' : 'light',
@@ -36,7 +38,7 @@ export function useSettings() {
   const current = useSyncExternalStore(subscribe, () => settings);
   return {
     ...current,
-    setWorld: (world: HaloWorld) => commit({ world }),
+    setWorld: (world: HaloWorldName) => commit({ world }),
     setTheme: (theme: SiteTheme) => commit({ theme }),
   };
 }

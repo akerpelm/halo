@@ -2,6 +2,7 @@ import { useEffect, useId, useMemo, useRef, useState } from 'react';
 import { cn } from '../lib/cn';
 import { navigate } from '../lib/router';
 import { useSettings } from '../lib/settings';
+import { themeFor } from '../lib/worlds';
 import { type PropRow, drawerParts, drawerRootProps, selectors, toastFunctions, toastOptions, toasterProps, tokens } from './api';
 import { docPages } from './pages';
 import { propId } from './prop-table';
@@ -113,7 +114,7 @@ export function DocsSearch() {
         onClick={(event) => event.target === event.currentTarget && close()}
       >
         <div className="flex h-full items-start justify-center bg-[var(--halo-overlay,oklch(30%_0.03_262/0.24))] px-4 pt-[12vh]" onClick={(event) => event.target === event.currentTarget && close()}>
-          <div data-halo-world={world} data-theme={theme} className="halo halo-surface docs-search-panel w-full max-w-[600px] overflow-hidden [--halo-radius:20px]">
+          <div data-halo-world={world} data-theme={themeFor(world, theme)} className="halo halo-surface docs-search-panel w-full max-w-[600px] overflow-hidden [--halo-radius:20px]">
             <div className="flex items-center gap-3 border-b border-[color-mix(in_oklch,var(--halo-fg)_12%,transparent)] px-4">
               <svg aria-hidden width="16" height="16" viewBox="0 0 16 16" fill="none" className="flex-none text-[var(--halo-fg-muted)]">
                 <circle cx="7" cy="7" r="5.25" stroke="currentColor" strokeWidth="1.5" />

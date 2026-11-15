@@ -33,7 +33,7 @@ export function createDemos(toasterId?: string) {
         return;
       }
       window.clearInterval(tick);
-      toast.update(id, 'Export ready', { ...on, from, type: 'success', duration: 5000, description: 'project-assets.zip · 14.2 MB' });
+      toast.update(id, 'Export ready', { ...on, from, type: 'success', description: 'project-assets.zip · 14.2 MB' });
     }, 900);
   },
   long: (from?: Element) =>

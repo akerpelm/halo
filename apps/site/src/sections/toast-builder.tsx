@@ -94,7 +94,9 @@ function Shortlist<T>({
 }) {
   const [open, setOpen] = useState(false);
   const extra = items.length - limit;
-  const shown = open ? items : items.filter((item, index) => index < limit || isSelected(item));
+  // A selection past the cut takes the last slot, so the row never grows to five.
+  const selectedLate = items.findIndex(isSelected) >= limit;
+  const shown = open ? items : items.filter((item, index) => index < (selectedLate ? limit - 1 : limit) || isSelected(item));
   return (
     <>
       <div className={className}>{shown.map(render)}</div>
@@ -255,7 +257,8 @@ export function ToastBuilder({ config, onChange, output, onOutput }: ToastBuilde
         </div>
       </div>
 
-      <div className="grid lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)]">
+      {/* On phones this is a flex column, so the stage can move first and stay pinned while the controls scroll. */}
+      <div className="flex flex-col lg:grid lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)]">
         <form className="grid content-start gap-6 border-line p-5 max-lg:border-b lg:border-r" onSubmit={(event) => event.preventDefault()} aria-label="Toast layers">
           <Group title="World">
             <Shortlist
@@ -428,15 +431,17 @@ export function ToastBuilder({ config, onChange, output, onOutput }: ToastBuilde
           </Fold>
         </form>
 
-        <div className="grid min-w-0 content-start gap-5 p-5 lg:sticky lg:top-16 lg:self-start">
+        {/* A flex column, not a grid: a grid would confine the sticky stage to its own row. */}
+        <div className="min-w-0 max-lg:contents lg:flex lg:flex-col lg:gap-5 lg:p-5">
           {/* The stage: previews land here, beside the controls, never in the page corner. */}
-          <div ref={stageRef} data-world={config.world} className="relative h-[300px] overflow-hidden rounded-2xl bg-wall-deep" aria-label="Preview stage" role="region">
+          <div ref={stageRef} data-world={config.world} className="sticky top-16 z-10 h-[300px] overflow-hidden rounded-2xl bg-wall-deep max-lg:order-first max-lg:m-3 max-lg:h-[168px] lg:top-[76px] lg:shadow-[0_0_0_12px_var(--wall)]" aria-label="Preview stage" role="region">
             <span aria-hidden className="cast absolute inset-x-[10%] bottom-[-30%] h-[70%]">
               <span className="pool top-0 left-0 h-full w-[55%] bg-coat-a" />
               <span className="pool top-[10%] right-0 h-full w-[50%] bg-coat-b" />
             </span>
             <Toaster id="playground" contained offset={16} label="Playground notifications" theme={theme} {...toToasterProps(config)} />
           </div>
+          <div className="grid gap-5 max-lg:p-5">
           <div>
             <p className="m-0 mb-3 text-label text-ink-soft">Every change fires a preview. Or fire your own:</p>
             <div className="flex flex-wrap gap-2">
@@ -475,6 +480,7 @@ export function ToastBuilder({ config, onChange, output, onOutput }: ToastBuilde
             copyLabel={output === 'code' ? 'Copy code' : 'Copy prompt'}
             wrap={output === 'prompt'}
           />
+          </div>
         </div>
       </div>
     </>

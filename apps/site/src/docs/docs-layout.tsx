@@ -28,7 +28,7 @@ export function DocsLayout({ slug }: { slug: string }) {
                 aria-current={p.slug === page.slug ? 'page' : undefined}
                 className={cn(
                   'inline-flex min-h-9 items-center rounded-full px-3.5 text-ui no-underline transition-colors duration-150 pointer-coarse:min-h-11 lg:flex lg:rounded-lg lg:px-3',
-                  p.slug === page.slug ? 'bg-ink/[0.08] font-medium text-ink' : 'text-ink-soft hover:bg-ink/[0.04] hover:text-ink max-lg:bg-ink/[0.04]',
+                  p.slug === page.slug ? 'bg-ink/[0.08] font-medium text-ink' : 'text-ink-soft hover:bg-ink/[0.04] hover:text-ink max-lg:shadow-[inset_0_0_0_1px_var(--line)]',
                 )}
               >
                 {p.title}
@@ -40,10 +40,11 @@ export function DocsLayout({ slug }: { slug: string }) {
 
       <PageTransition key={page.slug}>
       <article className="min-w-0">
-        <header className="grid items-end gap-x-8 md:grid-cols-[minmax(0,1fr)_minmax(0,320px)]">
-          <div className="pb-2">
-            <h1 className="m-0 text-[clamp(2.25rem,4.4vw,3.25rem)] leading-[1.05] font-semibold tracking-[-0.03em]">{page.title}</h1>
-            <p className="mt-4 mb-0 max-w-[60ch] text-lead leading-[1.55] text-ink-soft">{page.lede}</p>
+        {/* The title spans the full width so it never wraps beside the specimen; the lede shares the row with it. */}
+        <header className="grid items-start gap-x-8 md:grid-cols-[minmax(0,1fr)_minmax(0,320px)]">
+          <div className="pb-2 md:contents">
+            <h1 className="m-0 md:col-span-2 text-[clamp(2.25rem,4.4vw,3.25rem)] leading-[1.05] font-semibold tracking-[-0.03em]">{page.title}</h1>
+            <p className="mt-4 mb-0 max-w-[60ch] text-lead leading-[1.55] text-ink-soft md:pb-2">{page.lede}</p>
           </div>
           {specimens[page.slug]?.()}
         </header>

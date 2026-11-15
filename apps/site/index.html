@@ -12,7 +12,7 @@
         const saved = JSON.parse(localStorage.getItem('halo-site') || '{}');
         const theme = saved.theme === 'light' || saved.theme === 'dark' ? saved.theme : matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
         document.documentElement.dataset.theme = theme;
-        if (['partition', 'smoked', 'vapor', 'crystal', 'ink'].includes(saved.world)) document.documentElement.dataset.world = saved.world;
+        if (['dichroic', 'partition', 'smoked', 'vapor', 'crystal', 'ink', 'opal', 'mercury', 'vellum', 'midnight'].includes(saved.world)) document.documentElement.dataset.world = saved.world;
       } catch {}
     </script>
   </head>
