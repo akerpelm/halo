@@ -9,10 +9,11 @@ export type Route = {
   ogAlt: string;
 };
 
-type DocRoute = Route & { slug: string; markdown: string };
+type DocRoute = Route & { slug: string; name: string; markdown: string };
 
-const doc = (slug: string, title: string, description: string): DocRoute => ({
+const doc = (slug: string, name: string, title: string, description: string): DocRoute => ({
   slug,
+  name,
   path: `/docs/${slug}`,
   title,
   description,
@@ -32,36 +33,43 @@ export const homeRoute: Route = {
 export const docsRoutes: readonly DocRoute[] = [
   doc(
     'getting-started',
+    'Getting started',
     'Getting started · Halo',
     'Install halo-ui-react, render one Toaster, call toast() from anywhere, and compose a drawer from parts. React 18.2 or newer, Next.js App Router ready.',
   ),
   doc(
     'toast',
+    'Toast',
     'Toast for React: API and Toaster props · Halo',
     'toast(), toast.promise, toast.undo and toast.stream, every option and Toaster prop, keyboard and screen-reader behaviour, and how it compares with Sonner.',
   ),
   doc(
     'drawer',
+    'Drawer',
     'Drawer for React on the native dialog · Halo',
     'A bottom sheet or side panel on <dialog>: snap points picked from flick velocity, a handle that is a real button, page push-back, and how it compares with Vaul.',
   ),
   doc(
     'worlds',
+    'Worlds',
     'Worlds: frosted-glass themes · Halo',
     'Nine glass themes for the toast and drawer, each in light and dark. Pick one with a prop, colour toasts by type, or recolour the edge.',
   ),
   doc(
     'motion',
+    'Motion',
     'Motion: springs and reduced motion · Halo',
     `Spring presets with measured settle times, custom springs, six toast entrances, reduced-motion behaviour, and the ${sizes.spring} kB spring engine on its own.`,
   ),
   doc(
     'customize',
+    'Customize',
     'Customize: tokens, Tailwind and custom worlds · Halo',
     'Write a world in one CSS selector, extend a built-in one, style each part with Tailwind classNames, and every token and selector Halo exposes.',
   ),
   doc(
     'agents',
+    'For agents',
     'For AI agents: llms.txt and prompts · Halo',
     'llms.txt with the whole API, copy-ready prompts for adding toasts, migrating from Sonner or Vaul and setting up Next.js, and the rules that keep it accessible.',
   ),

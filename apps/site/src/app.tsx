@@ -2,14 +2,13 @@ import { Toaster } from 'halo-ui-react/toast';
 import { type CSSProperties, useLayoutEffect, useState } from 'react';
 import { Nav } from './components/nav';
 import { SurfaceTransition } from './components/page-transition';
-import { DocsLayout } from './docs/docs-layout';
 import { type BuildConfig, PLAIN } from './lib/build';
+import { DocsLayout, PlaygroundPage } from './lib/lazy-surfaces';
 import { PathContext, usePath } from './lib/router';
 import { useSettings } from './lib/settings';
 import { Footer } from './sections/footer';
 import { Home } from './sections/home';
 import { NotFound } from './sections/not-found';
-import { PlaygroundPage } from './sections/playground-page';
 import { docsSlugFor, playgroundRoute, routeFor } from './routes';
 
 export function App({ serverPath = '/' }: { serverPath?: string }) {

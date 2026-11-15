@@ -1,7 +1,8 @@
 import type { AnchorHTMLAttributes, MouseEvent } from 'react';
+import { preloadSurface } from '../lib/lazy-surfaces';
 import { navigate } from '../lib/router';
 
-export function Link({ href = '', onClick, ...props }: AnchorHTMLAttributes<HTMLAnchorElement>) {
+export function Link({ href = '', onClick, onPointerEnter, onFocus, ...props }: AnchorHTMLAttributes<HTMLAnchorElement>) {
   const internal = href.startsWith('/') && !href.startsWith('//') && !/\.(txt|md|xml)$/.test(href);
   return (
     <a
@@ -12,6 +13,14 @@ export function Link({ href = '', onClick, ...props }: AnchorHTMLAttributes<HTML
         if (!internal || modified || event.defaultPrevented) return;
         event.preventDefault();
         navigate(href);
+      }}
+      onPointerEnter={(event) => {
+        onPointerEnter?.(event);
+        if (internal) preloadSurface(href);
+      }}
+      onFocus={(event) => {
+        onFocus?.(event);
+        if (internal) preloadSurface(href);
       }}
       {...props}
     />

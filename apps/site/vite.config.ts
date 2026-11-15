@@ -7,6 +7,7 @@ const lib = (path: string) => fileURLToPath(new URL(`../../packages/react/src/${
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
+  build: { manifest: true },
   resolve: {
     alias: [
       { find: /^@\//, replacement: `${fileURLToPath(new URL('./src/', import.meta.url))}` },

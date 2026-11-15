@@ -17,7 +17,7 @@ export function llms(): string {
     .replaceAll('{{spring}}', String(sizes.spring))
     .replaceAll('{{styles}}', String(sizes.styles))
     .replaceAll('{{method}}', sizes.method);
-  const docs = docsRoutes.map((route) => `- [${docTitle(route.title)}](${absoluteUrl(route.markdown)}): ${route.description}`);
+  const docs = docsRoutes.map((route) => `- [${route.name}](${absoluteUrl(route.markdown)}): ${route.description}`);
   const optional = [homeRoute, playgroundRoute].map((route) => `- [${docTitle(route.title)}](${absoluteUrl(route.path)}): ${route.description}`);
   return `${filled.trimEnd()}\n\n## Docs\n\n${docs.join('\n')}\n\n## Optional\n\n${optional.join('\n')}\n`;
 }

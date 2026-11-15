@@ -1,8 +1,9 @@
 import { InstallChip } from '../components/install-chip';
 import { Link } from '../components/link';
-import { docPages } from '../docs/pages';
 import { Mark } from '../components/nav';
+import { version } from '../lib/package-facts';
 import { GITHUB_URL, NPM_URL } from '../lib/site';
+import { docsRoutes } from '../routes';
 
 export function Footer() {
   return (
@@ -19,15 +20,15 @@ export function Footer() {
         <div>
           <p className="m-0 mb-3 flex items-center gap-2 text-ink">
             <Mark className="mt-1 h-[9px] w-6" />
-            <span className="font-medium">Halo 0.1.0</span>
+            <span className="font-medium">Halo {version}</span>
           </p>
           <p className="m-0 text-ink-faint">Spring-physics toast and drawer for React.</p>
         </div>
         <ul className="m-0 grid list-none gap-1.5 p-0">
-          {docPages.map((p) => (
+          {docsRoutes.map((p) => (
             <li key={p.slug}>
-              <Link href={`/docs/${p.slug}`} className="inline-flex min-h-6 items-center text-ink-soft no-underline hover:text-ink pointer-coarse:min-h-11">
-                {p.title}
+              <Link href={p.path} className="inline-flex min-h-6 items-center text-ink-soft no-underline hover:text-ink pointer-coarse:min-h-11">
+                {p.name}
               </Link>
             </li>
           ))}
