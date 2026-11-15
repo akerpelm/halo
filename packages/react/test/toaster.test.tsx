@@ -91,12 +91,12 @@ describe('appearance props', () => {
     expect(screen.getByText('Saved').closest('li')?.querySelector('.halo-toast-icon')).toBeNull();
   });
 
-  it('marks tinted toasts and passes coat colours as custom properties', () => {
-    render(<Toaster tint coat={['red', 'green', 'blue']} />);
+  it('marks intent and passes coat colours as custom properties', () => {
+    render(<Toaster intent="edge" coat={['red', 'green', 'blue']} />);
     act(() => {
       toast.error('Nope');
     });
-    expect(screen.getByText('Nope').closest('li')?.hasAttribute('data-tint')).toBe(true);
+    expect(screen.getByText('Nope').closest('li')?.getAttribute('data-intent')).toBe('edge');
     const region = screen.getByRole('region') as HTMLElement;
     expect(region.style.getPropertyValue('--halo-coat-b')).toBe('green');
   });
@@ -130,5 +130,19 @@ describe('extending', () => {
       toast.dismiss(id);
     });
     expect(toast.isActive(id)).toBe(false);
+  });
+});
+
+describe('hidden toasts', () => {
+  it('marks toasts past the visible count as hidden so they cannot block the page', () => {
+    render(<Toaster visibleToasts={2} />);
+    act(() => {
+      toast('one');
+      toast('two');
+      toast('three');
+    });
+    // Newest first: 'one' is now third and out of view.
+    expect(screen.getByText('one').closest('li')?.hasAttribute('data-hidden')).toBe(true);
+    expect(screen.getByText('three').closest('li')?.hasAttribute('data-hidden')).toBe(false);
   });
 });

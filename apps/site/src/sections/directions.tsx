@@ -30,8 +30,8 @@ const toastDirections: ToastDirection[] = [
   },
   {
     name: 'Showtime',
-    line: 'Blooms out of a capsule on a jelly spring, with tinted glass. For playful products.',
-    config: { ...PLAIN, world: 'dichroic', motion: 'bloom', spring: 'jelly', coat: 'orchid', tint: true, icons: true, timer: 'icon', closeButton: true, radius: 'pill' },
+    line: 'Blooms out of a capsule on a jelly spring, with glass tinted by type. For playful products.',
+    config: { ...PLAIN, world: 'dichroic', motion: 'bloom', spring: 'jelly', coat: 'orchid', intent: 'tint', icons: true, timer: 'icon', closeButton: true, radius: 'pill' },
   },
   {
     name: 'Signage',

@@ -59,7 +59,8 @@ const hooks: ReadonlyArray<readonly [string, string]> = [
   ['.halo-toast', 'Each toast. Parts: -body, -icon, -title, -description, -action, -close.'],
   ['[data-type="error"]', 'The toast type: default, success, error, warning, info, loading.'],
   ['[data-front]', 'The toast at the front of the stack.'],
-  ['[data-tint]', 'Tinted toasts.'],
+  ['[data-intent="edge"]', 'Toasts showing their type in colour: tint, edge, or glow.'],
+  ['[data-hidden]', 'Toasts past the visible count. Inert, and they never block the page.'],
   ['[data-swiping]', 'A toast mid-swipe.'],
   ['.halo-drawer-panel[data-dragging]', 'A drawer mid-drag.'],
 ];

@@ -2,7 +2,7 @@ import { type PointerEvent, type RefObject, useEffect, useLayoutEffect, useRef, 
 import { PIXEL_PRECISION, type SpringValue, createSpringValue } from '../core/animator';
 import { createVelocityTracker, project, rubberband } from '../core/gesture';
 import { type SpringConfig, resolveSpring } from '../core/spring';
-import { CloseIcon, TimerRing, type ToastMotion, type ToastTimer, TypeIcon } from './icons';
+import { CloseIcon, TimerRing, type ToastIntent, type ToastMotion, type ToastTimer, TypeIcon } from './icons';
 import { type ToastRecord, toast as toastApi } from './store';
 import type { ToastClassNames } from './toaster';
 
@@ -28,7 +28,7 @@ type ToastItemProps = {
   timer: ToastTimer;
   motionStyle: ToastMotion;
   icons: boolean;
-  tint: boolean;
+  intent: ToastIntent;
   classNames: ToastClassNames | undefined;
   onHeight: (id: ToastRecord['id'], height: number) => void;
   onRemove: (id: ToastRecord['id']) => void;
@@ -153,7 +153,7 @@ export function ToastItem({
   timer,
   motionStyle,
   icons,
-  tint,
+  intent,
   classNames,
   onHeight,
   onRemove,
@@ -177,6 +177,8 @@ export function ToastItem({
 
   const dismissible = t.dismissible !== false;
   const clamped = !expanded && index > 0;
+  // Toasts past the visible count are invisible; they must not block clicks or take focus either.
+  const hidden = !visible || t.dismissed;
   const timed = t.type !== 'loading' && Number.isFinite(duration);
   if (index > -1) lastIndex.current = index;
   dismissedRef.current = t.dismissed;
@@ -236,6 +238,11 @@ export function ToastItem({
       else exiting.current = false;
     });
   }, [t.dismissed]);
+
+  // Set as a DOM property so it works on React 18 too, which has no `inert` prop.
+  useLayoutEffect(() => {
+    if (ref.current) ref.current.inert = hidden;
+  }, [hidden]);
 
   useEffect(() => {
     if (t.dismissed || !bodyRef.current) return;
@@ -367,8 +374,9 @@ export function ToastItem({
       data-front={index === 0 || undefined}
       data-clamped={clamped || undefined}
       data-dismissed={t.dismissed || undefined}
+      data-hidden={hidden || undefined}
       data-timer-paused={!running || undefined}
-      data-tint={tint || undefined}
+      data-intent={intent || undefined}
       className={cx('halo-toast halo-surface', classNames?.toast, t.className)}
       style={{ height: clamped ? frontHeight : undefined, zIndex: 1000 - lastIndex.current }}
       onPointerDown={onPointerDown}

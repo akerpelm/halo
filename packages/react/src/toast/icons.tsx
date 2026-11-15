@@ -60,6 +60,9 @@ function Loading() {
 
 export type ToastTimer = 'close' | 'icon' | 'edge' | false;
 
+/** How a toast shows its type in colour: wash the glass, colour the edge ring, or cast coloured light. */
+export type ToastIntent = 'tint' | 'edge' | 'glow' | false;
+
 /**
  * How a toast enters and leaves. Every style is one spring from 0 to 1, read differently.
  * rise: lifts in from the edge. fade: opacity only. drop: falls in from above and lands.

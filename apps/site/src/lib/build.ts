@@ -1,4 +1,4 @@
-import type { HaloDensity, HaloWorldName, SpringPresetName, ToastMotion, ToastPosition, ToastTimer } from '@halo-ui/react';
+import type { HaloDensity, HaloWorldName, SpringPresetName, ToastIntent, ToastMotion, ToastPosition, ToastTimer } from '@halo-ui/react';
 import type { RadiusPreset } from './config';
 
 export type SpringChoice = SpringPresetName | { duration: number; bounce: number };
@@ -10,7 +10,7 @@ export type BuildConfig = {
   motion: ToastMotion;
   spring: SpringChoice;
   coat: CoatName;
-  tint: boolean;
+  intent: ToastIntent;
   icons: boolean;
   timer: ToastTimer;
   closeButton: boolean;
@@ -27,7 +27,7 @@ export const PLAIN: BuildConfig = {
   motion: 'fade',
   spring: 'smooth',
   coat: 'material',
-  tint: false,
+  intent: false,
   icons: false,
   timer: false,
   closeButton: false,
@@ -45,7 +45,7 @@ export const MAXED: BuildConfig = {
   motion: 'bloom',
   spring: 'pop',
   coat: 'aurora',
-  tint: true,
+  intent: 'glow',
   icons: true,
   timer: 'icon',
   closeButton: true,
@@ -58,7 +58,7 @@ const LIBRARY_DEFAULTS: BuildConfig = {
   motion: 'rise',
   spring: 'snappy',
   coat: 'material',
-  tint: false,
+  intent: false,
   icons: true,
   timer: 'icon',
   closeButton: true,
@@ -110,7 +110,7 @@ export function layers(config: BuildConfig, worldName: (w: HaloWorldName) => str
   if (config.motion !== PLAIN.motion) list.push({ key: 'motion', label: `${motions.find((m) => m.value === config.motion)?.name} entrance` });
   if (!sameSpring(config.spring, PLAIN.spring)) list.push({ key: 'spring', label: `${springName(config.spring)} spring` });
   if (config.coat !== PLAIN.coat) list.push({ key: 'coat', label: `${coats[config.coat as Exclude<CoatName, 'material'>].name} coat` });
-  if (config.tint) list.push({ key: 'tint', label: 'Tinted by type' });
+  if (config.intent) list.push({ key: 'intent', label: `${config.intent[0]?.toUpperCase()}${config.intent.slice(1)} intent` });
   if (config.icons) list.push({ key: 'icons', label: 'Icons' });
   if (config.timer) list.push({ key: 'timer', label: `${config.timer === 'icon' ? 'Icon' : config.timer === 'close' ? 'Close' : 'Edge'} timer` });
   if (config.closeButton) list.push({ key: 'closeButton', label: 'Close button' });
@@ -133,7 +133,7 @@ export function builderCode(config: BuildConfig) {
     const [a, b, c] = coats[config.coat as Exclude<CoatName, 'material'>].colors;
     attrs.push(`coat={['${a}', '${b}', '${c}']}`);
   }
-  if (config.tint) attrs.push('tint');
+  if (config.intent) str('intent', config.intent);
   if (!config.icons) attrs.push('icons={false}');
   if (config.timer !== d.timer) attrs.push(config.timer ? `timer="${config.timer}"` : 'timer={false}');
   if (!config.closeButton) attrs.push('closeButton={false}');
@@ -175,7 +175,7 @@ export const toToasterProps = (config: BuildConfig) => ({
   motion: config.motion,
   spring: config.spring,
   coat: config.coat === 'material' ? undefined : coats[config.coat].colors,
-  tint: config.tint,
+  intent: config.intent,
   icons: config.icons,
   timer: config.timer,
   closeButton: config.closeButton,

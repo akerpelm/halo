@@ -3,7 +3,7 @@ import { type HaloDensity, type HaloRadius, appearanceStyle } from '../core/appe
 import { type SpringInput, resolveSpring } from '../core/spring';
 import { useReducedMotion } from '../core/use-media-query';
 import { toastStore } from './store';
-import type { ToastMotion, ToastTimer } from './icons';
+import type { ToastIntent, ToastMotion, ToastTimer } from './icons';
 import { ToastItem } from './toast-item';
 
 export type ToastPosition = 'top-left' | 'top-center' | 'top-right' | 'bottom-left' | 'bottom-center' | 'bottom-right';
@@ -51,8 +51,11 @@ export type ToasterProps = {
   motion?: ToastMotion;
   /** Show the type icons (success, error, and so on). */
   icons?: boolean;
-  /** Tint each toast's glass with its type colour. */
-  tint?: boolean;
+  /**
+   * Show each toast's type in colour, so success and error read apart even without icons.
+   * `tint` washes the glass, `edge` colours the edge ring, `glow` casts light in the type colour.
+   */
+  intent?: ToastIntent;
   /** Override the three dichroic coat colours, e.g. `['#3fd0c9', '#e06bd8', '#f2c14e']`. */
   coat?: readonly [string, string, string];
   /** Distance from the viewport edge in px. */
@@ -87,7 +90,7 @@ export function Toaster({
   timer = 'icon',
   motion = 'rise',
   icons = true,
-  tint = false,
+  intent = false,
   coat,
   offset = 24,
   className,
@@ -224,7 +227,7 @@ export function Toaster({
                 timer={timer}
                 motionStyle={motion}
                 icons={icons}
-                tint={tint}
+                intent={intent}
                 classNames={classNames}
                 onHeight={reportHeight}
                 onRemove={remove}

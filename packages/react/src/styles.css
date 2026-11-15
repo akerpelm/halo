@@ -335,22 +335,38 @@
   outline: 2px solid var(--halo-focus);
   outline-offset: 2px;
 }
-.halo-toast[data-dismissed] {
+.halo-toast[data-dismissed],
+.halo-toast[data-hidden] {
   pointer-events: none;
 }
 
-/* Type-tinted glass: the surface takes a wash of the type colour, the edge stays the material's. */
-.halo-toast[data-tint][data-type='success'] {
-  background: color-mix(in oklch, var(--halo-success) 14%, var(--halo-surface));
+/* Intent: the toast's type in colour, for when icons are off or not enough. */
+.halo-toast[data-type='success'] {
+  --halo-intent: var(--halo-success);
 }
-.halo-toast[data-tint][data-type='error'] {
-  background: color-mix(in oklch, var(--halo-error) 14%, var(--halo-surface));
+.halo-toast[data-type='error'] {
+  --halo-intent: var(--halo-error);
 }
-.halo-toast[data-tint][data-type='warning'] {
-  background: color-mix(in oklch, var(--halo-warning) 16%, var(--halo-surface));
+.halo-toast[data-type='warning'] {
+  --halo-intent: var(--halo-warning);
 }
-.halo-toast[data-tint][data-type='info'] {
-  background: color-mix(in oklch, var(--halo-info) 14%, var(--halo-surface));
+.halo-toast[data-type='info'] {
+  --halo-intent: var(--halo-info);
+}
+/* Wash the glass in the type colour. */
+.halo-toast[data-intent='tint']:is([data-type='success'], [data-type='error'], [data-type='warning'], [data-type='info']) {
+  /* Mixed in oklab: oklch would interpolate hue from a white surface's 0° and drift pink. */
+  background: color-mix(in oklab, var(--halo-intent) 15%, var(--halo-surface));
+}
+/* Colour the edge ring itself: same width, same mask, so it stays one clean line. */
+.halo-toast[data-intent='edge']:is([data-type='success'], [data-type='error'], [data-type='warning'], [data-type='info']) {
+  --halo-edge: var(--halo-intent);
+}
+/* Cast light in the type colour, the way a dichroic pane throws its coat onto the wall. */
+.halo-toast[data-intent='glow']:is([data-type='success'], [data-type='error'], [data-type='warning'], [data-type='info']) {
+  box-shadow:
+    var(--halo-shadow),
+    0 16px 40px -14px color-mix(in oklch, var(--halo-intent) 62%, transparent);
 }
 
 .halo-toast-body {

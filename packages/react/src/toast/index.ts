@@ -1,5 +1,5 @@
 export { type ToastAction, type ToastOptions, type ToastRecord, type ToastType, toast } from './store';
-export type { ToastMotion, ToastTimer } from './icons';
+export type { ToastIntent, ToastMotion, ToastTimer } from './icons';
 export {
   type HaloTheme,
   type HaloWorld,

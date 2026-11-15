@@ -354,3 +354,12 @@ A world is a single `[data-halo-world='name']` selector of custom properties. Th
 ## Push-back
 
 The recess zooms the page out around the centre of the viewport (`transform-origin` set to the current scroll position), drifting 14px away from the drawer's edge at full progress. Depth defaults to 6% and bounce to 0.42, on a 0.46s spring.
+
+
+## Intent
+
+`intent` shows a toast's type in colour, for when icons are off or not enough: `tint` washes the glass (a 15% oklab mix; oklch drifts pink through a white surface's 0° hue), `edge` recolours the edge ring at its usual width, and `glow` adds a cast shadow in the type colour. Default and loading toasts are never coloured. A thick coloured side-stripe is deliberately not offered.
+
+## Hidden toasts
+
+Toasts past `visibleToasts` are `inert` with `pointer-events: none`, so an invisible toast can never block the page or take focus.

@@ -33,7 +33,7 @@ toast.success('Invite sent', { description: 'They will get an email shortly' });
 - **Accessible by default.** Separate polite and assertive live regions with announced types, a hotkey to reach the stack, keyboard dismissal, a handle that is a real button, and support for reduced motion, reduced transparency, and higher contrast.
 - **Six materials, out of the box.** `world` is `dichroic`, `partition`, `smoked`, `vapor`, `crystal`, or `ink`. Each is a complete token set, in light and dark.
 - **Six entrances and exits, all on springs:** `motion="rise | fade | drop | hinge | focus | bloom"`.
-- **Colour presets:** `coat={[a, b, c]}` recolours the dichroic edge; `tint` washes each toast in its type colour.
+- **Colour presets:** `coat={[a, b, c]}` recolours the dichroic edge; `intent="tint | edge | glow"` shows each toast's type in colour, even with icons off.
 - **Density and radius as props.** `density="compact | comfortable | spacious"`, `radius="square | soft | round | pill"` or px.
 - **Time left drawn on the edge.** A brighter arc unwinds around the pane and freezes while you read. No progress bar.
 - **A page that moves with the drawer.** `recess` pushes your app back on its own bouncier spring.

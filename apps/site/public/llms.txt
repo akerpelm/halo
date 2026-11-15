@@ -53,7 +53,7 @@ Toast options:
 - spring: 'snappy' | 'smooth' | 'bouncy' | 'gentle' | 'stiff' | 'pop' | 'jelly' | 'lazy' | { duration, bounce } | { stiffness, damping, mass } (default 'snappy')
 - motion: 'rise' | 'fade' | 'drop' | 'hinge' | 'focus' | 'bloom' (default 'rise'). How toasts enter and leave. rise lifts in from the edge, fade is opacity only, drop falls in from above, hinge swings down from its top edge, focus pulls in from a blur, bloom grows out of a capsule. Reduced-motion users always get fade.
 - icons: boolean (default true). Show the type icons.
-- tint: boolean (default false). Wash each toast's glass with its type colour.
+- intent: 'tint' | 'edge' | 'glow' | false (default false). Show each toast's type in colour, so success and error read apart even with icons off. tint washes the glass, edge colours the edge ring, glow casts light in the type colour.
 - coat: [string, string, string]. Override the three dichroic coat colours.
 - world: 'dichroic' | 'partition' | 'smoked' | 'vapor' | 'crystal' | 'ink' (default 'dichroic'). dichroic: clear with a coated, hue-shifting edge. partition: etched, neutral. smoked: bronze-tinted, always dark. vapor: most diffuse. crystal: clear and bevelled, little blur. ink: solid, no blur (cheapest to render).
 - theme: 'light' | 'dark' | 'system' (default 'system')
@@ -67,6 +67,7 @@ Toast options:
 - id, className, style
 
 Behavior worth knowing:
+- Toasts past visibleToasts are hidden and inert: they never block clicks on the page behind them or take keyboard focus.
 - Timers pause while the stack is hovered, focused, or touched, and while the tab is hidden. Toasts tucked behind the deck do not count down until they are visible.
 - Swipe toward the nearest screen edge to dismiss. Dismissal is decided by where the flick would land, so a short fast flick works.
 - Keyboard: the hotkey focuses the newest toast. Tab moves through toasts and their buttons. Esc dismisses the focused toast, and so do Delete and Backspace when the toast itself has focus.

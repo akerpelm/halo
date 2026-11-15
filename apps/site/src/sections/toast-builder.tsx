@@ -128,7 +128,7 @@ export function ToastBuilder({ config, onChange, output, onOutput }: ToastBuilde
       motion: pick(motions).value,
       spring: pick(springChoices).value,
       coat: pick(['material', 'aurora', 'ember', 'lagoon', 'orchid', 'mono'] as const),
-      tint: Math.random() > 0.5,
+      intent: pick(['tint', 'edge', 'glow', false] as const),
       icons: true,
       timer: pick(['icon', 'close', 'edge', false] as const),
       closeButton: Math.random() > 0.3,
@@ -247,10 +247,14 @@ export function ToastBuilder({ config, onChange, output, onOutput }: ToastBuilde
             </details>
           </Group>
 
-          <Group title="Colour" note={config.world === 'dichroic' ? undefined : 'Coat colours show on the Dichroic edge. Pick Dichroic above to see them.'}>
+          <Group title="Colour" note="Coat colours paint the Dichroic edge, so picking one switches the material to Dichroic.">
             <div className="grid grid-cols-3 gap-2">
               {(['material', ...Object.keys(coats)] as CoatName[]).map((name) => (
-                <button key={name} type="button" aria-pressed={config.coat === name} onClick={() => set({ coat: name })} className={cn(tile, 'grid-flow-col items-center justify-start gap-2.5')}>
+                <button
+                  key={name}
+                  type="button"
+                  aria-pressed={config.coat === name}
+                  onClick={() => set(name === 'material' ? { coat: name } : { coat: name, world: 'dichroic' })} className={cn(tile, 'grid-flow-col items-center justify-start gap-2.5')}>
                   {name === 'material' ? (
                     <span aria-hidden className="size-4 rounded-full shadow-[inset_0_0_0_1.5px_var(--ink-faint)]" />
                   ) : (
@@ -260,7 +264,17 @@ export function ToastBuilder({ config, onChange, output, onOutput }: ToastBuilde
                 </button>
               ))}
             </div>
-            <Toggle label="Tint the glass by type" checked={config.tint} onChange={(tint) => set({ tint })} />
+            <Segmented
+              label="Intent: show the type in colour"
+              value={config.intent || 'off'}
+              onChange={(value) => set({ intent: value === 'off' ? false : value })}
+              options={[
+                { value: 'off', label: 'Off' },
+                { value: 'tint', label: 'Tint' },
+                { value: 'edge', label: 'Edge' },
+                { value: 'glow', label: 'Glow' },
+              ]}
+            />
           </Group>
 
           <Group title="Shape">
