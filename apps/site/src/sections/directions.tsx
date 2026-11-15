@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 import { Button } from '../components/button';
 import { CopyButton } from '../components/copy-button';
 import { DemoDrawer } from '../components/demo-drawer';
+import { Link } from '../components/link';
 import { MaterialSample } from '../components/material-sample';
 import { Section } from '../components/section';
 import { type BuildConfig, PLAIN, builderPrompt } from '../lib/build';
@@ -9,7 +10,7 @@ import { type DrawerConfig, PRINCIPLES, defaultDrawerConfig, drawerPrompt } from
 import { LLMS_URL } from '../lib/site';
 import { navigate } from '../lib/router';
 import { useSettings } from '../lib/settings';
-import { worldName, worlds } from '../lib/worlds';
+import { allWorlds, worldName, worlds } from '../lib/worlds';
 
 type ToastDirection = { name: string; line: string; config: BuildConfig };
 type DrawerDirection = { name: string; line: string; config: DrawerConfig };
@@ -71,34 +72,44 @@ function Row({ name, line, actions }: { name: string; line: string; actions: Rea
 
 export function Directions({ onOpenToast }: DirectionsProps) {
   const { world, setWorld } = useSettings();
+  const current = allWorlds.find((w) => w.value === world) ?? { value: world, name: worldName(world), line: '' };
   return (
     <Section
       id="directions"
       title="Worlds"
       lede={
         <>
-          <p className="m-0">Nine worlds and a handful of tuned setups. Each one is a starting point you can paste, or hand to your agent as a prompt.</p>
-          <p className="m-0 mt-4">
-            You are looking at <strong className="font-semibold text-ink">{worldName(world)}</strong>.
+          <p className="m-0">
+            Nine glass themes, called worlds, each in light and dark. Pick one with a prop, or write your own in one CSS selector.
           </p>
+          <p className="m-0 mt-4">Below them, tuned setups you can paste or hand to your agent as a prompt.</p>
         </>
       }
     >
-      <ul className="m-0 grid list-none gap-x-8 gap-y-12 p-0 sm:grid-cols-2 xl:grid-cols-3">
-        {worlds.map(({ value, name, line }) => (
-          <li key={value} className="flex flex-col gap-4">
-            <MaterialSample world={value} />
-            <div className="flex items-center justify-between gap-4">
-              <h3 className="m-0 text-title font-semibold tracking-[-0.02em]">{name}</h3>
-              <Button size="sm" tone={world === value ? 'primary' : 'quiet'} aria-pressed={world === value} onClick={() => setWorld(value)}>
-                {world === value ? 'In use' : 'Use'}
-              </Button>
-            </div>
-            <p className="m-0 text-body leading-[1.55] text-ink-soft">{line}</p>
-            <code className="mt-auto text-label text-ink-faint">world="{value}"</code>
+      <div className="grid gap-x-8 gap-y-5 md:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)] md:items-center">
+        <MaterialSample world={current.value} />
+        <div className="grid content-center gap-3" aria-live="polite">
+          <h3 className="m-0 text-title font-semibold tracking-[-0.02em]">{current.name}</h3>
+          <p className="m-0 text-body leading-[1.55] text-ink-soft">{current.line}</p>
+          <code className="text-label text-ink-faint">world="{current.value}"</code>
+        </div>
+      </div>
+      <ul aria-label="Worlds" className="m-0 mt-6 flex list-none flex-wrap gap-1.5 p-0">
+        {worlds.map(({ value, name }) => (
+          <li key={value}>
+            <Button size="sm" tone={value === current.value ? 'primary' : 'quiet'} aria-pressed={value === current.value} onClick={() => setWorld(value)}>
+              {name}
+            </Button>
           </li>
         ))}
       </ul>
+      <p className="mt-6 mb-0 text-body text-ink-soft">
+        Picking one restyles the whole site.{' '}
+        <Link href="/docs/worlds" className="text-ink underline decoration-line underline-offset-4 hover:decoration-ink">
+          Compare all nine in the docs
+        </Link>
+        , with what each one costs to render.
+      </p>
 
       <h3 className="mt-16 mb-1 text-heading font-semibold tracking-[-0.02em]">Toast setups</h3>
       <ul className="m-0 list-none p-0">

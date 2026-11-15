@@ -26,7 +26,7 @@ export function ToastSection() {
         <HungLabel
           title="Toast"
           date="2026"
-          medium="Frosted pane, spring steel, two live regions"
+          medium="Frosted glass, real springs, polite and assertive live regions"
           rows={[
             ['Import', <code key="i">halo-ui-react/toast</code>],
             ['Weight', <span key="w"><CountUp value={sizes.toast} decimals={1} suffix=" kB" /> min+gzip, with springs</span>],
@@ -41,6 +41,10 @@ export function ToastSection() {
       <p className="mt-2 mb-6 max-w-[60ch] text-body leading-[1.55] text-ink-soft">
         One gesture drives both chips. When you let go, each library decides what happens, using its own rules on exactly the same
         input.
+      </p>
+      <p className="mt-0 mb-6 max-w-[60ch] text-body leading-[1.55] text-ink">
+        Sonner dismisses any drag past 45 px, even a slow one you meant to take back, and averages speed over the whole drag, so a short flick after a
+        pause reads as slow. Halo measures the last 80 ms and projects where the toast would land.
       </p>
       <FlickTest />
 

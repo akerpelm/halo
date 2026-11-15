@@ -1,8 +1,8 @@
-import type { HaloWorld } from 'halo-ui-react';
+import type { HaloWorldName } from 'halo-ui-react';
 import { useSettings } from '../lib/settings';
 import { Spotlight } from './spotlight';
 
-export function MaterialSample({ world }: { world: HaloWorld }) {
+export function MaterialSample({ world }: { world: HaloWorldName }) {
   const { theme } = useSettings();
   return (
     <Spotlight data-world={world} className="grid h-44 place-items-center rounded-2xl bg-wall-deep px-6">
