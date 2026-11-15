@@ -1,0 +1,41 @@
+{
+  "name": "@halo-ui/react",
+  "version": "0.1.0",
+  "description": "Spring-physics toast and drawer for React. Frosted glass, fully accessible, agent-ready.",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": ["**/*.css"],
+  "files": ["dist", "README.md"],
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js", "require": "./dist/index.cjs" },
+    "./toast": { "types": "./dist/toast.d.ts", "import": "./dist/toast.js", "require": "./dist/toast.cjs" },
+    "./drawer": { "types": "./dist/drawer.d.ts", "import": "./dist/drawer.js", "require": "./dist/drawer.cjs" },
+    "./spring": { "types": "./dist/spring.d.ts", "import": "./dist/spring.js", "require": "./dist/spring.cjs" },
+    "./styles.css": "./dist/styles.css"
+  },
+  "scripts": {
+    "build": "tsup && cp src/styles.css dist/styles.css",
+    "dev": "tsup --watch --onSuccess 'cp src/styles.css dist/styles.css'",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "react": ">=18.2",
+    "react-dom": ">=18.2"
+  },
+  "devDependencies": {
+    "@testing-library/react": "16.3.3",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "jsdom": "31.0.1",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "tsup": "9.0.0",
+    "typescript": "6.0.3",
+    "vitest": "5.1.0"
+  },
+  "keywords": ["react", "toast", "drawer", "sheet", "spring", "animation", "glass", "accessible", "sonner", "vaul"]
+}

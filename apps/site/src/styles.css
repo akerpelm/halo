@@ -1,0 +1,235 @@
+@import 'tailwindcss';
+/* Layered so Tailwind utilities can override the material. */
+@import '@halo-ui/react/styles.css' layer(components);
+
+@custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
+@custom-variant partition (&:where([data-world='partition'], [data-world='partition'] *));
+
+/*
+ * Two worlds, two lights each.
+ * Dichroic: a cool gallery wall with coated panes that throw colour.
+ * Partition: the same room behind acid-etched glass, with aluminium mullions and no hue.
+ */
+:root,
+[data-world='dichroic'] {
+  --wall: oklch(96.4% 0.005 250);
+  --wall-deep: oklch(92.6% 0.007 250);
+  --ink: oklch(19% 0.02 262);
+  --ink-soft: oklch(40% 0.018 262);
+  --ink-faint: oklch(52% 0.014 262);
+  --line: oklch(84% 0.008 255);
+  --wire: oklch(62% 0.01 255);
+  --coat-a: oklch(80% 0.14 198);
+  --coat-b: oklch(69% 0.22 332);
+  --coat-c: oklch(85% 0.14 78);
+  --pool: 0.42;
+  color-scheme: light;
+}
+
+[data-theme='dark'],
+[data-theme='dark'] [data-world='dichroic'] {
+  --wall: oklch(15.5% 0.012 262);
+  --wall-deep: oklch(12% 0.012 262);
+  --ink: oklch(96% 0.006 262);
+  --ink-soft: oklch(78% 0.012 262);
+  --ink-faint: oklch(66% 0.012 262);
+  --line: oklch(30% 0.014 262);
+  --wire: oklch(48% 0.012 262);
+  --coat-a: oklch(74% 0.14 198);
+  --coat-b: oklch(64% 0.22 332);
+  --coat-c: oklch(80% 0.14 78);
+  --pool: 0.32;
+  color-scheme: dark;
+}
+
+[data-world='partition'] {
+  --wall: oklch(93.2% 0.003 250);
+  --wall-deep: oklch(89% 0.004 250);
+  --line: oklch(80% 0.004 250);
+  --mullion: oklch(74% 0.006 250);
+  --wire: oklch(62% 0.006 250);
+  --coat-a: oklch(62% 0.004 250);
+  --coat-b: oklch(58% 0.004 250);
+  --coat-c: oklch(70% 0.004 250);
+  --pool: 0.22;
+}
+
+[data-world='partition'][data-theme='dark'],
+[data-theme='dark'] [data-world='partition'] {
+  --wall: oklch(17% 0.004 250);
+  --wall-deep: oklch(13.5% 0.004 250);
+  --line: oklch(31% 0.004 250);
+  --mullion: oklch(36% 0.006 250);
+  --wire: oklch(48% 0.006 250);
+  --coat-a: oklch(4% 0 0);
+  --coat-b: oklch(4% 0 0);
+  --coat-c: oklch(8% 0 0);
+  --pool: 0.5;
+}
+
+@theme {
+  /* A spring sampled from Halo's solver, for CSS-only transitions like the switch thumb. */
+  --ease-spring: linear(0, 0.091, 0.281, 0.487, 0.667, 0.805, 0.901, 0.963, 0.997, 1.014, 1.02, 1.019, 1.016, 1.012, 1.008, 1.005, 1.003, 1.001, 1, 1);
+}
+
+/* The light each newer world casts. The wall itself stays the gallery's. */
+[data-world='smoked'] {
+  --coat-a: oklch(72% 0.11 60);
+  --coat-b: oklch(62% 0.1 35);
+  --coat-c: oklch(80% 0.1 85);
+}
+[data-world='vapor'] {
+  --coat-a: oklch(84% 0.08 220);
+  --coat-b: oklch(86% 0.06 250);
+  --coat-c: oklch(90% 0.04 195);
+}
+[data-world='crystal'] {
+  --coat-a: oklch(84% 0.1 200);
+  --coat-b: oklch(80% 0.11 300);
+  --coat-c: oklch(88% 0.11 90);
+}
+[data-world='ink'] {
+  --pool: 0;
+}
+
+@theme inline {
+  --color-wall: var(--wall);
+  --color-wall-deep: var(--wall-deep);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-ink-faint: var(--ink-faint);
+  --color-line: var(--line);
+  --color-wire: var(--wire);
+  --color-coat-a: var(--coat-a);
+  --color-coat-b: var(--coat-b);
+  --color-coat-c: var(--coat-c);
+  --font-display: 'Funnel Display Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-sans: 'Funnel Sans Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono Variable', ui-monospace, monospace;
+}
+
+@layer base {
+  html {
+    background: var(--wall-deep);
+    scroll-behavior: smooth;
+    scrollbar-color: var(--wire) transparent;
+    -webkit-text-size-adjust: 100%;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+  body {
+    margin: 0;
+    background: var(--wall);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-size: 16px;
+    line-height: 1.55;
+    caret-color: var(--coat-b);
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    transition:
+      background-color 300ms ease,
+      color 300ms ease;
+  }
+  ::selection {
+    background: color-mix(in oklch, var(--coat-a) 45%, transparent);
+    color: var(--ink);
+  }
+  :focus-visible {
+    outline: 2px solid var(--ink);
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    text-wrap: balance;
+  }
+  p {
+    text-wrap: pretty;
+  }
+  a {
+    text-underline-offset: 0.22em;
+    text-decoration-thickness: 1px;
+  }
+  code,
+  kbd,
+  pre {
+    font-family: var(--font-mono);
+    font-variant-ligatures: none;
+  }
+  input[type='range'] {
+    accent-color: var(--ink);
+  }
+}
+
+/* The recessed page, used by the drawer's `recess` option. */
+[data-halo-recess] {
+  background: var(--wall);
+}
+
+/* Light the panes throw on the wall. Pure geometry, blurred once and moved by transform. */
+.pool {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(48px);
+  opacity: var(--pool);
+  pointer-events: none;
+  will-change: transform;
+}
+
+/* Etched partition: frost everywhere except a clear disc under the pointer. */
+.etched {
+  -webkit-backdrop-filter: blur(var(--halo-blur)) saturate(var(--halo-saturate));
+  backdrop-filter: blur(var(--halo-blur)) saturate(var(--halo-saturate));
+  background: var(--halo-surface);
+  -webkit-mask-image: radial-gradient(circle 84px at var(--mx, -999px) var(--my, -999px), transparent 92%, #000 100%);
+  mask-image: radial-gradient(circle 84px at var(--mx, -999px) var(--my, -999px), transparent 92%, #000 100%);
+}
+
+/* Aluminium mullions frame the content column; section rules are the transoms between bays.
+   They sit in the gutters at every width, so they never cross text. */
+[data-world='partition'] .mullions {
+  --mullion-x: 8px;
+  background-image:
+    linear-gradient(var(--mullion), var(--mullion)),
+    linear-gradient(var(--mullion), var(--mullion));
+  background-size: 1px 100%;
+  background-position:
+    var(--mullion-x) 0,
+    calc(100% - var(--mullion-x)) 0;
+  background-repeat: no-repeat;
+}
+@media (min-width: 640px) {
+  [data-world='partition'] .mullions {
+    --mullion-x: 16px;
+  }
+}
+@media (min-width: 1304px) {
+  [data-world='partition'] .mullions {
+    --mullion-x: calc(50% - 632px);
+  }
+}
+
+/* Cast light: tints the wall and the letters on it without washing them out.
+   Partition casts no colour, only a soft silhouette shadow. */
+.cast {
+  mix-blend-mode: multiply;
+}
+[data-theme='dark'] .cast {
+  mix-blend-mode: screen;
+}
+[data-world='partition'] .cast {
+  mix-blend-mode: multiply;
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .etched {
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+}
