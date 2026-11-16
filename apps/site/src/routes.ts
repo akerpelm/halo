@@ -28,7 +28,7 @@ const doc = (group: DocGroup, slug: string, name: string, title: string, descrip
 export const homeRoute: Route = {
   path: '/',
   title: 'Halo: spring-physics toast and drawer for React',
-  description: `A toast and drawer for React on real springs. Keeps Sonner's toast() calls and puts the drawer on the native dialog. ${sizes.toast} kB, no dependencies.`,
+  description: `A spring-physics toast and drawer for React. Takes Sonner's toast() calls, keeps Vaul's part names on a native dialog. Toast ${sizes.toast} kB, no dependencies.`,
   ogImage: '/og/home.png',
   ogAlt: 'Halo: a spring-physics toast and drawer for React',
 };

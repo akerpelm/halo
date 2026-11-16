@@ -350,7 +350,7 @@ export function HangingPane({
             <div className="min-w-0">
               <p className="m-0 font-display text-[clamp(1.2rem,2.4vw,1.75rem)] leading-tight font-semibold tracking-[-0.015em]">Grab me, then let go.</p>
               <p className="m-0 mt-2 text-body leading-normal text-[var(--halo-fg-muted)]">
-                The speed you let go at carries straight into the spring. Nothing here runs on a timer.
+                Throw it. The readout shows the speed it kept.
               </p>
             </div>
           </div>

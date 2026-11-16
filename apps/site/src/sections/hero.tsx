@@ -18,8 +18,8 @@ export function Hero() {
           Toasts and drawers that keep the speed of your flick.
         </h1>
         <p className="mt-7 mb-0 max-w-[44ch] text-[clamp(17px,1.5vw,19px)] leading-[1.55] text-ink-soft">
-          A spring-physics toast and drawer for React. Frosted glass, keyboard and screen-reader support built in, and the same{' '}
-          <code className="text-[0.92em]">toast()</code> calls as Sonner.
+          A spring-physics toast and drawer for React. The toast takes Sonner’s calls, the drawer keeps Vaul’s part names on a native dialog, and
+          both work by keyboard and screen reader.
         </p>
         <div className="mt-9 flex flex-wrap items-center gap-3">
           <Magnet>

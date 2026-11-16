@@ -26,7 +26,7 @@ export function ToastSection() {
         <HungLabel
           title="Toast"
           date="2026"
-          medium="Frosted glass, real springs, polite and assertive live regions"
+          medium="Frosted glass, spring physics, polite and assertive live regions"
           rows={[
             ['Import', <code key="i">halo-ui-react/toast</code>],
             ['Weight', <span key="w"><CountUp value={sizes.toast} decimals={1} suffix=" kB" /> min+gzip, with springs</span>],
