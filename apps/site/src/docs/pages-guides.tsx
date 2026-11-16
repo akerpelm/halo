@@ -44,6 +44,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <C>Drawer</C> is a namespace of parts exported from a client module. A server component can render a client component, but it cannot reach into a client
         module’s exports, so <C>{'<Drawer.Root>'}</C> belongs in a file marked <C>'use client'</C>. Pass server data in as props.
       </P>
+      <Note title="Seeing “Element type is invalid … got: undefined”?">
+        That is Next.js rendering <C>{'<Drawer.Root>'}</C> from a server component. Move the drawer into a client component like the one below. Checked with Next.js 16.4.
+      </Note>
       <CodeBlock
         label="app/share-sheet.tsx"
         code={`'use client';

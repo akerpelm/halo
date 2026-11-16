@@ -98,7 +98,6 @@ Bring a library change's behaviour under test: break the code on purpose and con
 3. Owner-only, from the SEO brief: Cloudflare AI crawler settings (allow search and agent bots; decide on training bots), Search Console and Bing verification plus sitemap submission, GitHub topics, description and social preview image.
 4. Docs P2 from the SEO brief: guides (custom content, async and promises, streaming, undo, multiple toasters, a drawer with a form, nested drawers, testing), and reference pages (types, browser support, troubleshooting, changelog, the spring engine, a worlds comparison table with render cost).
 5. A looping recording of the flick test for people who don't drag, and a demo GIF for the README.
-6. Confirm the Next.js guide (`/docs/nextjs`) in a real App Router app: `<Toaster />` in a server layout, and `Drawer.Root` failing from a server component (the guide says to use it in a client component).
-7. Analytics events (copy_install, fire_toast, open_drawer, …). Cloudflare Web Analytics has no custom events, so this needs a tool choice first.
-8. Publish the shadcn registry (`/r/toast.json`, `/r/drawer.json`), then submit to the shadcn directory and 21st.dev.
-9. Consider trimming the toast bundle (see `packages/react/sizes.json`).
+6. Analytics events (copy_install, fire_toast, open_drawer, …). Cloudflare Web Analytics has no custom events, so this needs a tool choice first.
+7. Publish the shadcn registry (`/r/toast.json`, `/r/drawer.json`), then submit to the shadcn directory and 21st.dev.
+8. Consider trimming the toast bundle (see `packages/react/sizes.json`).
