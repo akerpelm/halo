@@ -33,7 +33,7 @@ for (const route of routes) {
   test(`og image for ${route.path}`, async ({ page }) => {
     await page.addInitScript(() => localStorage.setItem('halo-site', JSON.stringify({ world: 'dichroic', theme: 'light' })));
     await page.goto('/404.html');
-    const title = route === homeRoute ? 'Surfaces that move like they weigh something.' : route.ogAlt;
+    const title = route === homeRoute ? 'Toasts and drawers that keep the speed of your flick.' : route.ogAlt;
     const eyebrow = route.path.startsWith('/docs') ? `haloui.dev${route.path}` : 'npm i halo-ui-react';
     await page.evaluate((html) => {
       document.body.innerHTML = html;

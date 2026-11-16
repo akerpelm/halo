@@ -15,11 +15,11 @@ export function Hero() {
       <div className="relative z-[15] mx-auto flex max-w-[1240px] flex-col px-4 pt-28 sm:px-8 md:pt-32 lg:min-h-[min(100svh,980px)] lg:justify-end lg:pb-24">
         <p className="m-0 mb-5 text-ui font-medium text-ink-soft">An alternative to Sonner and Vaul</p>
         <h1 id="hero-heading" className="m-0 max-w-[15ch] text-[clamp(3rem,7.6vw,6rem)] leading-[0.94] font-semibold tracking-[-0.035em]">
-          Surfaces that move like they weigh something.
+          Toasts and drawers that keep the speed of your flick.
         </h1>
         <p className="mt-7 mb-0 max-w-[44ch] text-[clamp(17px,1.5vw,19px)] leading-[1.55] text-ink-soft">
-          A toast and a drawer for React on real springs. They keep the speed of your flick, announce every type to screen readers, and take the
-          same <code className="text-[0.92em]">toast()</code> calls as Sonner.
+          A spring-physics toast and drawer for React. Frosted glass, keyboard and screen-reader support built in, and the same{' '}
+          <code className="text-[0.92em]">toast()</code> calls as Sonner.
         </p>
         <div className="mt-9 flex flex-wrap items-center gap-3">
           <Magnet>
