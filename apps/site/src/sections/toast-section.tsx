@@ -1,6 +1,6 @@
 import type { MouseEvent } from 'react';
 import { Button } from '../components/button';
-import { FlickTest } from '../components/flick-test';
+import { WhySprings } from '../components/why-springs';
 import { Link } from '../components/link';
 import { Section } from '../components/section';
 import { CountUp } from '../components/count-up';
@@ -37,16 +37,12 @@ export function ToastSection() {
         />
       }
     >
-      <h3 className="m-0 text-heading font-semibold tracking-[-0.02em]">Flick test</h3>
+      <h3 className="m-0 text-heading font-semibold tracking-[-0.02em]">Why springs</h3>
       <p className="mt-2 mb-6 max-w-[60ch] text-body leading-[1.55] text-ink-soft">
-        One gesture drives both chips. When you let go, each library decides what happens, using its own rules on exactly the same
-        input.
+        Most interface motion runs on a clock: a fixed curve over a fixed time, whatever your hand was doing. A spring starts from where things are and how fast
+        they are moving. Throw the pane, then tap the lane while it is still moving.
       </p>
-      <p className="mt-0 mb-6 max-w-[60ch] text-body leading-[1.55] text-ink">
-        Sonner dismisses any drag past 45 px, even a slow one you meant to take back, and averages speed over the whole drag, so a short flick after a
-        pause reads as slow. Halo measures the last 80 ms and projects where the toast would land.
-      </p>
-      <FlickTest />
+      <WhySprings />
 
       <h3 className="mt-16 mb-2 text-heading font-semibold tracking-[-0.02em]">Four toasts you’d otherwise build yourself</h3>
       <p className="mt-0 mb-6 max-w-[60ch] text-body leading-[1.55] text-ink-soft">Each is one call, with the motion, timing and announcements already handled.</p>
