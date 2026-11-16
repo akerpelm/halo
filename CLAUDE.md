@@ -76,7 +76,7 @@ Bring a library change's behaviour under test: break the code on purpose and con
 ## Deploying and releasing
 
 - Site: automatic. Cloudflare Workers Builds deploys every push to `main` (`pnpm run build`, then `npx wrangler deploy`) and reports a check on the GitHub commit.
-- Library: bump `version` in `packages/react/package.json`, commit, then run `npm publish` in `packages/react` (it rebuilds and tests first, then asks for 2FA). Tag the commit. The owner runs the publish; agents prepare it.
+- Library: move the `## Unreleased` notes in `packages/react/CHANGELOG.md` under `## x.y.z (date)`, bump `version` in `packages/react/package.json`, commit, then push a `vx.y.z` tag. `.github/workflows/publish.yml` checks the tag, changelog and sizes, builds, tests, publishes with npm trusted publishing (provenance included, no token), and creates the GitHub Release from the changelog. The owner pushes release tags; agents prepare the commit.
 
 ## Gotchas
 
@@ -94,14 +94,11 @@ Bring a library change's behaviour under test: break the code on purpose and con
 ## Open items, in priority order
 
 1. Test on a real iPhone in Safari, and in Firefox. Everything so far was verified only in headless Chrome.
-2. Automate npm releases from CI with trusted publishing and provenance.
-3. Add `CHANGELOG.md` before the next release, and cut a GitHub Release for 0.1.0.
-4. Republish to npm so the new README, description and keywords (bottom-sheet, notifications, snackbar) reach npmjs.com. Needs a version bump.
-5. Owner-only, from the SEO brief: Cloudflare AI crawler settings (allow search and agent bots; decide on training bots), Search Console and Bing verification plus sitemap submission, GitHub topics, description and social preview image.
-6. Docs P2 from the SEO brief: guides (custom content, async and promises, streaming, undo, multiple toasters, a drawer with a form, nested drawers, testing), and reference pages (types, browser support, troubleshooting, changelog, the spring engine, a worlds comparison table with render cost).
-7. A looping recording of the flick test for people who don't drag, and a demo GIF for the README.
-8. Document the `view-transition-name` trap in the Toast docs and `apps/site/src/content/llms.md`.
-9. Confirm the Next.js guide (`/docs/nextjs`) in a real App Router app: `<Toaster />` in a server layout, and `Drawer.Root` failing from a server component (the guide says to use it in a client component).
-10. Analytics events (copy_install, fire_toast, open_drawer, …). Cloudflare Web Analytics has no custom events, so this needs a tool choice first.
-11. Publish the shadcn registry (`/r/toast.json`, `/r/drawer.json`), then submit to the shadcn directory and 21st.dev.
-12. Consider trimming the toast bundle (see `packages/react/sizes.json`).
+2. Add the trusted publisher on npmjs.com (repo akerpelm/halo, workflow `publish.yml`), then release 0.1.1 so the new README, description and keywords reach npm.
+3. Owner-only, from the SEO brief: Cloudflare AI crawler settings (allow search and agent bots; decide on training bots), Search Console and Bing verification plus sitemap submission, GitHub topics, description and social preview image.
+4. Docs P2 from the SEO brief: guides (custom content, async and promises, streaming, undo, multiple toasters, a drawer with a form, nested drawers, testing), and reference pages (types, browser support, troubleshooting, changelog, the spring engine, a worlds comparison table with render cost).
+5. A looping recording of the flick test for people who don't drag, and a demo GIF for the README.
+6. Confirm the Next.js guide (`/docs/nextjs`) in a real App Router app: `<Toaster />` in a server layout, and `Drawer.Root` failing from a server component (the guide says to use it in a client component).
+7. Analytics events (copy_install, fire_toast, open_drawer, …). Cloudflare Web Analytics has no custom events, so this needs a tool choice first.
+8. Publish the shadcn registry (`/r/toast.json`, `/r/drawer.json`), then submit to the shadcn directory and 21st.dev.
+9. Consider trimming the toast bundle (see `packages/react/sizes.json`).

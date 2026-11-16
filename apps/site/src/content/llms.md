@@ -83,6 +83,7 @@ Behavior worth knowing:
 - Swipe toward the nearest screen edge to dismiss. Dismissal is decided by where the flick would land, so a short fast flick works.
 - Keyboard: the hotkey focuses the newest toast. Tab moves through toasts and their buttons. Esc dismisses the focused toast, and so do Delete and Backspace when the toast itself has focus.
 - Screen readers: messages are announced through separate polite and assertive live regions, prefixed with the type ("Error:", "Success:").
+- View transitions: a `view-transition-name` makes its element a backdrop root, so frosted glass inside it stops blurring the page. Never put a permanent `view-transition-name` on an element that contains the Toaster or a drawer. To keep the stack still during a transition, name it only while one runs: `html:active-view-transition .halo-toaster { view-transition-name: toaster; }`.
 
 ## Drawer
 

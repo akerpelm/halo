@@ -159,6 +159,11 @@ toast.update(id, 'Export ready', { type: 'success' });`}
           <PropTable rows={g.rows} caption={`Toaster props: ${g.title}`} />
         </Plaque>
       ))}
+      <Note title="Using view transitions?">
+        A <C>view-transition-name</C> turns its element into a backdrop root, so frosted glass inside it stops blurring the page and toasts look see-through. Don’t name an
+        element that contains the Toaster. If the stack must stay put during a transition, name it only while one runs:{' '}
+        <C>{"html:active-view-transition .halo-toaster { view-transition-name: toaster; }"}</C>.
+      </Note>
       <H2 id="extra-types">Undo, stream, launch, group</H2>
       <H3>Launch from the trigger</H3>
       <P>
