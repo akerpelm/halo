@@ -37,15 +37,15 @@ Entry points: `halo-ui-react`, `halo-ui-react/toast`, `halo-ui-react/drawer`, `h
 ```sh
 pnpm install
 pnpm dev         # builds the library, then runs the site with library source aliased in
-pnpm test        # 50 tests
+pnpm test        # 50 library tests (vitest)
 pnpm typecheck
 pnpm build
-pnpm --filter haloui-site test:e2e   # Playwright browser checks against a preview build
+pnpm --filter haloui-site test:e2e   # 84 Playwright checks against a prerendered preview build
 pnpm --filter halo-ui-react size     # after a library build: rewrite sizes.json and the size tables in both READMEs
 pnpm --filter haloui-site og         # regenerate public/og/*.png after changing a route title
 ```
 
-pnpm 10, Node 22 (`.node-version`). Run builds one after another: a stale `tsup --watch` from an earlier `pnpm dev` can empty `dist` mid-build. Restart `pnpm dev` after changing `tsup.config.ts`.
+pnpm 10, Node 22 (`.node-version`; the publish workflow uses Node 24 because trusted publishing needs npm 11.5+). Run builds one after another: a stale `tsup --watch` from an earlier `pnpm dev` can empty `dist` mid-build. Restart `pnpm dev` after changing `tsup.config.ts`.
 
 ## Rules
 
@@ -58,7 +58,8 @@ pnpm 10, Node 22 (`.node-version`). Run builds one after another: a stale `tsup 
 - Animate transform and opacity only. Every animation honours `prefers-reduced-motion`.
 - Accessibility is required: WCAG AA contrast, a visible `:focus-visible` ring on everything interactive, 44px targets on coarse pointers, semantic HTML first.
 - Smallest change that solves the problem. Plan multi-file changes in a few bullets before building.
-- Small commits, imperative subject (`add`, `fix`, `remove`). Ask before pushing, force-pushing, or publishing to npm.
+- Small commits, imperative subject (`add`, `fix`, `remove`). Ask before pushing, force-pushing, or publishing to npm. A push to `main` deploys the site, and CI runs only on pull requests, so run the checks yourself before pushing.
+- No absolute claims in copy ("fully accessible", "no other library", "drop-in"). State the behaviour and link the proof.
 
 ## Verifying a change
 
@@ -91,13 +92,43 @@ Bring a library change's behaviour under test: break the code on purpose and con
 - `lib/cable.ts` is a Verlet simulation: cables are 0.994 of the rest gap so they stay taut, tension straightens them, and the pane's top edge is a surface slack can rest on. A zero-length cable must not be stepped (guarded).
 - The domain is `haloui.dev` but the package is `halo-ui-react`. When renaming, never touch `haloui.dev`.
 
-## Open items, in priority order
+## Current state (2026-11-16)
 
-1. Test on a real iPhone in Safari, and in Firefox. Everything so far was verified only in headless Chrome.
-2. Add the trusted publisher on npmjs.com (repo akerpelm/halo, workflow `publish.yml`), then release 0.1.1 so the new README, description and keywords reach npm.
-3. Owner-only, from the SEO brief: Cloudflare AI crawler settings (allow search and agent bots; decide on training bots), Search Console and Bing verification plus sitemap submission, GitHub topics, description and social preview image.
-4. Docs P2 from the SEO brief: guides (custom content, async and promises, streaming, undo, multiple toasters, a drawer with a form, nested drawers, testing), and reference pages (types, browser support, troubleshooting, changelog, the spring engine, a worlds comparison table with render cost).
-5. A looping recording of the flick test for people who don't drag, and a demo GIF for the README.
-6. Analytics events (copy_install, fire_toast, open_drawer, …). Cloudflare Web Analytics has no custom events, so this needs a tool choice first.
-7. Publish the shadcn registry (`/r/toast.json`, `/r/drawer.json`), then submit to the shadcn directory and 21st.dev.
-8. Consider trimming the toast bundle (see `packages/react/sizes.json`).
+Live at haloui.dev, `main` at the latest commit, all checks green.
+
+- Every route is prerendered (`docs/toast.html`, served without a trailing slash) with its own title, description, canonical, Open Graph tags and a 1200x630 image (`public/og/`). Real 404s, `robots.txt`, `sitemap.xml`, `/docs` 301s to `/docs/getting-started`, every docs page has a `.md` twin, and `/llms.txt` follows the llms.txt spec. Verified with curl on production.
+- Docs and Playground are lazy chunks; home JS is about 115 kB gzipped.
+- Home: eyebrow "An alternative to Sonner and Vaul", headline "Toasts and drawers that keep the speed of your flick.", a facts strip read from the package, Why springs (a throw-and-retarget demo with a live speed graph, `components/why-springs.tsx`), four extra toast types, Worlds as one sample and a switcher, and a "Get started" close.
+- Docs (11 pages, grouped): Getting started, Next.js and SSR, Migrate from Sonner, Migrate from Vaul, Toast, Drawer, Worlds, Motion, Customize, Accessibility, For agents.
+- CI on pull requests: typecheck, tests, build, the size check, and the Playwright suite. Tag pushes (`v*`) run `publish.yml`.
+- npm: 0.1.0 is `latest`. The README, description and keywords changed since, so they reach npm only with 0.1.1 (`CHANGELOG.md` has them under Unreleased). The 291 downloads on launch day were registry mirrors and scanners: 148 were for the `0.0.0-stage` placeholder.
+
+## Decisions not to undo
+
+- The eyebrow says "An alternative to", not "Drop-in for": the Vaul migration removes Portal and Overlay and renames three props, and some Sonner features have no equivalent (see the Migrate pages).
+- No GitHub star count in the facts strip until it helps rather than hurts.
+- The old flick test was replaced because both sides looked the same on any normal drag. Why springs uses the drawer's default spring (0.5 s, bounce 0.12) and docks at plus or minus 20% of the lane; longer trips or the stiffer toast spring made the two lines look alike again.
+- Sizes are measured by `packages/react/scripts/size.mjs` (esbuild minify, React external, gzip -9, 1 kB = 1000 bytes). Toast is 8.5 kB, not the 8.4 once typed by hand.
+- The Next.js guide is verified against Next.js 16.4.3: `<Drawer.Root>` in a server component fails the build ("Element type is invalid ... got: undefined"), so drawers go in client components.
+- The SEO brief (from a copy and SEO consultant) was applied with corrections: its flick-test verdict had Sonner backwards, it assumed Cloudflare Pages rather than Workers, and its `index.html`-per-route layout would add trailing-slash redirects.
+
+## Waiting on the owner
+
+1. Run `npm login`, then `npm deprecate halo-ui-react@0.0.0-stage "Placeholder from staged publishing; install halo-ui-react@latest"` (it failed with a 404 because npm was logged out).
+2. Add the trusted publisher on npmjs.com: user `akerpelm`, repository `halo`, workflow `publish.yml`, no environment, allow `npm publish`. Then an agent prepares 0.1.1 and the owner pushes the tag.
+3. Test on a real iPhone in Safari, and in Firefox. Nothing has been checked on a real device.
+4. Cloudflare AI crawler settings (allow search and agent bots; decide on training bots), Search Console and Bing verification with the sitemap, GitHub topics, description and social preview image.
+5. Decide: on phones the hero's pane sits below the facts strip, so the headline's claim has nothing to touch near it. Move the pane up, or change the button to "Fire a toast, then flick it".
+6. Decide: grow beyond Toast and Drawer, or stay at two until launch traction (recommended).
+7. Decide: keep or soften "Accessibility bugs are fixed first" on the Accessibility page.
+
+## Next for agents, in priority order
+
+1. Once item 2 above is done, prepare 0.1.1: move Unreleased to `## 0.1.1 (date)`, bump the version, run the checks, commit, and ask the owner to push `v0.1.1`.
+2. Run CI on pushes to `main` too, or switch to pull requests; today direct pushes skip CI.
+3. Docs P2: guides (custom content, async and promises, streaming, undo, multiple toasters, a drawer with a form, nested drawers, testing) and reference pages (types, browser support, troubleshooting, the spring engine, a worlds comparison with render cost). Each needs a `routes.ts` entry, a `docPages` entry and an OG image (`pnpm --filter haloui-site og`).
+4. If Why springs still doesn't land for the owner: a fading trail of recent positions on both panes, so the difference shows without reading the graph.
+5. A demo GIF for the README and a short loop of Why springs.
+6. Publish the shadcn registry (`/r/toast.json`, `/r/drawer.json`), then submit to the shadcn directory and 21st.dev.
+7. Analytics events need a tool choice first: Cloudflare Web Analytics has no custom events.
+8. Consider trimming the toast bundle.
