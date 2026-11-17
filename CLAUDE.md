@@ -58,12 +58,12 @@ pnpm 10, Node 22 (`.node-version`; the publish workflow uses Node 24 because tru
 - Animate transform and opacity only. Every animation honours `prefers-reduced-motion`.
 - Accessibility is required: WCAG AA contrast, a visible `:focus-visible` ring on everything interactive, 44px targets on coarse pointers, semantic HTML first.
 - Smallest change that solves the problem. Plan multi-file changes in a few bullets before building.
-- Small commits, imperative subject (`add`, `fix`, `remove`). Ask before pushing, force-pushing, or publishing to npm. A push to `main` deploys the site, and CI runs only on pull requests, so run the checks yourself before pushing.
+- Small commits, imperative subject (`add`, `fix`, `remove`). Ask before pushing, force-pushing, or publishing to npm. A push to `main` deploys the site at the same time CI starts, so a failing check does not stop the deploy: run the checks yourself before pushing.
 - No absolute claims in copy ("fully accessible", "no other library", "drop-in"). State the behaviour and link the proof.
 
 ## Verifying a change
 
-Typecheck, test and build before every commit. CI runs those plus the Playwright checks (`apps/site/e2e`) on every pull request. The Playwright suite covers axe, overflow, the keyboard walk, page transitions and reduced motion in Chromium; for anything visual, still open the page in a browser and check:
+Typecheck, test and build before every commit. CI runs those plus the Playwright checks (`apps/site/e2e`) on every pull request and every push to `main`. The Playwright suite covers axe, overflow, the keyboard walk, page transitions and reduced motion in Chromium; for anything visual, still open the page in a browser and check:
 
 - widths 320, 375, 640, 768, 1024, 1440: no horizontal overflow, nothing clipped;
 - light and dark, in Dichroic and at least one other world (Ink and Midnight catch the most bugs);
@@ -100,7 +100,7 @@ Live at haloui.dev, `main` at the latest commit, all checks green.
 - Docs and Playground are lazy chunks; home JS is about 115 kB gzipped.
 - Home: eyebrow "An alternative to Sonner and Vaul", headline "Toasts and drawers that keep the speed of your flick.", a facts strip read from the package, Why springs (a throw-and-retarget demo with a live speed graph, `components/why-springs.tsx`), four extra toast types, Worlds as one sample and a switcher, and a "Get started" close.
 - Docs (11 pages, grouped): Getting started, Next.js and SSR, Migrate from Sonner, Migrate from Vaul, Toast, Drawer, Worlds, Motion, Customize, Accessibility, For agents.
-- CI on pull requests: typecheck, tests, build, the size check, and the Playwright suite. Tag pushes (`v*`) run `publish.yml`.
+- CI on pull requests and pushes to `main`: typecheck, tests, build, the size check, and the Playwright suite. Tag pushes (`v*`) run `publish.yml`.
 - npm: 0.1.0 is `latest`. The README, description and keywords changed since, so they reach npm only with 0.1.1 (`CHANGELOG.md` has them under Unreleased). The 291 downloads on launch day were registry mirrors and scanners: 148 were for the `0.0.0-stage` placeholder.
 
 ## Decisions not to undo
@@ -125,10 +125,9 @@ Live at haloui.dev, `main` at the latest commit, all checks green.
 ## Next for agents, in priority order
 
 1. Once item 2 above is done, prepare 0.1.1: move Unreleased to `## 0.1.1 (date)`, bump the version, run the checks, commit, and ask the owner to push `v0.1.1`.
-2. Run CI on pushes to `main` too, or switch to pull requests; today direct pushes skip CI.
-3. Docs P2: guides (custom content, async and promises, streaming, undo, multiple toasters, a drawer with a form, nested drawers, testing) and reference pages (types, browser support, troubleshooting, the spring engine, a worlds comparison with render cost). Each needs a `routes.ts` entry, a `docPages` entry and an OG image (`pnpm --filter haloui-site og`).
-4. If Why springs still doesn't land for the owner: a fading trail of recent positions on both panes, so the difference shows without reading the graph.
-5. A demo GIF for the README and a short loop of Why springs.
-6. Publish the shadcn registry (`/r/toast.json`, `/r/drawer.json`), then submit to the shadcn directory and 21st.dev.
-7. Analytics events need a tool choice first: Cloudflare Web Analytics has no custom events.
-8. Consider trimming the toast bundle.
+2. Docs P2: guides (custom content, async and promises, streaming, undo, multiple toasters, a drawer with a form, nested drawers, testing) and reference pages (types, browser support, troubleshooting, the spring engine, a worlds comparison with render cost). Each needs a `routes.ts` entry, a `docPages` entry and an OG image (`pnpm --filter haloui-site og`).
+3. If Why springs still doesn't land for the owner: a fading trail of recent positions on both panes, so the difference shows without reading the graph.
+4. A demo GIF for the README and a short loop of Why springs.
+5. Publish the shadcn registry (`/r/toast.json`, `/r/drawer.json`), then submit to the shadcn directory and 21st.dev.
+6. Analytics events need a tool choice first: Cloudflare Web Analytics has no custom events.
+7. Consider trimming the toast bundle.

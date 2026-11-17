@@ -36,7 +36,7 @@ pnpm --filter haloui-site test:e2e    # Playwright: axe, overflow, keyboard, tra
 pnpm --filter halo-ui-react size      # rewrite sizes.json and the README size tables after a library change
 ```
 
-CI runs typecheck, tests, the build, the size check, and the Playwright suite on every pull request.
+CI runs typecheck, tests, the build, the size check, and the Playwright suite on every pull request and every push to `main`.
 
 ## Before you open a pull request
 
