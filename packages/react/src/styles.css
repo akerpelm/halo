@@ -904,27 +904,18 @@ dialog.halo-drawer::backdrop {
 }
 
 .halo-popover {
-  --halo-popover-rim: color-mix(in oklch, var(--halo-fg) 16%, transparent);
   --halo-edge: var(
     --halo-world-edge,
-    radial-gradient(
-      190px 120px at var(--halo-attach-x, 50%) var(--halo-attach-y, 0%),
-      var(--halo-coat-a),
-      var(--halo-coat-b) 38%,
-      var(--halo-coat-c) 62%,
-      var(--halo-popover-rim)
+    conic-gradient(
+      from var(--halo-attach-angle, 0deg) at var(--halo-attach-x, 50%) var(--halo-attach-y, 0%),
+      var(--halo-coat-c) 22%,
+      var(--halo-coat-a) 36%,
+      var(--halo-coat-b) 50%,
+      var(--halo-coat-a) 64%,
+      var(--halo-coat-c) 78%
     )
   );
   --halo-edge-width: 1.25px;
-  --halo-glow-x: 0px;
-  --halo-glow-y: -14px;
-  --halo-shadow:
-    inset 0 1px 0 light-dark(oklch(100% 0 0 / 0.75), oklch(100% 0 0 / 0.1)),
-    0 1px 2px light-dark(oklch(30% 0.02 262 / 0.08), oklch(0% 0 0 / 0.4)),
-    0 16px 36px -18px light-dark(oklch(30% 0.04 262 / 0.3), oklch(0% 0 0 / 0.7)),
-    var(--halo-glow-x) var(--halo-glow-y) 30px -16px color-mix(in oklch, var(--halo-coat-a) 75%, transparent),
-    calc(var(--halo-glow-x) * 0.6 + var(--halo-glow-y) * 0.6) calc(var(--halo-glow-y) * 0.6 + var(--halo-glow-x) * 0.6) 34px -20px
-      color-mix(in oklch, var(--halo-coat-b) 55%, transparent);
   position: fixed;
   inset: auto;
   z-index: 2147483000;
@@ -941,73 +932,77 @@ dialog.halo-drawer::backdrop {
   line-height: 1.45;
   transform-origin: 0 0;
   outline: none;
-  position-anchor: var(--halo-anchor);
 }
-.halo-popover[data-placement='bottom'] {
-  position-area: bottom;
-  position-try-fallbacks: bottom span-right, bottom span-left, flip-block, top span-right, top span-left;
-}
-.halo-popover[data-placement='top'] {
-  position-area: top;
-  position-try-fallbacks: top span-right, top span-left, flip-block, bottom span-right, bottom span-left;
-}
-.halo-popover[data-placement='right'] {
-  position-area: right;
-  position-try-fallbacks: right span-bottom, right span-top, flip-inline, left span-bottom, left span-top;
-}
-.halo-popover[data-placement='left'] {
-  position-area: left;
-  position-try-fallbacks: left span-bottom, left span-top, flip-inline, right span-bottom, right span-top;
-}
-.halo-popover:is([data-placement='bottom'], [data-placement='top']) {
-  margin-block: var(--halo-popover-gap);
-}
-.halo-popover:is([data-placement='bottom'], [data-placement='top'])[data-align='center'] {
-  margin-inline: 8px;
-}
-.halo-popover:is([data-placement='left'], [data-placement='right']) {
-  margin-inline: var(--halo-popover-gap);
-}
-.halo-popover:is([data-placement='left'], [data-placement='right'])[data-align='center'] {
-  margin-block: 8px;
-}
-.halo-popover[data-placement='bottom'][data-align='start'] {
-  position-area: bottom span-right;
-}
-.halo-popover[data-placement='bottom'][data-align='end'] {
-  position-area: bottom span-left;
-}
-.halo-popover[data-placement='top'][data-align='start'] {
-  position-area: top span-right;
-}
-.halo-popover[data-placement='top'][data-align='end'] {
-  position-area: top span-left;
-}
-.halo-popover[data-placement='right'][data-align='start'] {
-  position-area: right span-bottom;
-}
-.halo-popover[data-placement='right'][data-align='end'] {
-  position-area: right span-top;
-}
-.halo-popover[data-placement='left'][data-align='start'] {
-  position-area: left span-bottom;
-}
-.halo-popover[data-placement='left'][data-align='end'] {
-  position-area: left span-top;
-}
-.halo-popover[data-fallback] {
-  margin: 0;
+@supports (position-anchor: --halo) {
+  .halo-popover {
+    position-anchor: var(--halo-anchor);
+  }
+  .halo-popover[data-placement='bottom'] {
+    position-area: bottom;
+    position-try-fallbacks: bottom span-right, bottom span-left, flip-block, top span-right, top span-left;
+  }
+  .halo-popover[data-placement='top'] {
+    position-area: top;
+    position-try-fallbacks: top span-right, top span-left, flip-block, bottom span-right, bottom span-left;
+  }
+  .halo-popover[data-placement='right'] {
+    position-area: right;
+    position-try-fallbacks: right span-bottom, right span-top, flip-inline, left span-bottom, left span-top;
+  }
+  .halo-popover[data-placement='left'] {
+    position-area: left;
+    position-try-fallbacks: left span-bottom, left span-top, flip-inline, right span-bottom, right span-top;
+  }
+  .halo-popover:is([data-placement='bottom'], [data-placement='top']) {
+    margin-block: var(--halo-popover-gap);
+  }
+  .halo-popover:is([data-placement='bottom'], [data-placement='top'])[data-align='center'] {
+    margin-inline: 8px;
+  }
+  .halo-popover:is([data-placement='left'], [data-placement='right']) {
+    margin-inline: var(--halo-popover-gap);
+  }
+  .halo-popover:is([data-placement='left'], [data-placement='right'])[data-align='center'] {
+    margin-block: 8px;
+  }
+  .halo-popover[data-placement='bottom'][data-align='start'] {
+    position-area: bottom span-right;
+  }
+  .halo-popover[data-placement='bottom'][data-align='end'] {
+    position-area: bottom span-left;
+  }
+  .halo-popover[data-placement='top'][data-align='start'] {
+    position-area: top span-right;
+  }
+  .halo-popover[data-placement='top'][data-align='end'] {
+    position-area: top span-left;
+  }
+  .halo-popover[data-placement='right'][data-align='start'] {
+    position-area: right span-bottom;
+  }
+  .halo-popover[data-placement='right'][data-align='end'] {
+    position-area: right span-top;
+  }
+  .halo-popover[data-placement='left'][data-align='start'] {
+    position-area: left span-bottom;
+  }
+  .halo-popover[data-placement='left'][data-align='end'] {
+    position-area: left span-top;
+  }
 }
 .halo-popover[data-side='top'] {
-  --halo-glow-y: 14px;
+  --halo-attach-angle: 180deg;
 }
 .halo-popover[data-side='right'] {
-  --halo-glow-x: -14px;
-  --halo-glow-y: 0px;
+  --halo-attach-angle: 270deg;
 }
 .halo-popover[data-side='left'] {
-  --halo-glow-x: 14px;
-  --halo-glow-y: 0px;
+  --halo-attach-angle: 90deg;
+}
+
+.halo-popover:focus-visible {
+  outline: 2px solid var(--halo-focus);
+  outline-offset: 2px;
 }
 
 .halo-popover-body {

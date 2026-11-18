@@ -8,6 +8,7 @@ test.describe('popover', () => {
   test('opens from the keyboard, takes focus, and gives it back on Esc', async ({ page }) => {
     await openPage(page, '/docs/popover');
     const trigger = page.getByRole('main').getByRole('button', { name: 'Share', exact: true }).last();
+    await trigger.evaluate((el) => el.scrollIntoView({ block: 'center' }));
     await trigger.focus();
     await page.keyboard.press('Enter');
     const dialog = page.getByRole('dialog', { name: 'Share “Spring launch”' });
@@ -33,6 +34,27 @@ test.describe('popover', () => {
     const side = await popup.getAttribute('data-side');
     const attachY = await popup.evaluate((el) => el.style.getPropertyValue('--halo-attach-y'));
     expect(attachY).toBe(side === 'bottom' ? '0%' : '100%');
+  });
+
+  test('closes when its trigger scrolls under the header, without moving the page', async ({ page }) => {
+    await openPage(page, '/docs/popover');
+    const trigger = page.getByRole('main').getByRole('button', { name: 'Share', exact: true }).last();
+    await trigger.scrollIntoViewIfNeeded();
+    await trigger.click();
+    const popup = page.locator('.halo-popover:popover-open');
+    await expect(popup).toBeVisible();
+    const sides = new Set<string | null>();
+    const triggerTop = await trigger.evaluate((el) => el.getBoundingClientRect().top);
+    for (let step = 0; step < 12; step++) {
+      await page.evaluate((dy) => window.scrollBy(0, dy), (triggerTop - 20) / 12);
+      await page.waitForTimeout(30);
+      if (await popup.count()) sides.add(await popup.getAttribute('data-side'));
+    }
+    await expect(page.locator('.halo-popover:popover-open')).toHaveCount(0);
+    expect([...sides].filter(Boolean)).toEqual(['bottom']);
+    const scrollAfterClose = await page.evaluate(() => window.scrollY);
+    await page.waitForTimeout(300);
+    expect(await page.evaluate(() => window.scrollY)).toBe(scrollAfterClose);
   });
 
   test('has no axe violations while open, in light and dark', async ({ page }) => {

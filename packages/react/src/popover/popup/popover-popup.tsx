@@ -3,7 +3,10 @@ import { radiusStyle } from '../../utils/appearance';
 import { cx } from '../../utils/cx';
 import { useReducedMotion } from '../../utils/use-media-query';
 import { usePopoverRootContext } from '../root/popover-root-context';
-import { usePopoverMotion, wireInvoker } from './use-popover-motion';
+import { wireInvoker } from './invoker';
+import { usePopoverMotion } from './use-popover-motion';
+import { usePopoverPlacement } from './use-popover-placement';
+import { usePopoverState } from './use-popover-state';
 
 export type PopoverPopupProps = HTMLAttributes<HTMLDivElement>;
 
@@ -13,10 +16,33 @@ export type PopoverPopupProps = HTMLAttributes<HTMLDivElement>;
  */
 export function PopoverPopup({ children, className, style, ...props }: PopoverPopupProps) {
   const root = usePopoverRootContext('Popup');
-  const { popupRef, triggerRef } = root;
+  const { popupRef, triggerRef, open, setOpen } = root;
   const reducedMotion = useReducedMotion();
 
-  usePopoverMotion({ ...root, reducedMotion });
+  const motion = usePopoverMotion(popupRef, root.spring, reducedMotion);
+
+  const placement = usePopoverPlacement({
+    popupRef,
+    triggerRef,
+    open,
+    side: root.side,
+    align: root.align,
+    offset: root.offset,
+    isMoving: motion.isMoving,
+    onDetach: () => {
+      if (popupRef.current?.contains(document.activeElement)) triggerRef.current?.focus({ preventScroll: true });
+      setOpen(false);
+    },
+  });
+
+  usePopoverState({
+    popupRef,
+    open,
+    setOpen,
+    onOpening: motion.prepare,
+    onOpened: () => motion.enter(placement.place()),
+    onClosing: () => motion.exit(placement.measure()),
+  });
 
   useLayoutEffect(() => wireInvoker(triggerRef.current, popupRef.current));
 

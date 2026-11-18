@@ -1,5 +1,5 @@
 import { type ButtonHTMLAttributes, type CSSProperties, useLayoutEffect } from 'react';
-import { wireInvoker } from '../popup/use-popover-motion';
+import { wireInvoker } from '../popup/invoker';
 import { usePopoverRootContext } from '../root/popover-root-context';
 
 /** A button wired to the popover as its native invoker, so the browser handles Esc, outside clicks and focus return. */

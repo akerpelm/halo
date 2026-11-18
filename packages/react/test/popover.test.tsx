@@ -143,6 +143,11 @@ describe('popover placement', () => {
     expect(sideOf(trigger, { left: -110, top: 80, width: 200, height: 120 })).toBe('left');
   });
 
+  it('keeps the side while the two boxes are a frame apart during a scroll', () => {
+    expect(sideOf(trigger, { left: 40, top: 128, width: 200, height: 120 })).toBe('bottom');
+    expect(sideOf(trigger, { left: 40, top: -16, width: 200, height: 120 })).toBe('top');
+  });
+
   it('gathers the edge light where the trigger meets the popup', () => {
     expect(attachPoint(trigger, { left: 40, top: 140, width: 200, height: 120 }, 'bottom')).toEqual({ x: 50, y: 0 });
     expect(attachPoint(trigger, { left: 120, top: -30, width: 200, height: 120 }, 'top').y).toBe(100);

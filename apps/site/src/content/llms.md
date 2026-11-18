@@ -130,7 +130,7 @@ Focus moves into the panel on open (or to an element with autofocus or data-auto
 
 ## Popover
 
-A non-modal dialog on the native popover attribute. The browser handles the top layer, Esc, outside clicks, tab order and focus return. CSS anchor positioning places it (Halo measures and places it in browsers without anchor positioning). It grows out of its trigger on a spring, and the coat light gathers on the edge that faces the trigger.
+A non-modal dialog on the native popover attribute. The browser handles the top layer, Esc, outside clicks, tab order and focus return. CSS anchor positioning places it (Halo measures and places it in browsers without anchor positioning). It grows out of its trigger on a spring; the coat ring's gradient radiates from where it meets the trigger. It closes when its trigger scrolls out of view or is covered (e.g. by a sticky header).
 
 ```tsx
 import { Popover } from 'halo-ui-react/popover';
@@ -182,8 +182,8 @@ import { Swipe } from 'halo-ui-react/swipe';
 </Swipe.Group>
 ```
 
-- Swipe.Group: a <ul> plus a polite status region. One open row at a time. When a row is removed, the rows below close the gap on a spring and focus moves to the row now in its place. Props: hint (nudge the first row once when the list scrolls into view), world, theme, density, radius. Gap: --halo-swipe-gap.
-- Swipe.Root: an <li>. Props: disabled (gesture off, actions still reachable by Tab), spring.
+- Swipe.Group: a <ul> plus a polite status region. One open row at a time. When a row is removed, the rows below close the gap on a spring and focus moves to the row now in its place. Props: hint (nudge the first row once when the list scrolls into view), fullSwipe (default true; false makes every swipe stop with the actions showing, so the commit action needs a tap), world, theme, density, radius. Gap: --halo-swipe-gap.
+- Swipe.Root: an <li>. Props: disabled (gesture off, actions still reachable by Tab), fullSwipe (overrides the Group), spring.
 - Swipe.Content: the sliding glass. Links and buttons inside keep working; the click that ends a drag is swallowed. While a row is open, its contents stay nearly still so the item's name stays readable.
 - Swipe.Actions: side 'end' (default, uncovered by swiping toward the start) or 'start'. Mirrors in right-to-left text.
 - Swipe.Action: a <button>. commit: a full swipe clicks it (one per side). announce: text read out after it runs (needs Swipe.Group). Tab to it and the row slides open; Esc closes.

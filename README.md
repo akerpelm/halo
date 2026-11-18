@@ -54,8 +54,8 @@ Each guide lists what doesn't carry over, and has a prompt you can hand to a cod
 | --- | --- |
 | `halo-ui-react/toast` | 8.5 kB (includes springs) |
 | `halo-ui-react/drawer` | 5.9 kB (includes springs) |
-| `halo-ui-react/popover` | 4.1 kB (includes springs) |
-| `halo-ui-react/swipe` | 5.4 kB (includes springs) |
+| `halo-ui-react/popover` | 4.6 kB (includes springs) |
+| `halo-ui-react/swipe` | 5.5 kB (includes springs) |
 | `halo-ui-react/spring` | 1.9 kB |
 | `styles.css` | 5.8 kB |
 

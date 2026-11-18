@@ -132,6 +132,7 @@ export const popoverParts: PropRow[] = [
 
 export const swipeGroupProps: PropRow[] = [
   { name: 'hint', type: 'boolean', default: 'false', description: 'Nudge the first row open a little, once, when the list scrolls into view. Off under reduced motion.' },
+  { name: 'fullSwipe', type: 'boolean', default: 'true', description: 'When false, a swipe always stops with the actions showing, and the commit action needs a tap. A Root can override it.' },
   { name: 'world / theme / density', type: 'same as Toaster', description: 'Material, colour scheme, and spacing for every row.' },
   { name: 'radius', type: 'preset | number', default: '18px', description: 'Corner radius of each row.' },
   { name: '--halo-swipe-gap', type: 'CSS length', default: '8px', description: 'Space between rows.' },
@@ -139,7 +140,7 @@ export const swipeGroupProps: PropRow[] = [
 
 export const swipeParts: PropRow[] = [
   { name: 'Swipe.Group', type: '<ul> + status region', description: 'One open row at a time. Closes the gap a removed row leaves, moves focus on, and reads out each action’s announce.' },
-  { name: 'Swipe.Root', type: '<li>', description: 'One row. disabled turns the gesture off; the actions stay reachable by Tab. spring tunes the slide.' },
+  { name: 'Swipe.Root', type: '<li>', description: 'One row. disabled turns the gesture off; the actions stay reachable by Tab. fullSwipe overrides the Group. spring tunes the slide.' },
   { name: 'Swipe.Content', type: '<div>', description: 'The glass that slides. Links and buttons inside still work; a drag swallows the click that ends it.' },
   { name: 'Swipe.Actions', type: '<div>', description: "side='end' (default) is uncovered by swiping toward the start; side='start' the other way. Mirrors in right-to-left text." },
   { name: 'Swipe.Action', type: '<button>', description: 'A real button. Tab to it and the row slides open. commit makes a full swipe click it. announce is read out after it runs.' },

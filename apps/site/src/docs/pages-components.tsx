@@ -1,6 +1,6 @@
 import { CodeBlock } from '../components/code-block';
 import { DemoPopover, PlacementPopovers } from '../components/demo-popover';
-import { DemoSwipe } from '../components/demo-swipe';
+import { SwipePlayground } from '../components/demo-swipe';
 import { sizes } from '../lib/package-facts';
 import { popoverParts, popoverRootProps, swipeGroupProps, swipeParts } from './api';
 import type { DocPage } from './pages';
@@ -52,7 +52,7 @@ export const popoverPage: DocPage = {
       </Plaque>
       <H2 id="placement">Placement and light</H2>
       <P>
-        The popover starts at the size and place of its trigger and grows into position on a spring, with its contents fading in once the glass is mostly open. There is no arrow. The coat light gathers on the edge that faces the trigger, so the light shows where it attaches.
+        The popover starts at the size and place of its trigger and grows into position on a spring, with its contents fading in once the glass is mostly open. There is no arrow. The coat ring runs all the way round, and its gradient radiates from the point where the popover meets the trigger, so the light shows where it attaches.
       </P>
       <div className="my-4">
         <PlacementPopovers />
@@ -74,6 +74,9 @@ export const popoverPage: DocPage = {
           </>,
           <>
             <strong>Nesting.</strong> A trigger inside a popover opens a child that stays open with its parent.
+          </>,
+          <>
+            <strong>Scrolling away.</strong> The popover follows its trigger as the page scrolls. Once the trigger scrolls out of view or under something that covers it, like a sticky header, the popover closes back into it, and focus goes to the trigger without moving the page. This is Halo's part; the browser would leave it floating.
           </>,
         ]}
       />
@@ -123,7 +126,7 @@ export const swipePage: DocPage = {
 </Swipe.Group>`}
       />
       <div className="my-6 max-w-[440px]">
-        <DemoSwipe />
+        <SwipePlayground />
       </div>
       <P>
         Swipe is {sizes.swipe} kB min+gzip with the springs.
@@ -136,6 +139,9 @@ export const swipePage: DocPage = {
           </>,
           <>
             <strong>Run.</strong> If the row already shows its actions and your flick would carry it past the commit point, the commit action runs. Past that point the edge lights up and the action grows, and phones get a short vibration.
+          </>,
+          <>
+            <strong>Stop at the buttons.</strong> With <C>fullSwipe={'{false}'}</C> on the Group or a Root, a swipe always rests with the actions showing, however far it goes. The commit action keeps its emphasis but needs a tap. Use it when choosing matters more than speed.
           </>,
           <>
             <strong>Close.</strong> Anything shorter, or a flick back, slides it closed. A flick on a closed row opens it; it does not run an action.

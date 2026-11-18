@@ -8,11 +8,26 @@ const EDGE_MARGIN = 8;
 
 export const supportsAnchorPositioning = () => typeof CSS !== 'undefined' && CSS.supports('position-anchor', '--halo');
 
-/** Which side of the trigger the popup ended up on, after any flip the browser made. */
+/** Which side of the trigger the popup ended up on, after any flip: the side with the clear gap between them. */
 export function sideOf(trigger: Box, popup: Box): PopoverSide {
-  if (popup.top >= trigger.top + trigger.height - 1) return 'bottom';
-  if (popup.top + popup.height <= trigger.top + 1) return 'top';
-  return popup.left >= trigger.left + trigger.width / 2 ? 'right' : 'left';
+  const gaps: Record<PopoverSide, number> = {
+    bottom: popup.top - (trigger.top + trigger.height),
+    top: trigger.top - (popup.top + popup.height),
+    right: popup.left - (trigger.left + trigger.width),
+    left: trigger.left - (popup.left + popup.width),
+  };
+  return (Object.keys(gaps) as PopoverSide[]).reduce((best, side) => (gaps[side] > gaps[best] ? side : best), 'bottom');
+}
+
+/** Whether the trigger has scrolled out of view or is covered, e.g. by a sticky header, at its centre. */
+export function isDetached(trigger: Element, popup: Element): boolean {
+  const rect = trigger.getBoundingClientRect();
+  const x = rect.left + rect.width / 2;
+  const y = rect.top + rect.height / 2;
+  if (x < 0 || y < 0 || x > window.innerWidth || y > window.innerHeight) return true;
+  const top = document.elementFromPoint?.(x, y);
+  if (!top) return false;
+  return !trigger.contains(top) && !popup.contains(top);
 }
 
 /** Where the trigger meets the popup's edge, in % of the popup box, so the edge light can gather there. */
