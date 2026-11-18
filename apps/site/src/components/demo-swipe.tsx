@@ -2,6 +2,7 @@ import { Swipe } from 'halo-ui-react/swipe';
 import { toast } from 'halo-ui-react/toast';
 import { useState } from 'react';
 import { useSettings } from '../lib/settings';
+import { Toggle } from './toggle';
 
 type Invoice = { id: number; client: string; amount: string; due: string };
 
@@ -12,7 +13,7 @@ const invoices: readonly Invoice[] = [
   { id: 1045, client: 'Okafor Design', amount: '$2,075', due: 'Due Dec 2' },
 ];
 
-export function DemoSwipe({ hint = false }: { hint?: boolean }) {
+export function DemoSwipe({ hint = false, fullSwipe = true }: { hint?: boolean; fullSwipe?: boolean }) {
   const { world, theme } = useSettings();
   const [items, setItems] = useState(invoices);
   const [flagged, setFlagged] = useState<ReadonlySet<number>>(new Set());
@@ -44,7 +45,7 @@ export function DemoSwipe({ hint = false }: { hint?: boolean }) {
   }
 
   return (
-    <Swipe.Group aria-label="Invoices" hint={hint} world={world} theme={theme}>
+    <Swipe.Group aria-label="Invoices" hint={hint} fullSwipe={fullSwipe} world={world} theme={theme}>
       {items.map((invoice) => {
         const isFlagged = flagged.has(invoice.id);
         return (
@@ -73,5 +74,15 @@ export function DemoSwipe({ hint = false }: { hint?: boolean }) {
         );
       })}
     </Swipe.Group>
+  );
+}
+
+export function SwipePlayground() {
+  const [fullSwipe, setFullSwipe] = useState(true);
+  return (
+    <div className="grid gap-3">
+      <Toggle label="A full swipe runs Archive" checked={fullSwipe} onChange={setFullSwipe} />
+      <DemoSwipe fullSwipe={fullSwipe} />
+    </div>
   );
 }

@@ -1,6 +1,7 @@
 import { createContext, useContext } from 'react';
 
 export type SwipeGroupContextValue = {
+  fullSwipe: boolean;
   /** Close whichever row was open before this one. */
   claim: (close: () => void) => void;
   announce: (message: string) => void;

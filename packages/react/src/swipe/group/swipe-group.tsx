@@ -14,13 +14,15 @@ export type SwipeGroupProps = HTMLAttributes<HTMLUListElement> & {
   radius?: HaloRadius;
   /** Nudge the first row open a little, once, when the list first scrolls into view, so people learn it swipes. */
   hint?: boolean;
+  /** When false, a swipe always stops with the actions showing, and the commit action needs a tap. Rows can override it. */
+  fullSwipe?: boolean;
 };
 
 /**
  * A list of swipeable rows. Only one row is open at a time, rows close the gap a removed row leaves
  * on a spring, focus moves on when a focused row is removed, and each action's `announce` is read out.
  */
-export function SwipeGroup({ children, className, world = 'dichroic', theme = 'system', density = 'comfortable', radius, hint = false, style, ...props }: SwipeGroupProps) {
+export function SwipeGroup({ children, className, world = 'dichroic', theme = 'system', density = 'comfortable', radius, hint = false, fullSwipe = true, style, ...props }: SwipeGroupProps) {
   const listRef = useRef<HTMLUListElement>(null);
   const openRow = useRef<(() => void) | null>(null);
   const [message, setMessage] = useState('');
@@ -45,13 +47,14 @@ export function SwipeGroup({ children, className, world = 'dichroic', theme = 's
 
   const value = useMemo<SwipeGroupContextValue>(
     () => ({
+      fullSwipe,
       claim: (close) => {
         if (openRow.current !== close) openRow.current?.();
         openRow.current = close;
       },
       announce: (next) => setMessage((previous) => (previous === next ? `${next}\u00a0` : next)),
     }),
-    [],
+    [fullSwipe],
   );
 
   return (

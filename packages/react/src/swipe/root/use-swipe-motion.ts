@@ -9,6 +9,7 @@ type Options = {
   contentRef: RefObject<HTMLDivElement | null>;
   actionsRef: RefObject<Record<SwipeSide, HTMLDivElement | null>>;
   spring: SpringInput;
+  fullSwipe: boolean;
   reducedMotion: boolean;
   onOpen: () => void;
   onClose: () => void;
@@ -18,13 +19,13 @@ const FLY_PAST = 24;
 const HOLD_LABEL = 0.94;
 const HINT_DISTANCE = 28;
 
-export function useSwipeMotion({ rootRef, contentRef, actionsRef, spring, reducedMotion, onOpen, onClose }: Options) {
+export function useSwipeMotion({ rootRef, contentRef, actionsRef, spring, fullSwipe, reducedMotion, onOpen, onClose }: Options) {
   const config = useMemo(() => resolveSpring(spring), [spring]);
   const geometry = useRef(EMPTY_SWIPE_GEOMETRY);
   const armed = useRef(false);
   const touching = useRef(false);
-  const live = useRef({ config, reducedMotion, onOpen, onClose });
-  live.current = { config, reducedMotion, onOpen, onClose };
+  const live = useRef({ config, fullSwipe, reducedMotion, onOpen, onClose });
+  live.current = { config, fullSwipe, reducedMotion, onOpen, onClose };
 
   const setArmed = (root: HTMLElement, next: boolean) => {
     if (next === armed.current) return;
@@ -63,7 +64,7 @@ export function useSwipeMotion({ rootRef, contentRef, actionsRef, spring, reduce
   const [x] = useState(() => createSpringValue(0, config, paint, PIXEL_PRECISION));
 
   const measure = () => {
-    if (rootRef.current) geometry.current = measureSwipe(rootRef.current, actionsRef.current);
+    if (rootRef.current) geometry.current = measureSwipe(rootRef.current, actionsRef.current, live.current.fullSwipe);
   };
 
   const go = (target: number, velocity = 0) => {

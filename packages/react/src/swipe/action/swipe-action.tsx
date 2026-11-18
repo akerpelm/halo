@@ -3,7 +3,7 @@ import { cx } from '../../utils/cx';
 import { useSwipeRootContext } from '../root/swipe-root-context';
 
 export type SwipeActionProps = ButtonHTMLAttributes<HTMLButtonElement> & {
-  /** A full swipe runs this action. One per side. A full swipe clicks this same button, so both paths run your `onClick`. */
+  /** A full swipe runs this action (one per side), by clicking this same button, so both paths run your `onClick`. Turn full swipes off with `fullSwipe={false}` on the Group or Root. */
   commit?: boolean;
   /** Read out by screen readers after the action runs, e.g. "Invoice 42 archived". Needs a `<Swipe.Group>`. */
   announce?: string;

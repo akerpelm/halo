@@ -38,13 +38,13 @@ export function limit(x: number, geometry: SwipeGeometry): number {
   return Math.sign(x) * (reach + rubberband(distance - reach, geometry.row || 1));
 }
 
-export function measureSwipe(row: HTMLElement, actions: Record<SwipeSide, HTMLElement | null>): SwipeGeometry {
+export function measureSwipe(row: HTMLElement, actions: Record<SwipeSide, HTMLElement | null>, fullSwipe = true): SwipeGeometry {
   return {
     row: row.offsetWidth,
     start: actions.start?.offsetWidth ?? 0,
     end: actions.end?.offsetWidth ?? 0,
-    startCommit: Boolean(actions.start?.querySelector('[data-commit]')),
-    endCommit: Boolean(actions.end?.querySelector('[data-commit]')),
+    startCommit: fullSwipe && Boolean(actions.start?.querySelector('[data-commit]')),
+    endCommit: fullSwipe && Boolean(actions.end?.querySelector('[data-commit]')),
     ltr: getComputedStyle(row).direction !== 'rtl',
   };
 }

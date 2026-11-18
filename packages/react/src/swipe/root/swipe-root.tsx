@@ -11,6 +11,8 @@ import { type SwipeMotion, useSwipeMotion } from './use-swipe-motion';
 export type SwipeRootProps = LiHTMLAttributes<HTMLLIElement> & {
   /** Turns off the gesture. The actions stay reachable by keyboard. */
   disabled?: boolean;
+  /** When false, a swipe always stops with the actions showing, and the commit action needs a tap. Defaults to the Group's, or true. */
+  fullSwipe?: boolean;
   spring?: SpringInput;
   /** Appearance, when the row is not inside a `<Swipe.Group>`. */
   world?: HaloWorldName;
@@ -28,6 +30,7 @@ export function SwipeRoot({
   children,
   className,
   disabled = false,
+  fullSwipe: fullSwipeProp,
   spring = DEFAULT_SPRING,
   world = 'dichroic',
   theme = 'system',
@@ -40,6 +43,7 @@ export function SwipeRoot({
   ...props
 }: SwipeRootProps) {
   const group = useSwipeGroupContext();
+  const fullSwipe = fullSwipeProp ?? group?.fullSwipe ?? true;
   const reducedMotion = useReducedMotion();
   const rootRef = useRef<HTMLLIElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -58,6 +62,7 @@ export function SwipeRoot({
     contentRef,
     actionsRef,
     spring,
+    fullSwipe,
     reducedMotion,
     onOpen: () => {
       group?.claim(closeRow);

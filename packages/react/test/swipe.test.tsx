@@ -26,14 +26,14 @@ afterEach(cleanup);
 
 type Item = { id: number; name: string };
 
-function Inbox({ onArchive = () => {}, onFlag = () => {} }: { onArchive?: (item: Item) => void; onFlag?: (item: Item) => void }) {
+function Inbox({ onArchive = () => {}, onFlag = () => {}, fullSwipe }: { onArchive?: (item: Item) => void; onFlag?: (item: Item) => void; fullSwipe?: boolean }) {
   const [items, setItems] = useState<Item[]>([
     { id: 1, name: 'Invoice 41' },
     { id: 2, name: 'Invoice 42' },
     { id: 3, name: 'Invoice 43' },
   ]);
   return (
-    <Swipe.Group aria-label="Invoices">
+    <Swipe.Group aria-label="Invoices" fullSwipe={fullSwipe}>
       {items.map((item) => (
         <Swipe.Root key={item.id}>
           <Swipe.Content>
@@ -107,6 +107,18 @@ describe('<Swipe />', () => {
     expect(onArchive).toHaveBeenCalledWith({ id: 2, name: 'Invoice 42' });
     expect(screen.queryByText('Invoice 42')).toBeNull();
     expect(screen.getByRole('status').textContent).toBe('Invoice 42 archived');
+  });
+
+  it('stops with the actions showing when full swipes are off', async () => {
+    const onArchive = vi.fn();
+    render(<Inbox onArchive={onArchive} fullSwipe={false} />);
+    await dragBy(contentOf('Invoice 42'), -200);
+    await act(async () => {});
+    expect(onArchive).not.toHaveBeenCalled();
+    expect(offset(contentOf('Invoice 42'))).toBe(`translate3d(${-ACTIONS}px, 0px, 0px)`);
+    expect(rowOf('Invoice 42').hasAttribute('data-armed')).toBe(false);
+    fireEvent.click(screen.getByRole('button', { name: 'Archive Invoice 42' }));
+    expect(onArchive).toHaveBeenCalledOnce();
   });
 
   it('ignores vertical movement so the page can scroll', async () => {
