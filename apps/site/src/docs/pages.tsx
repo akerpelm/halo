@@ -15,6 +15,7 @@ import { releaseSteps } from './comparisons';
 import { drawerParts, drawerRootProps, selectors, toastFunctions, toastOptions, toasterGroups, tokens } from './api';
 import { Plaque } from './plaque';
 import { PropTable } from './prop-table';
+import { popoverPage, swipePage } from './pages-components';
 import { accessibilityPage, nextjsPage } from './pages-guides';
 import { migrateSonnerPage, migrateVaulPage } from './pages-migrate';
 import { recipes } from './recipes';
@@ -524,6 +525,8 @@ export const docPages: readonly DocPage[] = [
   migrateVaulPage,
   toastPage,
   drawerPage,
+  popoverPage,
+  swipePage,
   worldsPage,
   motionPage,
   customizePage,

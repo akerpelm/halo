@@ -14,6 +14,8 @@ export function llms(): string {
     .replaceAll('{{react}}', reactPeer)
     .replaceAll('{{toast}}', String(sizes.toast))
     .replaceAll('{{drawer}}', String(sizes.drawer))
+    .replaceAll('{{popover}}', String(sizes.popover))
+    .replaceAll('{{swipe}}', String(sizes.swipe))
     .replaceAll('{{spring}}', String(sizes.spring))
     .replaceAll('{{styles}}', String(sizes.styles))
     .replaceAll('{{method}}', sizes.method);

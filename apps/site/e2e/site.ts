@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 
-export const auditedPaths = ['/', '/playground', '/docs/toast'] as const;
+export const auditedPaths = ['/', '/playground', '/docs/toast', '/docs/popover', '/docs/swipe'] as const;
 
 export type Theme = 'light' | 'dark';
 

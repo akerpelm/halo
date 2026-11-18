@@ -1,13 +1,13 @@
 # Halo (halo-ui-react)
 
-> A spring-physics Toast and Drawer for React {{react}}+, on one closed-form spring engine. No dependencies besides React. Toasts announce through polite and assertive live regions and dismiss from the keyboard; the drawer is a native <dialog>. Nine visual worlds: "dichroic" (default), "partition", "smoked", "vapor", "crystal", "ink", "opal", "mercury", "vellum", plus any you define in CSS.
+> A spring-physics Toast, Drawer, Popover and Swipe actions for React {{react}}+, on one closed-form spring engine. No dependencies besides React. Toasts announce through polite and assertive live regions and dismiss from the keyboard; the drawer is a native <dialog>; the popover uses the native popover attribute and CSS anchor positioning; swipe actions are real buttons with a keyboard path. Nine visual worlds: "dichroic" (default), "partition", "smoked", "vapor", "crystal", "ink", "opal", "mercury", "vellum", plus any you define in CSS.
 
 Install: `npm i halo-ui-react`
 Styles: import `halo-ui-react/styles.css` once (e.g. in your root layout or main entry).
 Human docs: https://haloui.dev/docs/getting-started. Every docs page is also served as Markdown at its URL plus .md (for example https://haloui.dev/docs/toast.md); the full list is at the end of this file. Agent recipes: https://haloui.dev/docs/agents.
 Source: https://github.com/akerpelm/halo (MIT).
-Sizes, min+gzip: toast {{toast}} kB, drawer {{drawer}} kB (each including the springs), spring engine {{spring}} kB, styles.css {{styles}} kB. {{method}}
-Entry points: `halo-ui-react/toast`, `halo-ui-react/drawer`, `halo-ui-react/spring`, or everything from `halo-ui-react`.
+Sizes, min+gzip: toast {{toast}} kB, drawer {{drawer}} kB, popover {{popover}} kB, swipe {{swipe}} kB (each including the springs), spring engine {{spring}} kB, styles.css {{styles}} kB. {{method}}
+Entry points: `halo-ui-react/toast`, `halo-ui-react/drawer`, `halo-ui-react/popover`, `halo-ui-react/swipe`, `halo-ui-react/spring`, or everything from `halo-ui-react`.
 All components are client components (the bundle starts with 'use client').
 
 ## Toast
@@ -128,6 +128,68 @@ Parts:
 
 Focus moves into the panel on open (or to an element with autofocus or data-autofocus) and returns to the trigger on close. Page scroll is locked while open.
 
+## Popover
+
+A non-modal dialog on the native popover attribute. The browser handles the top layer, Esc, outside clicks, tab order and focus return. CSS anchor positioning places it (Halo measures and places it in browsers without anchor positioning). It grows out of its trigger on a spring, and the coat light gathers on the edge that faces the trigger.
+
+```tsx
+import { Popover } from 'halo-ui-react/popover';
+
+<Popover.Root side="bottom" align="center">
+  <Popover.Trigger>Share</Popover.Trigger>
+  <Popover.Popup>
+    <Popover.Title>Share project</Popover.Title>
+    <Popover.Description>Anyone with the link can view.</Popover.Description>
+    <button data-autofocus>Copy link</button>
+    <Popover.Close>Done</Popover.Close>
+  </Popover.Popup>
+</Popover.Root>
+```
+
+Popover.Root props:
+- open, defaultOpen, onOpenChange(open): controlled or uncontrolled. Esc, outside clicks and the trigger report through onOpenChange.
+- side: 'bottom' | 'top' | 'left' | 'right' (default 'bottom'). Flips when there is no room.
+- align: 'start' | 'center' | 'end' (default 'center').
+- offset: px gap to the trigger (default 8).
+- spring: default { duration: 0.32, bounce: 0.14 }.
+- world, theme, density, radius: same as Toaster.
+
+Parts:
+- Popover.Trigger: a <button>, the native invoker. Sets aria-haspopup="dialog", aria-expanded and aria-controls.
+- Popover.Popup: <div popover="auto" role="dialog">. Focus moves to [autofocus] or [data-autofocus] inside, or to the popup. Width: max 320px, or set --halo-popover-width.
+- Popover.Title: labels the popup. Without one, pass aria-label to Popover.Popup.
+- Popover.Description, Popover.Close.
+Named exports also exist (PopoverRoot, PopoverTrigger, PopoverPopup, PopoverTitle, PopoverDescription, PopoverClose).
+Do not use it for hover tooltips or for menus with arrow-key navigation.
+
+## Swipe actions
+
+Swipe a list row to uncover actions; swipe all the way to run the commit action. Every action is a real <button>, so keyboard, screen reader and click run the same onClick as the swipe.
+
+```tsx
+import { Swipe } from 'halo-ui-react/swipe';
+
+<Swipe.Group aria-label="Invoices">
+  {invoices.map((invoice) => (
+    <Swipe.Root key={invoice.id}>
+      <Swipe.Content>{invoice.client}</Swipe.Content>
+      <Swipe.Actions side="end">
+        <Swipe.Action aria-label={`Flag invoice ${invoice.id}`} onClick={() => flag(invoice)}>Flag</Swipe.Action>
+        <Swipe.Action commit aria-label={`Archive invoice ${invoice.id}`} onClick={() => archive(invoice)}>Archive</Swipe.Action>
+      </Swipe.Actions>
+    </Swipe.Root>
+  ))}
+</Swipe.Group>
+```
+
+- Swipe.Group: a <ul> plus a polite status region. One open row at a time. When a row is removed, the rows below close the gap on a spring and focus moves to the row now in its place. Props: hint (nudge the first row once when the list scrolls into view), world, theme, density, radius. Gap: --halo-swipe-gap.
+- Swipe.Root: an <li>. Props: disabled (gesture off, actions still reachable by Tab), spring.
+- Swipe.Content: the sliding glass. Links and buttons inside keep working; the click that ends a drag is swallowed. While a row is open, its contents stay nearly still so the item's name stays readable.
+- Swipe.Actions: side 'end' (default, uncovered by swiping toward the start) or 'start'. Mirrors in right-to-left text.
+- Swipe.Action: a <button>. commit: a full swipe clicks it (one per side). announce: text read out after it runs (needs Swipe.Group). Tab to it and the row slides open; Esc closes.
+Release rules: opens if the flick would coast past half the actions; runs the commit action only if the actions were already uncovered and the flick carries past the commit point; otherwise closes. A mostly vertical drag scrolls the page.
+Name the item in each action's label. For removals, offer undo with toast.undo() instead of a confirmation.
+
 ## Styling and custom worlds
 
 A world is one CSS selector of custom properties. Define your own and pass its name:
@@ -145,10 +207,10 @@ A world is one CSS selector of custom properties. Define your own and pass its n
 }
 ```
 Halo's token selectors use :where(), so they have zero specificity: any selector you write wins. If you import Halo's stylesheet into a cascade layer, put your world in the same layer after it, or leave it unlayered.
-`<Toaster world="midnight" />` and `<Drawer.Root world="midnight">` accept any world name.
+`<Toaster world="midnight" />`, `<Drawer.Root>`, `<Popover.Root>` and `<Swipe.Group>` accept any world name.
 Extend a built-in world with the same selector, e.g. `[data-halo-world='dichroic'] { --halo-radius: 12px; }`, or one instance with `style` or a Tailwind arbitrary property: `className="[--halo-blur:8px]"`.
 Toaster `classNames={{ toast, body, icon, title, description, action, close }}` adds classes to every toast part. Per toast: `toast('x', { className })`.
-State hooks for CSS: `[data-type]`, `[data-front]`, `[data-tint]`, `[data-swiping]`, `[data-dismissed]`; drawer: `.halo-drawer-panel[data-dragging]`.
+State hooks for CSS: `[data-type]`, `[data-front]`, `[data-tint]`, `[data-swiping]`, `[data-dismissed]`; drawer: `.halo-drawer-panel[data-dragging]`; popover: `.halo-popover[data-side]`; swipe: `.halo-swipe[data-showing]`, `[data-armed]`.
 
 
 Everything is CSS custom properties on `.halo` and `.halo-surface`:

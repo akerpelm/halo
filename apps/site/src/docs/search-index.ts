@@ -1,4 +1,4 @@
-import { type PropRow, drawerParts, drawerRootProps, selectors, toastFunctions, toastOptions, toasterProps, tokens } from './api';
+import { type PropRow, drawerParts, drawerRootProps, popoverParts, popoverRootProps, selectors, swipeGroupProps, swipeParts, toastFunctions, toastOptions, toasterProps, tokens } from './api';
 import { docPages } from './pages';
 import { propId } from './prop-table';
 
@@ -21,6 +21,10 @@ export function buildIndex(): Entry[] {
   rows(toasterProps, 'Prop', 'toast', 'Toaster');
   rows(drawerRootProps, 'Prop', 'drawer', 'Drawer.Root');
   rows(drawerParts, 'Part', 'drawer', 'Drawer');
+  rows(popoverRootProps, 'Prop', 'popover', 'Popover.Root');
+  rows(popoverParts, 'Part', 'popover', 'Popover');
+  rows(swipeGroupProps, 'Prop', 'swipe', 'Swipe.Group');
+  rows(swipeParts, 'Part', 'swipe', 'Swipe');
   rows(tokens, 'Token', 'customize', 'Customize');
   rows(selectors, 'Selector', 'customize', 'Customize');
   return entries;

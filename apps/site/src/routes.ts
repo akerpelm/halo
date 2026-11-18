@@ -77,6 +77,20 @@ export const docsRoutes: readonly DocRoute[] = [
     'A bottom sheet or side panel on <dialog>: snap points picked from flick velocity, a handle that is a real button, and page push-back.',
   ),
   doc(
+    'Components',
+    'popover',
+    'Popover',
+    'Popover for React on the native popover API · Halo',
+    'A non-modal popover in the top layer, placed by CSS anchor positioning with no positioning library. It grows out of its trigger, and light marks where it attaches.',
+  ),
+  doc(
+    'Components',
+    'swipe',
+    'Swipe actions',
+    'Swipe actions for React list rows · Halo',
+    'Swipe a row to reveal actions, or swipe all the way to run one. Every action is a real button, and focus moves on when a row leaves.',
+  ),
+  doc(
     'Style and motion',
     'worlds',
     'Worlds',

@@ -15,6 +15,8 @@ export default defineConfig({
       { find: 'halo-ui-react/spring', replacement: lib('spring/index.ts') },
       { find: 'halo-ui-react/toast', replacement: lib('toast/index.ts') },
       { find: 'halo-ui-react/drawer', replacement: lib('drawer/index.ts') },
+      { find: 'halo-ui-react/popover', replacement: lib('popover/index.ts') },
+      { find: 'halo-ui-react/swipe', replacement: lib('swipe/index.ts') },
       { find: /^halo-ui-react$/, replacement: lib('index.ts') },
     ],
   },

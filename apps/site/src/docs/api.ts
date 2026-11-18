@@ -95,6 +95,7 @@ export const tokens: PropRow[] = [
   { name: '--halo-coat-a / -b / -c', type: 'colour', description: 'Dichroic coat colours, used by the default edge.' },
   { name: '--halo-shadow', type: 'box-shadow', description: 'Depth.' },
   { name: '--halo-radius', type: 'length', description: 'Corner radius.' },
+  { name: '--halo-popover-width', type: 'length', description: 'Popover max width. Defaults to 320px.' },
   { name: '--halo-control / --halo-control-fg', type: 'colour', description: 'Action button fill and text.' },
   { name: '--halo-success / error / warning / info', type: 'colour', description: 'Type colours for icons, timers, and intent.' },
 ];
@@ -107,4 +108,39 @@ export const selectors: PropRow[] = [
   { name: '[data-hidden]', type: 'attribute', description: 'Past the visible count. Inert, never blocks the page.' },
   { name: '[data-swiping] / [data-streaming]', type: 'attribute', description: 'Mid-swipe; text still arriving.' },
   { name: '.halo-drawer-panel[data-dragging]', type: 'attribute', description: 'A drawer mid-drag.' },
+  { name: '.halo-popover[data-side]', type: 'attribute', description: 'The side the popover landed on, after any flip.' },
+  { name: '.halo-swipe[data-showing] / [data-armed]', type: 'attribute', description: 'Which side’s actions are uncovered; a full swipe will run the commit action.' },
+];
+
+export const popoverRootProps: PropRow[] = [
+  { name: 'open / defaultOpen / onOpenChange', type: 'boolean', description: 'Controlled or uncontrolled. Esc, outside clicks and the trigger report through onOpenChange.' },
+  { name: 'side', type: "'top' | 'bottom' | 'left' | 'right'", default: "'bottom'", description: 'The side it prefers. It flips to the opposite side when there is no room.' },
+  { name: 'align', type: "'start' | 'center' | 'end'", default: "'center'", description: 'How it lines up with the trigger along that side.' },
+  { name: 'offset', type: 'number', default: '8', description: 'Gap to the trigger, in px.' },
+  { name: 'spring', type: 'SpringInput', default: '{ duration: 0.32, bounce: 0.14 }', description: 'Drives the growth out of the trigger.' },
+  { name: 'world / theme / density', type: 'same as Toaster', description: 'Material, colour scheme, and spacing.' },
+  { name: 'radius', type: 'preset | number', default: '18px', description: 'Corner radius.' },
+];
+
+export const popoverParts: PropRow[] = [
+  { name: 'Popover.Trigger', type: '<button>', description: 'The native invoker. The browser handles Esc, outside clicks, tab order and focus return. Sets aria-expanded and aria-controls.' },
+  { name: 'Popover.Popup', type: '<div popover role="dialog">', description: 'A non-modal dialog in the top layer. Focus moves to [autofocus] or [data-autofocus] inside, or to the popup.' },
+  { name: 'Popover.Title', type: '<h2>', description: 'Labels the popup. Without one, give Popover.Popup an aria-label.' },
+  { name: 'Popover.Description', type: '<p>', description: 'Describes the popup.' },
+  { name: 'Popover.Close', type: '<button>', description: 'Closes it. Focus returns to the trigger.' },
+];
+
+export const swipeGroupProps: PropRow[] = [
+  { name: 'hint', type: 'boolean', default: 'false', description: 'Nudge the first row open a little, once, when the list scrolls into view. Off under reduced motion.' },
+  { name: 'world / theme / density', type: 'same as Toaster', description: 'Material, colour scheme, and spacing for every row.' },
+  { name: 'radius', type: 'preset | number', default: '18px', description: 'Corner radius of each row.' },
+  { name: '--halo-swipe-gap', type: 'CSS length', default: '8px', description: 'Space between rows.' },
+];
+
+export const swipeParts: PropRow[] = [
+  { name: 'Swipe.Group', type: '<ul> + status region', description: 'One open row at a time. Closes the gap a removed row leaves, moves focus on, and reads out each action’s announce.' },
+  { name: 'Swipe.Root', type: '<li>', description: 'One row. disabled turns the gesture off; the actions stay reachable by Tab. spring tunes the slide.' },
+  { name: 'Swipe.Content', type: '<div>', description: 'The glass that slides. Links and buttons inside still work; a drag swallows the click that ends it.' },
+  { name: 'Swipe.Actions', type: '<div>', description: "side='end' (default) is uncovered by swiping toward the start; side='start' the other way. Mirrors in right-to-left text." },
+  { name: 'Swipe.Action', type: '<button>', description: 'A real button. Tab to it and the row slides open. commit makes a full swipe click it. announce is read out after it runs.' },
 ];

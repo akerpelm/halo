@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import { CopyButton } from '../components/copy-button';
 import { DemoDrawer } from '../components/demo-drawer';
+import { DemoPopover } from '../components/demo-popover';
 import { HangingPane } from '../components/hanging-pane';
 import { SpringPreview } from '../components/spring-preview';
 import { demos } from '../lib/demo-toasts';
@@ -78,6 +79,19 @@ export const specimens: Record<string, () => ReactNode> = {
       <div className="mt-3">
         <DemoDrawer trigger="Open the drawer" size="sm" tone="primary" />
       </div>
+    </Specimen>
+  ),
+  popover: () => (
+    <Specimen label="A popover">
+      <Line title="Grows from its trigger">The light marks where it attaches.</Line>
+      <div className="mt-3">
+        <DemoPopover trigger="Share" tone="primary" size="sm" />
+      </div>
+    </Specimen>
+  ),
+  swipe: () => (
+    <Specimen label="Swipe actions">
+      <Line title="Swipe the rows below">Or press Tab to reach their buttons.</Line>
     </Specimen>
   ),
   worlds: () => <WorldSpecimen />,
