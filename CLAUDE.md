@@ -1,6 +1,6 @@
 # Halo
 
-Spring-physics Toast and Drawer for React, with a frosted-glass material and nine visual worlds.
+Spring-physics Toast, Drawer, Popover and Swipe actions for React, with a frosted-glass material and nine visual worlds.
 
 - Site: https://haloui.dev (docs, playground, showcase)
 - npm: `halo-ui-react` (0.1.0, MIT)
@@ -17,6 +17,8 @@ packages/react   halo-ui-react, the library (tsup, no runtime dependencies besid
   src/utils/       appearance tokens, media queries, scroll lock, controllable state
   src/drawer/      root/ trigger/ content/ handle/ title/ description/ close/ scroll/ + index.parts.ts
   src/toast/       store/ toaster/ toast-item/ icons/
+  src/popover/     root/ trigger/ popup/ (placement, motion) title/ description/ close/ + index.parts.ts
+  src/swipe/       group/ (layout, focus) root/ (geometry, motion) content/ (drag) actions/ action/ + index.parts.ts
   src/styles.css   the material and all worlds as CSS custom properties
   test/            vitest + jsdom
 apps/site        haloui.dev (Vite, React 19, Tailwind v4)
@@ -30,14 +32,14 @@ apps/site        haloui.dev (Vite, React 19, Tailwind v4)
 wrangler.jsonc   Cloudflare deploy config (static assets, 404.html for unknown paths)
 ```
 
-Entry points: `halo-ui-react`, `halo-ui-react/toast`, `halo-ui-react/drawer`, `halo-ui-react/spring`, `halo-ui-react/styles.css`. The public API is `toast()`, `<Toaster>`, the `Drawer` namespace, `useDrawer`, and the spring helpers. Do not change it without a version bump and a docs update.
+Entry points: `halo-ui-react`, `halo-ui-react/toast`, `halo-ui-react/drawer`, `halo-ui-react/popover`, `halo-ui-react/swipe`, `halo-ui-react/spring`, `halo-ui-react/styles.css`. The public API is `toast()`, `<Toaster>`, the `Drawer`, `Popover` and `Swipe` namespaces (plus named exports for popover and swipe parts), `useDrawer`, and the spring helpers. Do not change it without a version bump and a docs update.
 
 ## Commands
 
 ```sh
 pnpm install
 pnpm dev         # builds the library, then runs the site with library source aliased in
-pnpm test        # 50 library tests (vitest)
+pnpm test        # 78 library tests (vitest)
 pnpm typecheck
 pnpm build
 pnpm --filter haloui-site test:e2e   # 84 Playwright checks against a prerendered preview build

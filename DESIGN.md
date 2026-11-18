@@ -442,3 +442,11 @@ React `<ViewTransition>` with `addTransitionType`. The path lives in React state
   - Toasters float above at z 200 and never move with the page.
   - These names (header, toasters) apply only during a transition, via `html:active-view-transition` and a `--vt-name` custom property. A `view-transition-name` makes its element a backdrop root, so a permanent name would stop toasts and the header menu from blurring the page.
 - **Reduced motion:** every view-transition animation runs at 0s.
+
+## Popover
+
+A non-modal dialog on the native `popover` attribute, placed by CSS anchor positioning (a measured fallback where that is missing). No arrow: the edge ring becomes a radial gather of the three coats at the point where the trigger meets the popup (`--halo-attach-x/y`), fading to a 16% ink rim everywhere else, and the cast light (`--halo-glow-x/y`) leaks toward the trigger. When it flips, the light moves with it. It opens by growing out of the trigger's own box on a spring (`growFrom`, origin top-left), with its contents fading in only past 35% so text is never seen squashed. It closes on a short ease-in back toward the trigger where the browser can animate out of the top layer (`overlay`), and at once elsewhere. Centred popovers keep 8px from the viewport edge; start and end alignment are tried before flipping sides.
+
+## Swipe actions
+
+Rows are glass slivers over the wall: a quiet surface with a contact shadow and a 13% ink rim, not the toast's full coat ring, so a list does not shimmer. The actions sit under the row and fade in with the reveal, so the part of a pill still under the glass is blurred by the row's own backdrop filter and sharpens as the edge clears it ("the actions come into focus"). The edge passing over the actions lights with the coats (`::after`, a radial at `--halo-swipe-lead`), brighter as a full swipe nears its commit point (`--halo-swipe-arm`); armed, the commit pill grows 8% and the others fade. Opening toward the start holds the row's contents nearly still (`--halo-swipe-hold`, 0.94 of the travel) so the item's name stays readable while you act on it. Actions are pills: quiet ink at 9%, the commit action in the control colour. Removed rows leave a gap that the rows below close on a spring, transforms only.
