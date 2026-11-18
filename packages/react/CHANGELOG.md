@@ -4,6 +4,12 @@ All notable changes to `halo-ui-react`. The format follows [Keep a Changelog](ht
 
 ## Unreleased
 
+### Added
+
+- `halo-ui-react/popover`: `Popover` parts (`Root`, `Trigger`, `Popup`, `Title`, `Description`, `Close`) on the native popover attribute and CSS anchor positioning, with a measured fallback where anchor positioning is missing. The popup grows out of its trigger on a spring, and the coat light gathers on the edge that faces it.
+- `halo-ui-react/swipe`: `Swipe` parts (`Group`, `Root`, `Content`, `Actions`, `Action`). A flick-projected release opens the row or runs its `commit` action; every action is a real button that Tab reveals; `Swipe.Group` keeps one row open, closes the gap a removed row leaves with transforms, moves focus on, and announces results.
+- Named exports for every popover and swipe part (`PopoverRoot`, `SwipeGroup` and so on) beside the namespaces.
+
 ### Changed
 
 - README: claims replaced with the behaviour behind them, and a size table generated from the build (toast 8.5 kB, drawer 5.9 kB, min+gzip).

@@ -30,6 +30,8 @@ const sizes = {
   toast: await measureEntry('toast'),
   drawer: await measureEntry('drawer'),
   spring: await measureEntry('spring'),
+  popover: await measureEntry('popover'),
+  swipe: await measureEntry('swipe'),
   styles: await measureStyles(),
 };
 
@@ -39,6 +41,8 @@ const table = [
   '| --- | --- |',
   `| \`halo-ui-react/toast\` | ${sizes.toast} kB (includes springs) |`,
   `| \`halo-ui-react/drawer\` | ${sizes.drawer} kB (includes springs) |`,
+  `| \`halo-ui-react/popover\` | ${sizes.popover} kB (includes springs) |`,
+  `| \`halo-ui-react/swipe\` | ${sizes.swipe} kB (includes springs) |`,
   `| \`halo-ui-react/spring\` | ${sizes.spring} kB |`,
   `| \`styles.css\` | ${sizes.styles} kB |`,
   '',

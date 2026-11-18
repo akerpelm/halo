@@ -6,6 +6,8 @@ export default defineConfig({
     toast: 'src/toast/index.ts',
     drawer: 'src/drawer/index.ts',
     spring: 'src/spring/index.ts',
+    popover: 'src/popover/index.ts',
+    swipe: 'src/swipe/index.ts',
   },
   format: ['esm', 'cjs'],
   dts: true,

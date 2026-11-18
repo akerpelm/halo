@@ -1,7 +1,7 @@
 {
   "name": "halo-ui-react",
   "version": "0.1.0",
-  "description": "Spring-physics toast and drawer for React. Native <dialog> drawer, polite and assertive announcements, no dependencies, and an llms.txt for AI agents.",
+  "description": "Spring-physics toast, drawer, popover and swipe actions for React. Native <dialog> drawer, native popover, polite and assertive announcements, no dependencies, and an llms.txt for AI agents.",
   "license": "MIT",
   "author": "Alex Kerpelman",
   "homepage": "https://haloui.dev",
@@ -24,7 +24,10 @@
     "vaul",
     "bottom-sheet",
     "notifications",
-    "snackbar"
+    "snackbar",
+    "popover",
+    "swipe-actions",
+    "swipe"
   ],
   "type": "module",
   "sideEffects": [
@@ -49,6 +52,12 @@
       ],
       "spring": [
         "./dist/spring.d.ts"
+      ],
+      "popover": [
+        "./dist/popover.d.ts"
+      ],
+      "swipe": [
+        "./dist/swipe.d.ts"
       ]
     }
   },
@@ -91,6 +100,26 @@
       "require": {
         "types": "./dist/spring.d.cts",
         "default": "./dist/spring.cjs"
+      }
+    },
+    "./popover": {
+      "import": {
+        "types": "./dist/popover.d.ts",
+        "default": "./dist/popover.js"
+      },
+      "require": {
+        "types": "./dist/popover.d.cts",
+        "default": "./dist/popover.cjs"
+      }
+    },
+    "./swipe": {
+      "import": {
+        "types": "./dist/swipe.d.ts",
+        "default": "./dist/swipe.js"
+      },
+      "require": {
+        "types": "./dist/swipe.d.cts",
+        "default": "./dist/swipe.cjs"
       }
     },
     "./styles.css": "./dist/styles.css",

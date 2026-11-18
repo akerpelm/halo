@@ -902,3 +902,308 @@ dialog.halo-drawer::backdrop {
     animation: none;
   }
 }
+
+.halo-popover {
+  --halo-popover-rim: color-mix(in oklch, var(--halo-fg) 16%, transparent);
+  --halo-edge: var(
+    --halo-world-edge,
+    radial-gradient(
+      190px 120px at var(--halo-attach-x, 50%) var(--halo-attach-y, 0%),
+      var(--halo-coat-a),
+      var(--halo-coat-b) 38%,
+      var(--halo-coat-c) 62%,
+      var(--halo-popover-rim)
+    )
+  );
+  --halo-edge-width: 1.25px;
+  --halo-glow-x: 0px;
+  --halo-glow-y: -14px;
+  --halo-shadow:
+    inset 0 1px 0 light-dark(oklch(100% 0 0 / 0.75), oklch(100% 0 0 / 0.1)),
+    0 1px 2px light-dark(oklch(30% 0.02 262 / 0.08), oklch(0% 0 0 / 0.4)),
+    0 16px 36px -18px light-dark(oklch(30% 0.04 262 / 0.3), oklch(0% 0 0 / 0.7)),
+    var(--halo-glow-x) var(--halo-glow-y) 30px -16px color-mix(in oklch, var(--halo-coat-a) 75%, transparent),
+    calc(var(--halo-glow-x) * 0.6 + var(--halo-glow-y) * 0.6) calc(var(--halo-glow-y) * 0.6 + var(--halo-glow-x) * 0.6) 34px -20px
+      color-mix(in oklch, var(--halo-coat-b) 55%, transparent);
+  position: fixed;
+  inset: auto;
+  z-index: 2147483000;
+  box-sizing: border-box;
+  width: max-content;
+  max-width: min(var(--halo-popover-width, 320px), calc(100vw - 16px));
+  height: auto;
+  margin: 0;
+  padding: var(--halo-pad-y) var(--halo-pad-x);
+  border: 0;
+  overflow: visible;
+  color: var(--halo-fg);
+  font-family: inherit;
+  line-height: 1.45;
+  transform-origin: 0 0;
+  outline: none;
+  position-anchor: var(--halo-anchor);
+}
+.halo-popover[data-placement='bottom'] {
+  position-area: bottom;
+  position-try-fallbacks: bottom span-right, bottom span-left, flip-block, top span-right, top span-left;
+}
+.halo-popover[data-placement='top'] {
+  position-area: top;
+  position-try-fallbacks: top span-right, top span-left, flip-block, bottom span-right, bottom span-left;
+}
+.halo-popover[data-placement='right'] {
+  position-area: right;
+  position-try-fallbacks: right span-bottom, right span-top, flip-inline, left span-bottom, left span-top;
+}
+.halo-popover[data-placement='left'] {
+  position-area: left;
+  position-try-fallbacks: left span-bottom, left span-top, flip-inline, right span-bottom, right span-top;
+}
+.halo-popover:is([data-placement='bottom'], [data-placement='top']) {
+  margin-block: var(--halo-popover-gap);
+}
+.halo-popover:is([data-placement='bottom'], [data-placement='top'])[data-align='center'] {
+  margin-inline: 8px;
+}
+.halo-popover:is([data-placement='left'], [data-placement='right']) {
+  margin-inline: var(--halo-popover-gap);
+}
+.halo-popover:is([data-placement='left'], [data-placement='right'])[data-align='center'] {
+  margin-block: 8px;
+}
+.halo-popover[data-placement='bottom'][data-align='start'] {
+  position-area: bottom span-right;
+}
+.halo-popover[data-placement='bottom'][data-align='end'] {
+  position-area: bottom span-left;
+}
+.halo-popover[data-placement='top'][data-align='start'] {
+  position-area: top span-right;
+}
+.halo-popover[data-placement='top'][data-align='end'] {
+  position-area: top span-left;
+}
+.halo-popover[data-placement='right'][data-align='start'] {
+  position-area: right span-bottom;
+}
+.halo-popover[data-placement='right'][data-align='end'] {
+  position-area: right span-top;
+}
+.halo-popover[data-placement='left'][data-align='start'] {
+  position-area: left span-bottom;
+}
+.halo-popover[data-placement='left'][data-align='end'] {
+  position-area: left span-top;
+}
+.halo-popover[data-fallback] {
+  margin: 0;
+}
+.halo-popover[data-side='top'] {
+  --halo-glow-y: 14px;
+}
+.halo-popover[data-side='right'] {
+  --halo-glow-x: -14px;
+  --halo-glow-y: 0px;
+}
+.halo-popover[data-side='left'] {
+  --halo-glow-x: 14px;
+  --halo-glow-y: 0px;
+}
+
+.halo-popover-body {
+  max-height: min(70dvh, 520px);
+  overflow: auto;
+  overscroll-behavior: contain;
+  opacity: var(--halo-popover-reveal, 1);
+}
+.halo-popover-title {
+  margin: 0;
+  font-size: 1em;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+  text-wrap: balance;
+}
+.halo-popover-description {
+  margin: 4px 0 0;
+  color: var(--halo-fg-muted);
+  line-height: 1.5;
+  text-wrap: pretty;
+}
+
+.halo-swipe-group {
+  position: relative;
+  display: grid;
+  gap: var(--halo-swipe-gap, 8px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.halo-swipe {
+  --halo-swipe-reveal: 0;
+  --halo-swipe-arm: 0;
+  --halo-swipe-lead: 100%;
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+  list-style: none;
+  border-radius: var(--halo-radius);
+}
+.halo-swipe::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: color-mix(in oklch, var(--halo-fg) 6%, transparent);
+  opacity: min(1, calc(var(--halo-swipe-reveal) * 3));
+  pointer-events: none;
+}
+.halo-swipe[data-lead='left'] {
+  --halo-swipe-lead: 0%;
+}
+
+.halo-swipe-content {
+  --halo-shadow:
+    inset 0 1px 0 light-dark(oklch(100% 0 0 / 0.75), oklch(100% 0 0 / 0.1)),
+    0 1px 2px light-dark(oklch(30% 0.02 262 / 0.08), oklch(0% 0 0 / 0.4));
+  --halo-edge: var(--halo-world-edge, color-mix(in oklch, var(--halo-fg) 13%, transparent));
+  z-index: 1;
+  overflow: clip;
+  padding: var(--halo-pad-y) var(--halo-pad-x);
+  touch-action: pan-y;
+}
+.halo-swipe-content > * {
+  translate: var(--halo-swipe-hold, 0px) 0;
+}
+.halo-swipe-content::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  box-sizing: border-box;
+  border: calc(var(--halo-edge-width) + var(--halo-swipe-arm) * 0.6px) solid transparent;
+  border-radius: inherit;
+  background: radial-gradient(
+      34% 130% at var(--halo-swipe-lead) 50%,
+      var(--halo-coat-a),
+      var(--halo-coat-b) 42%,
+      var(--halo-coat-c) 70%,
+      transparent
+    )
+    border-box;
+  -webkit-mask:
+    linear-gradient(#000 0 0) padding-box,
+    linear-gradient(#000 0 0) border-box;
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) padding-box exclude,
+    linear-gradient(#000 0 0) border-box;
+  opacity: calc(var(--halo-swipe-reveal) * 0.5 + var(--halo-swipe-arm) * 0.5);
+  pointer-events: none;
+}
+.halo-swipe-content[data-dragging] {
+  cursor: grabbing;
+  user-select: none;
+}
+.halo-swipe-content :is(a, img) {
+  -webkit-user-drag: none;
+}
+.halo-swipe[data-disabled] .halo-swipe-content {
+  touch-action: auto;
+}
+
+.halo-swipe-actions {
+  position: absolute;
+  inset-block: 0;
+  z-index: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding-inline: 10px;
+  opacity: 0;
+}
+.halo-swipe-actions[data-side='end'] {
+  inset-inline-end: 0;
+}
+.halo-swipe-actions[data-side='start'] {
+  inset-inline-start: 0;
+}
+.halo-swipe[data-showing='end'] .halo-swipe-actions[data-side='end'],
+.halo-swipe[data-showing='start'] .halo-swipe-actions[data-side='start'] {
+  opacity: var(--halo-swipe-reveal);
+}
+.halo-swipe-actions:focus-within {
+  opacity: 1;
+}
+
+.halo-swipe-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 36px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 999px;
+  background: color-mix(in oklch, var(--halo-fg) 9%, transparent);
+  color: var(--halo-fg);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 560;
+  white-space: nowrap;
+  cursor: pointer;
+  opacity: calc(1 - var(--halo-swipe-arm) * 0.7);
+  transition: background-color 140ms ease;
+}
+.halo-swipe-action:hover {
+  background: color-mix(in oklch, var(--halo-fg) 14%, transparent);
+}
+.halo-swipe-action[data-commit] {
+  background: var(--halo-control);
+  color: var(--halo-control-fg);
+  opacity: 1;
+  transform: scale(calc(1 + var(--halo-swipe-arm) * 0.08));
+}
+.halo-swipe-action[data-commit]:hover {
+  background: color-mix(in oklch, var(--halo-control) 86%, transparent);
+}
+.halo-swipe-action:focus-visible {
+  outline: 2px solid var(--halo-focus);
+  outline-offset: 2px;
+}
+
+@media (pointer: coarse) {
+  .halo-swipe-action {
+    position: relative;
+  }
+  .halo-swipe-action::after {
+    content: '';
+    position: absolute;
+    inset: -4px;
+  }
+}
+
+@media (prefers-contrast: more) {
+  .halo-popover.halo-surface {
+    --halo-edge: var(--halo-fg);
+  }
+  .halo-swipe-action {
+    box-shadow: inset 0 0 0 1px var(--halo-fg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .halo-popover {
+    transition:
+      opacity 120ms ease,
+      display 120ms allow-discrete,
+      overlay 120ms allow-discrete;
+  }
+  .halo-popover:not(:popover-open) {
+    opacity: 0;
+  }
+  @starting-style {
+    .halo-popover:popover-open {
+      opacity: 0;
+    }
+  }
+}
