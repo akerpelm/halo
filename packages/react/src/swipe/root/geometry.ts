@@ -8,6 +8,7 @@ export type SwipeGeometry = { row: number; start: number; end: number; startComm
 export const EMPTY_SWIPE_GEOMETRY: SwipeGeometry = { row: 0, start: 0, end: 0, startCommit: false, endCommit: false, ltr: true };
 
 const COMMIT_PAST_ACTIONS = 56;
+export const COMMIT = '[data-commit]:not(:disabled)';
 const COMMIT_ROW_FRACTION = 0.5;
 
 /** The side whose actions a movement of `x` px uncovers: moving the content left uncovers the end side in left-to-right text. */
@@ -43,8 +44,8 @@ export function measureSwipe(row: HTMLElement, actions: Record<SwipeSide, HTMLEl
     row: row.offsetWidth,
     start: actions.start?.offsetWidth ?? 0,
     end: actions.end?.offsetWidth ?? 0,
-    startCommit: fullSwipe && Boolean(actions.start?.querySelector('[data-commit]')),
-    endCommit: fullSwipe && Boolean(actions.end?.querySelector('[data-commit]')),
+    startCommit: fullSwipe && Boolean(actions.start?.querySelector(COMMIT)),
+    endCommit: fullSwipe && Boolean(actions.end?.querySelector(COMMIT)),
     ltr: getComputedStyle(row).direction !== 'rtl',
   };
 }

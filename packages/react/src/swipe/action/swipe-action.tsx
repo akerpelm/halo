@@ -22,7 +22,7 @@ export function SwipeAction({ commit = false, announce, className, onClick, ...p
         onClick?.(event);
         if (event.defaultPrevented) return;
         if (announce) root.announce(announce);
-        root.motion.close();
+        root.dismiss();
       }}
     />
   );

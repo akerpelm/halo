@@ -7,6 +7,8 @@ export type SwipeRootContextValue = {
   motion: SwipeMotion;
   registerActions: (side: SwipeSide, element: HTMLDivElement | null) => void;
   announce: (message: string) => void;
+  /** Close the row, moving focus from a hidden action onto the row so it stays visible. */
+  dismiss: () => void;
   disabled: boolean;
 };
 

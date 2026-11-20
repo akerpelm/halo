@@ -76,6 +76,12 @@ export function SwipeRoot({
   });
   motionRef.current = motion;
 
+  const dismiss = () => {
+    const active = document.activeElement;
+    if (active?.closest('.halo-swipe-actions') && rootRef.current?.contains(active)) contentRef.current?.focus({ preventScroll: true });
+    motionRef.current?.close();
+  };
+
   useEffect(() => {
     const root = rootRef.current;
     const onHint = () => motionRef.current?.hint();
@@ -92,6 +98,7 @@ export function SwipeRoot({
       motion,
       disabled,
       announce: (message) => group?.announce(message),
+      dismiss,
       registerActions: (side, element) => {
         actionsRef.current[side] = element;
       },
@@ -125,7 +132,7 @@ export function SwipeRoot({
         onKeyDown?.(event);
         if (event.key !== 'Escape' || !motion.isOpen()) return;
         event.stopPropagation();
-        motion.close();
+        dismiss();
       }}
     >
       <SwipeRootContext.Provider value={value}>{children}</SwipeRootContext.Provider>

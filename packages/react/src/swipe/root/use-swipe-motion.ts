@@ -2,7 +2,7 @@ import { type RefObject, useMemo, useRef, useState } from 'react';
 import { clamp } from '../../gesture/projection';
 import { type SpringInput, resolveSpring } from '../../spring/spring-config';
 import { PIXEL_PRECISION, createSpringValue } from '../../spring/spring-value';
-import { EMPTY_SWIPE_GEOMETRY, type SwipeSide, commitDistance, directionOf, measureSwipe, releaseOutcome, sideFor } from './geometry';
+import { COMMIT, EMPTY_SWIPE_GEOMETRY, type SwipeSide, commitDistance, directionOf, measureSwipe, releaseOutcome, sideFor } from './geometry';
 
 type Options = {
   rootRef: RefObject<HTMLLIElement | null>;
@@ -90,9 +90,13 @@ export function useSwipeMotion({ rootRef, contentRef, actionsRef, spring, fullSw
   };
 
   const commit = (side: SwipeSide, velocity: number) => {
-    const button = actionsRef.current[side]?.querySelector<HTMLButtonElement>('[data-commit]');
+    const button = actionsRef.current[side]?.querySelector<HTMLButtonElement>(COMMIT);
     const away = directionOf(side, geometry.current.ltr) * (geometry.current.row + FLY_PAST);
-    go(away, velocity).then(() => button?.click());
+    go(away, velocity).then(() => {
+      if (x.get() !== away) return;
+      button?.click();
+      if (x.get() === away && !x.isAnimating()) close();
+    });
   };
 
   const release = (velocity: number) => {
@@ -107,7 +111,9 @@ export function useSwipeMotion({ rootRef, contentRef, actionsRef, spring, fullSw
     const side: SwipeSide | null = geometry.current.end > 0 ? 'end' : geometry.current.start > 0 ? 'start' : null;
     if (!side || live.current.reducedMotion) return;
     const peek = directionOf(side, geometry.current.ltr) * Math.min(HINT_DISTANCE, geometry.current[side] * 0.4);
-    go(peek).then(() => go(0));
+    go(peek).then(() => {
+      if (x.get() === peek) go(0);
+    });
   };
 
   return useMemo(

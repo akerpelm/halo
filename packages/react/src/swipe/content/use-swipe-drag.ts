@@ -46,6 +46,10 @@ export function useSwipeDrag(contentRef: RefObject<HTMLDivElement | null>, motio
   const onPointerMove = (event: PointerEvent<HTMLDivElement>) => {
     const current = drag.current;
     if (!current || current.pointerId !== event.pointerId) return;
+    if (event.pointerType === 'mouse' && event.buttons === 0) {
+      release(event, true);
+      return;
+    }
     const dx = event.clientX - current.x;
     const dy = event.clientY - current.y;
     if (!current.axis) {

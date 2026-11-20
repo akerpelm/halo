@@ -1096,6 +1096,10 @@ dialog.halo-drawer::backdrop {
   opacity: calc(var(--halo-swipe-reveal) * 0.5 + var(--halo-swipe-arm) * 0.5);
   pointer-events: none;
 }
+.halo-swipe-content:focus-visible {
+  outline: 2px solid var(--halo-focus);
+  outline-offset: -2px;
+}
 .halo-swipe-content[data-dragging] {
   cursor: grabbing;
   user-select: none;

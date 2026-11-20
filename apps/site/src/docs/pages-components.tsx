@@ -176,7 +176,7 @@ export const swipePage: DocPage = {
       <List
         items={[
           <>
-            <strong>Every action is a button.</strong> Tab reaches it, and the row slides open so you can see what has focus. Esc closes the row.
+            <strong>Every action is a button.</strong> Tab reaches it, and the row slides open so you can see what has focus. Esc, or running an action that keeps the row, closes it and moves focus onto the row, so focus stays where you can see it.
           </>,
           <>
             <strong>One code path.</strong> A full swipe clicks the commit button itself, so swipe, click, keyboard and screen reader all run the same <C>onClick</C>.

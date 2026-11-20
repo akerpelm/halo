@@ -1,5 +1,5 @@
 import { act, cleanup, fireEvent, render, screen } from '@testing-library/react';
-import { useState } from 'react';
+import { type MouseEvent, useState } from 'react';
 import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 import { Swipe } from '../src/swipe';
 import { type SwipeGeometry, commitDistance, limit, releaseOutcome, sideFor } from '../src/swipe/root/geometry';
@@ -188,7 +188,117 @@ describe('<Swipe />', () => {
     await dragBy(contentOf('Locked'), -120);
     expect(offset(contentOf('Locked'))).toBe('');
   });
+
+  it('springs back closed when the commit action does not go through', async () => {
+    render(<Row onCommit={(event) => event.preventDefault()} />);
+    await dragBy(contentOf('Row'), -200);
+    await act(async () => {});
+    expect(offset(contentOf('Row'))).toBe('');
+  });
+
+  it('does not full-swipe into a disabled commit action', async () => {
+    render(<Row commitDisabled />);
+    await dragBy(contentOf('Row'), -200);
+    await act(async () => {});
+    expect(offset(contentOf('Row'))).toBe(`translate3d(${-ACTIONS}px, 0px, 0px)`);
+  });
+
+  it('does not run the commit when the swipe is interrupted on its way out', async () => {
+    const onCommit = vi.fn();
+    const reduced = window.matchMedia;
+    window.matchMedia = (query: string) =>
+      ({ matches: false, media: query, addEventListener() {}, removeEventListener() {} }) as unknown as MediaQueryList;
+    try {
+      render(<Row onCommit={onCommit} />);
+      await dragBy(contentOf('Row'), -200);
+      fireEvent.keyDown(contentOf('Row'), { key: 'Escape' });
+      await pause(1200);
+      expect(onCommit).not.toHaveBeenCalled();
+      expect(offset(contentOf('Row'))).toBe('');
+    } finally {
+      window.matchMedia = reduced;
+    }
+  });
+
+  it('keeps focus visible on the row when Escape or an action closes it', () => {
+    render(<Inbox />);
+    const flag = screen.getByRole('button', { name: 'Flag Invoice 42' });
+    act(() => flag.focus());
+    fireEvent.keyDown(flag, { key: 'Escape' });
+    expect(document.activeElement).toBe(contentOf('Invoice 42'));
+    const next = screen.getByRole('button', { name: 'Flag Invoice 43' });
+    act(() => next.focus());
+    fireEvent.click(next);
+    expect(document.activeElement).toBe(contentOf('Invoice 43'));
+  });
+
+  it('moves focus to the next row when the focused row is removed, even with nothing focusable inside', async () => {
+    function Plain() {
+      const [items, setItems] = useState(['Alpha', 'Beta']);
+      return (
+        <Swipe.Group aria-label="Plain">
+          {items.map((name) => (
+            <Swipe.Root key={name}>
+              <Swipe.Content>{name}</Swipe.Content>
+              <Swipe.Actions>
+                <Swipe.Action commit aria-label={`Delete ${name}`} onClick={() => setItems((all) => all.filter((other) => other !== name))}>
+                  Delete
+                </Swipe.Action>
+              </Swipe.Actions>
+            </Swipe.Root>
+          ))}
+        </Swipe.Group>
+      );
+    }
+    render(<Plain />);
+    const remove = screen.getByRole('button', { name: 'Delete Alpha' });
+    act(() => remove.focus());
+    fireEvent.click(remove);
+    await act(async () => {});
+    expect(document.activeElement).toBe(contentOf('Beta'));
+  });
+
+  it('does not drag on hover after a mouse press was released outside the row', () => {
+    render(<Row />);
+    const content = contentOf('Row');
+    fireEvent.pointerDown(content, { pointerId: 1, clientX: 200, clientY: 100, button: 0, buttons: 1, pointerType: 'mouse' });
+    fireEvent.pointerUp(document.body, { pointerId: 1, clientX: 203, clientY: 100, pointerType: 'mouse' });
+    fireEvent.pointerMove(content, { pointerId: 1, clientX: 120, clientY: 100, buttons: 0, pointerType: 'mouse' });
+    expect(offset(content)).toBe('');
+  });
+
+  it('runs pointer handlers passed to Content alongside its own', async () => {
+    const onPointerDown = vi.fn();
+    render(<Row onContentPointerDown={onPointerDown} />);
+    await dragBy(contentOf('Row'), -80);
+    expect(onPointerDown).toHaveBeenCalledOnce();
+    expect(offset(contentOf('Row'))).toBe(`translate3d(${-ACTIONS}px, 0px, 0px)`);
+  });
 });
+
+function Row({
+  onCommit,
+  commitDisabled,
+  onContentPointerDown,
+}: {
+  onCommit?: (event: MouseEvent<HTMLButtonElement>) => void;
+  commitDisabled?: boolean;
+  onContentPointerDown?: () => void;
+}) {
+  return (
+    <Swipe.Group aria-label="Rows">
+      <Swipe.Root>
+        <Swipe.Content onPointerDown={onContentPointerDown}>Row</Swipe.Content>
+        <Swipe.Actions>
+          <Swipe.Action>Flag</Swipe.Action>
+          <Swipe.Action commit disabled={commitDisabled} onClick={onCommit}>
+            Archive
+          </Swipe.Action>
+        </Swipe.Actions>
+      </Swipe.Root>
+    </Swipe.Group>
+  );
+}
 
 describe('swipe geometry', () => {
   const geometry: SwipeGeometry = { row: ROW, start: 0, end: ACTIONS, startCommit: false, endCommit: true, ltr: true };

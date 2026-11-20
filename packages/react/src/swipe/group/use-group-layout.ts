@@ -34,6 +34,16 @@ export function useGroupLayout(listRef: RefObject<HTMLUListElement | null>, redu
     };
   }, []);
 
+  useEffect(() => {
+    const list = listRef.current;
+    if (!list || typeof ResizeObserver === 'undefined') return;
+    const observer = new ResizeObserver(() => {
+      for (const row of rowsOf(list)) tops.current.set(row, row.offsetTop);
+    });
+    observer.observe(list);
+    return () => observer.disconnect();
+  }, []);
+
   useLayoutEffect(() => {
     const list = listRef.current;
     if (!list) return;
@@ -60,7 +70,8 @@ export function useGroupLayout(listRef: RefObject<HTMLUListElement | null>, redu
     focused.current = null;
     if (document.activeElement && document.activeElement !== document.body) return;
     const next = rows[Math.min(lost.index, rows.length - 1)];
-    const target = next?.querySelector<HTMLElement>(`.halo-swipe-content ${FOCUSABLE}, .halo-swipe-content[tabindex]`) ?? list;
+    const content = next?.querySelector<HTMLElement>('.halo-swipe-content');
+    const target = content?.querySelector<HTMLElement>(FOCUSABLE) ?? content ?? list;
     target.focus({ preventScroll: true });
   });
 }
