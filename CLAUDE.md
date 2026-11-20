@@ -90,7 +90,7 @@ Bring a library change's behaviour under test: break the code on purpose and con
 - A `view-transition-name` makes its element a backdrop root, so frosted glass inside stops blurring the page. Persistent chrome is named only during transitions: `html:active-view-transition [style*='--vt-name']` in `apps/site/src/styles.css`.
 - Never define a world's `--halo-surface-solid` as `var(--halo-surface)`. Overrides built from it become a cycle and the pane turns transparent.
 - Measure layout in `useLayoutEffect`, not `useEffect`, or view-transition snapshots capture unplaced elements.
-- `apps/site/vite.config.ts` aliases `halo-ui-react/*` to library source. Moving a library entry breaks the site build until the alias is updated.
+- `apps/site/vite.config.ts` aliases `halo-ui-react/*` to library source, and `apps/site/tsconfig.json` `paths` does the same for types. A new or moved library entry needs both, or CI's typecheck (which runs before any build) cannot find it.
 - `lib/cable.ts` is a Verlet simulation: cables are 0.994 of the rest gap so they stay taut, tension straightens them, and the pane's top edge is a surface slack can rest on. A zero-length cable must not be stepped (guarded).
 - The domain is `haloui.dev` but the package is `halo-ui-react`. When renaming, never touch `haloui.dev`.
 

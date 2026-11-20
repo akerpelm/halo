@@ -7,7 +7,9 @@
       "halo-ui-react": ["../../packages/react/src/index.ts"],
       "halo-ui-react/spring": ["../../packages/react/src/spring/index.ts"],
       "halo-ui-react/toast": ["../../packages/react/src/toast/index.ts"],
-      "halo-ui-react/drawer": ["../../packages/react/src/drawer/index.ts"]
+      "halo-ui-react/drawer": ["../../packages/react/src/drawer/index.ts"],
+      "halo-ui-react/popover": ["../../packages/react/src/popover/index.ts"],
+      "halo-ui-react/swipe": ["../../packages/react/src/swipe/index.ts"]
     }
   },
   "include": ["src", "e2e", "og", "vite.config.ts", "playwright.config.ts", "playwright.og.config.ts"]
