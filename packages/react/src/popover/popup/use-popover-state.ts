@@ -53,7 +53,7 @@ export function usePopoverState({ popupRef, open, setOpen, onOpening, onOpened, 
 
   useLayoutEffect(() => {
     const popup = popupRef.current;
-    if (!popup || open === shown.current) return;
+    if (!popup || open === shown.current || typeof popup.showPopover !== 'function') return;
     if (open) popup.showPopover();
     else popup.hidePopover();
   }, [open]);

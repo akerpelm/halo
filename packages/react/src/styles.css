@@ -933,6 +933,11 @@ dialog.halo-drawer::backdrop {
   transform-origin: 0 0;
   outline: none;
 }
+@supports not selector(:popover-open) {
+  .halo-popover {
+    display: none;
+  }
+}
 @supports (position-anchor: --halo) {
   .halo-popover {
     position-anchor: var(--halo-anchor);

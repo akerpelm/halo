@@ -86,6 +86,9 @@ export const popoverPage: DocPage = {
       <P>
         Closing plays its exit where the browser supports animating out of the top layer (the CSS <C>overlay</C> property). Elsewhere it closes at once.
       </P>
+      <P>
+        It needs the native popover API: Chrome and Edge 114, Firefox 125, Safari 17 and later. In older browsers the popup stays hidden and the trigger does nothing, so offer another path to anything important inside it.
+      </P>
     </>
   ),
 };

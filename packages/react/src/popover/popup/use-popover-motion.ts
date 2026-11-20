@@ -43,7 +43,7 @@ export function usePopoverMotion(popupRef: RefObject<HTMLDivElement | null>, spr
       prepare() {
         const popup = popupRef.current;
         if (!popup) return;
-        popup.style.transition = 'none';
+        popup.style.transition = live.current.reducedMotion ? '' : 'none';
         popup.style.transform = '';
         popup.style.removeProperty('--halo-popover-reveal');
         popup.style.opacity = live.current.reducedMotion ? '' : '0';

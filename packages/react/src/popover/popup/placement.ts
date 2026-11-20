@@ -30,6 +30,12 @@ export function isDetached(trigger: Element, popup: Element): boolean {
   return !trigger.contains(top) && !popup.contains(top);
 }
 
+/** Whether someone is typing in the popup, where an on-screen keyboard can scroll the trigger away. */
+export function isEditingInside(popup: Element): boolean {
+  const active = document.activeElement;
+  return active !== null && popup.contains(active) && active.matches('input, textarea, select, [contenteditable]:not([contenteditable="false"])');
+}
+
 /** Where the trigger meets the popup's edge, in % of the popup box, so the edge light can gather there. */
 export function attachPoint(trigger: Box, popup: Box, side: PopoverSide): { x: number; y: number } {
   const along = (start: number, size: number, center: number) => Math.min(Math.max(((center - start) / size) * 100, 8), 92);

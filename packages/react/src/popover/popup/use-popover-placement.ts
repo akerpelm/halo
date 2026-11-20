@@ -1,5 +1,5 @@
 import { type RefObject, useEffect, useRef } from 'react';
-import { type PopoverAlign, type PopoverSide, attachPoint, fallbackPosition, isDetached, sideOf, supportsAnchorPositioning } from './placement';
+import { type PopoverAlign, type PopoverSide, attachPoint, fallbackPosition, isDetached, isEditingInside, sideOf, supportsAnchorPositioning } from './placement';
 
 export type Box = { left: number; top: number; width: number; height: number };
 export type Boxes = { trigger: Box; popup: Box };
@@ -71,8 +71,9 @@ export function usePopoverPlacement({ popupRef, triggerRef, open, side, align, o
         const popup = popupRef.current;
         const trigger = triggerRef.current;
         if (!popup || !trigger) return;
-        if (isDetached(trigger, popup)) live.current.onDetach();
-        else if (!live.current.isMoving()) place();
+        if (isDetached(trigger, popup)) {
+          if (!isEditingInside(popup)) live.current.onDetach();
+        } else if (!live.current.isMoving()) place();
       });
     };
     window.addEventListener('resize', follow);

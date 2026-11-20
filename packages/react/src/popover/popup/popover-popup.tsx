@@ -48,10 +48,6 @@ export function PopoverPopup({ children, className, style, ...props }: PopoverPo
 
   return (
     <div
-      ref={popupRef}
-      id={root.popupId}
-      popover="auto"
-      role="dialog"
       tabIndex={-1}
       aria-labelledby={root.titleId}
       aria-describedby={root.descriptionId}
@@ -70,6 +66,10 @@ export function PopoverPopup({ children, className, style, ...props }: PopoverPo
         } as CSSProperties
       }
       {...props}
+      ref={popupRef}
+      id={root.popupId}
+      popover="auto"
+      role="dialog"
     >
       <div className="halo-popover-body">{children}</div>
     </div>

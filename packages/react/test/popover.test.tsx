@@ -124,6 +124,58 @@ describe('<Popover />', () => {
     expect(trigger().getAttribute('aria-expanded')).toBe('false');
   });
 
+  it('leaves the reduced-motion fade to CSS instead of switching transitions off', () => {
+    render(<Share />);
+    act(() => popup().showPopover());
+    expect(popup().style.transition).toBe('');
+  });
+
+  it('keeps the trigger pointed at the popup when the popup is given its own id', () => {
+    render(
+      <Popover.Root>
+        <Popover.Trigger>Info</Popover.Trigger>
+        <Popover.Popup id="mine" aria-label="About">
+          Text
+        </Popover.Popup>
+      </Popover.Root>,
+    );
+    expect(screen.getByRole('button', { name: 'Info' }).getAttribute('aria-controls')).toBe(popup().id);
+  });
+
+  it('does not throw where the popover API is missing', () => {
+    const show = HTMLElement.prototype.showPopover;
+    const hide = HTMLElement.prototype.hidePopover;
+    Reflect.deleteProperty(HTMLElement.prototype, 'showPopover');
+    Reflect.deleteProperty(HTMLElement.prototype, 'hidePopover');
+    try {
+      expect(() => render(<Share defaultOpen />)).not.toThrow();
+    } finally {
+      HTMLElement.prototype.showPopover = show;
+      HTMLElement.prototype.hidePopover = hide;
+    }
+  });
+
+  it('closes when the trigger scrolls away, but not while someone types inside', async () => {
+    render(
+      <Popover.Root>
+        <Popover.Trigger>Info</Popover.Trigger>
+        <Popover.Popup aria-label="Rename">
+          <input aria-label="Name" />
+        </Popover.Popup>
+      </Popover.Root>,
+    );
+    act(() => popup().showPopover());
+    screen.getByRole('button', { name: 'Info' }).getBoundingClientRect = () => new DOMRect(10, -200, 80, 40);
+    act(() => screen.getByRole('textbox', { name: 'Name' }).focus());
+    fireEvent.scroll(window);
+    await act(() => new Promise((resolve) => setTimeout(resolve, 50)));
+    expect(popup().hasAttribute('data-test-open')).toBe(true);
+    act(() => popup().focus());
+    fireEvent.scroll(window);
+    await act(() => new Promise((resolve) => setTimeout(resolve, 50)));
+    expect(popup().hasAttribute('data-test-open')).toBe(false);
+  });
+
   it('carries world, theme and placement to the popup', () => {
     render(<Share world="partition" theme="dark" side="right" align="start" />);
     expect(popup().dataset.haloWorld).toBe('partition');

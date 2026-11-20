@@ -8,7 +8,7 @@ test.describe('popover', () => {
   test('opens from the keyboard, takes focus, and gives it back on Esc', async ({ page }) => {
     await openPage(page, '/docs/popover');
     const trigger = page.getByRole('main').getByRole('button', { name: 'Share', exact: true }).last();
-    await trigger.evaluate((el) => el.scrollIntoView({ block: 'center' }));
+    await trigger.evaluate((el) => el.scrollIntoView({ block: 'center', behavior: 'instant' }));
     await trigger.focus();
     await page.keyboard.press('Enter');
     const dialog = page.getByRole('dialog', { name: 'Share “Spring launch”' });
