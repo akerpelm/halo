@@ -111,7 +111,7 @@ Live at haloui.dev, `main` at the latest commit, all checks green.
 - No GitHub star count in the facts strip until it helps rather than hurts.
 - The old flick test was replaced because both sides looked the same on any normal drag. Why springs uses the drawer's default spring (0.5 s, bounce 0.12) and docks at plus or minus 20% of the lane; longer trips or the stiffer toast spring made the two lines look alike again.
 - Sizes are measured by `packages/react/scripts/size.mjs` (esbuild minify, React external, gzip -9, 1 kB = 1000 bytes). Toast is 8.5 kB, not the 8.4 once typed by hand.
-- The Next.js guide is verified against Next.js 16.4.3: `<Drawer.Root>` in a server component fails the build ("Element type is invalid ... got: undefined"), so drawers go in client components.
+- The Next.js guide is verified against Next.js 16.4.3: `<Drawer.Root>` in a server component fails the build ("Element type is invalid ... got: undefined") because a namespace cannot cross the `'use client'` boundary. The named drawer parts (`DrawerRoot`, `DrawerTrigger` and so on) do: a server-component `app/page.tsx` rendering them passed `next build` on 16.4.3 against the packed library. Keep both the namespace and the named exports.
 - The SEO brief (from a copy and SEO consultant) was applied with corrections: its flick-test verdict had Sonner backwards, it assumed Cloudflare Pages rather than Workers, and its `index.html`-per-route layout would add trailing-slash redirects.
 
 ## Waiting on the owner

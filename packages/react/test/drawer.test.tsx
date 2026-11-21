@@ -1,6 +1,18 @@
 import { act, cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
-import { Drawer, type DrawerRootProps, type SnapPoint } from '../src/drawer';
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerHandle,
+  DrawerRoot,
+  DrawerScroll,
+  DrawerTitle,
+  DrawerTrigger,
+  type DrawerRootProps,
+  type SnapPoint,
+} from '../src/drawer';
 
 const PANEL_SIZE = 700;
 
@@ -163,5 +175,17 @@ describe('<Drawer />', () => {
     vi.spyOn(console, 'error').mockImplementation(() => undefined);
     expect(() => render(<Drawer.Title>Lost</Drawer.Title>)).toThrow('<Drawer.Title> must be rendered inside <Drawer.Root>.');
     vi.restoreAllMocks();
+  });
+
+  it('exports every part by name for React Server Components', () => {
+    expect(DrawerRoot).toBe(Drawer.Root);
+    expect(DrawerTrigger).toBe(Drawer.Trigger);
+    expect(DrawerContent).toBe(Drawer.Content);
+    expect(DrawerHandle).toBe(Drawer.Handle);
+    expect(DrawerTitle).toBe(Drawer.Title);
+    expect(DrawerDescription).toBe(Drawer.Description);
+    expect(DrawerClose).toBe(Drawer.Close);
+    expect(DrawerScroll).toBe(Drawer.Scroll);
+    expect(Object.keys(Drawer).sort()).toEqual(['Close', 'Content', 'Description', 'Handle', 'Root', 'Scroll', 'Title', 'Trigger']);
   });
 });

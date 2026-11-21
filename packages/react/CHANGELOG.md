@@ -8,7 +8,7 @@ All notable changes to `halo-ui-react`. The format follows [Keep a Changelog](ht
 
 - `halo-ui-react/popover`: `Popover` parts (`Root`, `Trigger`, `Popup`, `Title`, `Description`, `Close`) on the native popover attribute and CSS anchor positioning, with a measured fallback where anchor positioning is missing. The popup grows out of its trigger on a spring, its edge gradient radiates from where it meets the trigger, and it closes back into the trigger when the trigger scrolls away or is covered.
 - `halo-ui-react/swipe`: `Swipe` parts (`Group`, `Root`, `Content`, `Actions`, `Action`). A flick-projected release opens the row or runs its `commit` action; every action is a real button that Tab reveals; `Swipe.Group` keeps one row open, closes the gap a removed row leaves with transforms, moves focus on, and announces results. `fullSwipe={false}` makes every swipe stop with the actions showing.
-- Named exports for every popover and swipe part (`PopoverRoot`, `SwipeGroup` and so on) beside the namespaces.
+- Named exports for every drawer, popover and swipe part (`DrawerRoot`, `PopoverRoot`, `SwipeGroup` and so on) beside the namespaces. The named drawer parts render from a Next.js server component, where `<Drawer.Root>` fails with "Element type is invalid".
 
 ### Changed
 

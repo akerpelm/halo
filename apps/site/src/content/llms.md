@@ -125,6 +125,7 @@ Parts:
 - Drawer.Close: a <button> that closes.
 - Drawer.Scroll: a scroll area that cooperates with dragging. Use it for any long content.
 - useDrawer(): { open, setOpen, activeSnap, setActiveSnap } for custom triggers, inside Drawer.Root.
+Named exports also exist (DrawerRoot, DrawerTrigger, DrawerContent, DrawerHandle, DrawerTitle, DrawerDescription, DrawerClose, DrawerScroll). Use them in a React Server Component: `<Drawer.Root>` from a server component fails with "Element type is invalid".
 
 Focus moves into the panel on open (or to an element with autofocus or data-autofocus) and returns to the trigger on close. Page scroll is locked while open.
 

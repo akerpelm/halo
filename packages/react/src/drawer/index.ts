@@ -1,5 +1,11 @@
 export * as Drawer from './index.parts';
 export { useDrawer } from './root/use-drawer';
-export type { DrawerRootProps, RecessConfig } from './root/drawer-root';
-export type { DrawerContentProps } from './content/drawer-content';
+export { DrawerRoot, type DrawerRootProps, type RecessConfig } from './root/drawer-root';
+export { DrawerTrigger } from './trigger/drawer-trigger';
+export { DrawerContent, type DrawerContentProps } from './content/drawer-content';
+export { DrawerHandle } from './handle/drawer-handle';
+export { DrawerTitle } from './title/drawer-title';
+export { DrawerDescription } from './description/drawer-description';
+export { DrawerClose } from './close/drawer-close';
+export { DrawerScroll } from './scroll/drawer-scroll';
 export type { DrawerSide, SnapPoint } from './utils/geometry';

@@ -250,6 +250,14 @@ const drawerPage: DocPage = {
   </Drawer.Content>
 </Drawer.Root>`}
       />
+      <P>
+        Each part is also exported by name: <C>DrawerRoot</C>, <C>DrawerTrigger</C>, <C>DrawerContent</C>, <C>DrawerHandle</C>, <C>DrawerTitle</C>,{' '}
+        <C>DrawerDescription</C>, <C>DrawerScroll</C> and <C>DrawerClose</C>. Use those in a Next.js server component; see{' '}
+        <Link href="/docs/nextjs" className={docLink}>
+          Next.js and SSR
+        </Link>
+        .
+      </P>
       <H2 id="root">Root props</H2>
       <Plaque id="drawer-root" title="Drawer.Root" count={drawerRootProps.length}>
         <PropTable rows={drawerRootProps} caption="Drawer.Root props" />

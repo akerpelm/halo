@@ -9,10 +9,10 @@ const link = 'text-ink underline decoration-line underline-offset-4 hover:decora
 export const nextjsPage: DocPage = {
   slug: 'nextjs',
   title: 'Next.js and SSR',
-  lede: 'Halo works in the App Router. The Toaster goes in the root layout; drawers live in client components; toast() runs on the client.',
+  lede: 'Halo works in the App Router. The Toaster goes in the root layout; drawers render from server components through their named parts; toast() runs on the client.',
   sections: [
     { id: 'layout', title: 'The root layout' },
-    { id: 'drawers', title: 'Drawers in client components' },
+    { id: 'drawers', title: 'Drawers in server and client components' },
     { id: 'server-actions', title: 'Toasts after a server action' },
     { id: 'recess', title: 'Pushing the page back' },
     { id: 'theme', title: 'Following your dark mode' },
@@ -39,13 +39,34 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   );
 }`}
       />
-      <H2 id="drawers">Drawers in client components</H2>
+      <H2 id="drawers">Drawers in server and client components</H2>
       <P>
-        <C>Drawer</C> is a namespace of parts exported from a client module. A server component can render a client component, but it cannot reach into a client
-        module’s exports, so <C>{'<Drawer.Root>'}</C> belongs in a file marked <C>'use client'</C>. Pass server data in as props.
+        Every drawer part is also exported by name. A server component can render the named parts directly, because each one is its own client component.
+      </P>
+      <CodeBlock
+        label="app/page.tsx"
+        code={`import { DrawerRoot, DrawerTrigger, DrawerContent, DrawerHandle, DrawerTitle, DrawerScroll } from 'halo-ui-react/drawer';
+
+export default function Page() {
+  return (
+    <DrawerRoot snapPoints={[0.45, 0.92]}>
+      <DrawerTrigger>Share</DrawerTrigger>
+      <DrawerContent>
+        <DrawerHandle />
+        <DrawerTitle>Share project</DrawerTitle>
+        <DrawerScroll>https://haloui.dev</DrawerScroll>
+      </DrawerContent>
+    </DrawerRoot>
+  );
+}`}
+      />
+      <P>
+        <C>Drawer</C> is a namespace of those parts. A server component can render a client component, but it cannot reach into a client module’s exports, so{' '}
+        <C>{'<Drawer.Root>'}</C> belongs in a file marked <C>'use client'</C>. Pass server data in as props.
       </P>
       <Note title="Seeing “Element type is invalid … got: undefined”?">
-        That is Next.js rendering <C>{'<Drawer.Root>'}</C> from a server component. Move the drawer into a client component like the one below. Checked with Next.js 16.4.
+        That is Next.js rendering <C>{'<Drawer.Root>'}</C> from a server component. Switch to the named parts above, or move the drawer into a client component like
+        the one below. Checked with Next.js 16.4.
       </Note>
       <CodeBlock
         label="app/share-sheet.tsx"
