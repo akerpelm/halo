@@ -113,3 +113,65 @@ test.describe('swipe actions', () => {
     await expect(page.locator('.halo-swipe').first()).not.toHaveAttribute('data-showing', /.+/);
   });
 });
+
+test.describe('playground', () => {
+  const builders = ['Toast', 'Drawer', 'Popover', 'Swipe'] as const;
+
+  for (const width of [320, 375, 640, 768, 1024, 1440]) {
+    test(`every builder fits at ${width}px`, async ({ page }) => {
+      await page.setViewportSize({ width, height: 900 });
+      await openPage(page, '/playground');
+      for (const builder of builders) {
+        await page.getByRole('group', { name: 'Building' }).getByText(builder, { exact: true }).click();
+        const overflow = await page.evaluate(() => {
+          const panel = document.querySelector('main section > div:last-child');
+          if (!(panel instanceof HTMLElement)) return { page: 0, escaped: ['no panel'] };
+          const bounds = panel.getBoundingClientRect();
+          const clippedInside = (el: Element) => {
+            for (let up = el.parentElement; up && up !== panel; up = up.parentElement) {
+              if (getComputedStyle(up).overflowX !== 'visible') return true;
+            }
+            return false;
+          };
+          const escaped = [...panel.querySelectorAll('*')]
+            .filter((el) => el instanceof HTMLElement && el.offsetParent !== null && !clippedInside(el))
+            .filter((el) => {
+              const box = el.getBoundingClientRect();
+              return box.width > 0 && (box.left < bounds.left - 1 || box.right > bounds.right + 1);
+            })
+            .map((el) => `${el.tagName.toLowerCase()}.${String((el as HTMLElement).className).split(' ')[0]}`);
+          return { page: document.documentElement.scrollWidth - window.innerWidth, escaped };
+        });
+        expect(overflow.page, `${builder} widens the page`).toBeLessThanOrEqual(0);
+        expect(overflow.escaped, `${builder} spills out of its panel`).toEqual([]);
+      }
+    });
+  }
+
+  for (const look of [
+    { world: 'ink', theme: 'light' },
+    { world: 'midnight', theme: 'dark' },
+  ] as const) {
+    test(`popover and swipe builders have no axe violations in ${look.world} ${look.theme}`, async ({ page }) => {
+      await applySettings(page, look);
+      await openPage(page, '/playground');
+      const building = page.getByRole('group', { name: 'Building' });
+
+      await building.getByText('Popover', { exact: true }).click();
+      await page.getByRole('group', { name: 'Side' }).getByText('Right', { exact: true }).click();
+      await expect(page.locator('pre, code').filter({ hasText: 'side="right"' }).first()).toBeVisible();
+      await page.getByRole('region', { name: 'Popover preview' }).getByRole('button', { name: 'Share' }).click();
+      await expect(page.locator('.halo-popover:popover-open')).toBeVisible();
+      await page.waitForTimeout(600);
+      expect((await new AxeBuilder({ page }).withTags(axeTags).analyze()).violations.map((v) => v.id)).toEqual([]);
+      await page.keyboard.press('Escape');
+
+      await building.getByText('Swipe', { exact: true }).click();
+      await page.getByRole('group', { name: 'Actions' }).getByText('Both', { exact: true }).click();
+      await expect(page.getByRole('region', { name: 'Swipe preview' }).getByRole('button', { name: 'Mark invoice 1042 paid' })).toHaveCount(1);
+      await expect(page.locator('pre, code').filter({ hasText: 'side="start"' }).first()).toBeVisible();
+      expect((await new AxeBuilder({ page }).withTags(axeTags).analyze()).violations.map((v) => v.id)).toEqual([]);
+    });
+  }
+
+});

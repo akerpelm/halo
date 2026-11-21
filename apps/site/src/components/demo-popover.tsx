@@ -1,13 +1,11 @@
-import { Popover, type PopoverAlign, type PopoverSide } from 'halo-ui-react/popover';
+import { Popover, type PopoverRootProps, type PopoverSide } from 'halo-ui-react/popover';
 import type { ReactNode } from 'react';
 import { useSettings } from '../lib/settings';
 import { type ButtonProps, buttonClass } from './button';
 import { CopyButton } from './copy-button';
 
-type DemoPopoverProps = {
+type DemoPopoverProps = Pick<PopoverRootProps, 'side' | 'align' | 'offset' | 'density' | 'radius' | 'spring'> & {
   trigger: ReactNode;
-  side?: PopoverSide;
-  align?: PopoverAlign;
   tone?: ButtonProps['tone'];
   size?: ButtonProps['size'];
 };
@@ -18,10 +16,10 @@ const people = [
   ['Luis Ortega', 'Can view'],
 ] as const;
 
-export function DemoPopover({ trigger, side = 'bottom', align = 'center', tone = 'quiet', size = 'md' }: DemoPopoverProps) {
+export function DemoPopover({ trigger, tone = 'quiet', size = 'md', ...root }: DemoPopoverProps) {
   const { world, theme } = useSettings();
   return (
-    <Popover.Root side={side} align={align} world={world} theme={theme}>
+    <Popover.Root {...root} world={world} theme={theme}>
       <Popover.Trigger className={buttonClass({ tone, size })}>{trigger}</Popover.Trigger>
       <Popover.Popup className="w-[300px]">
         <Popover.Title className="font-display">Share “Spring launch”</Popover.Title>

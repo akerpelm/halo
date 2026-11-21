@@ -1,26 +1,15 @@
 import { useState } from 'react';
 import { Button } from '../components/button';
-import { CodeBlock } from '../components/code-block';
+import { BuilderOutput, type BuilderOutputKind } from '../components/builder-output';
 import { DemoDrawer } from '../components/demo-drawer';
 import { DrawerStage } from '../components/drawer-stage';
 import { Segmented } from '../components/segmented';
-import { Slider } from '../components/slider';
-import { SpringCurve } from '../components/spring-curve';
+import { SpringControls } from '../components/spring-controls';
 import { Toggle } from '../components/toggle';
-import { type DrawerConfig, type SpringSetting, defaultDrawerConfig, drawerCode, drawerPrompt } from '../lib/config';
+import { type DrawerConfig, defaultDrawerConfig, drawerCode, drawerPrompt } from '../lib/config';
 import { useSettings } from '../lib/settings';
 
-function SpringControls({ value, onChange }: { value: SpringSetting; onChange: (value: SpringSetting) => void }) {
-  return (
-    <div className="grid gap-4">
-      <SpringCurve spring={value} />
-      <Slider label="Duration" value={value.duration} min={0.15} max={1.2} step={0.01} format={(v) => `${v.toFixed(2)} s`} onChange={(duration) => onChange({ ...value, duration })} />
-      <Slider label="Bounce" value={value.bounce} min={0} max={0.6} step={0.01} format={(v) => v.toFixed(2)} onChange={(bounce) => onChange({ ...value, bounce })} />
-    </div>
-  );
-}
-
-export function DrawerBuilder({ output, onOutput }: { output: 'code' | 'prompt'; onOutput: (output: 'code' | 'prompt') => void }) {
+export function DrawerBuilder({ output, onOutput }: { output: BuilderOutputKind; onOutput: (output: BuilderOutputKind) => void }) {
   const { world } = useSettings();
   const [config, setConfig] = useState<DrawerConfig>(defaultDrawerConfig);
   const set = (patch: Partial<DrawerConfig>) => setConfig((current) => ({ ...current, ...patch }));
@@ -86,25 +75,7 @@ export function DrawerBuilder({ output, onOutput }: { output: 'code' | 'prompt';
         >
           <DemoDrawer trigger="Open drawer" tone="primary" size="sm" config={config} />
         </DrawerStage>
-        <div className="grid gap-5 max-lg:p-5">
-        <Segmented
-          label="Output"
-          hideLabel
-          value={output}
-          onChange={onOutput}
-          options={[
-            { value: 'code', label: 'Code' },
-            { value: 'prompt', label: 'Agent prompt' },
-          ]}
-        />
-        <CodeBlock
-          className="-mx-5 -mb-5 rounded-none bg-transparent shadow-[inset_0_1px_0_var(--line)]"
-          code={output === 'code' ? drawerCode(config, world) : drawerPrompt(config, world)}
-          label={output === 'code' ? 'drawer.tsx' : 'prompt.md'}
-          copyLabel={output === 'code' ? 'Copy code' : 'Copy prompt'}
-          wrap={output === 'prompt'}
-        />
-        </div>
+        <BuilderOutput output={output} onOutput={onOutput} code={drawerCode(config, world)} prompt={drawerPrompt(config, world)} file="drawer.tsx" />
       </div>
     </div>
   );

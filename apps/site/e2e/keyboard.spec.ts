@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { type Page, expect, test } from '@playwright/test';
 import { auditedPaths, openPage } from './site';
 
 const maxStops = 250;
@@ -6,6 +6,19 @@ const maxStops = 250;
 for (const path of auditedPaths) {
   test(`every tab stop on ${path} shows a focus ring`, async ({ page }) => {
     await openPage(page, path);
+    await walk(page);
+  });
+}
+
+for (const builder of ['Drawer', 'Popover', 'Swipe']) {
+  test(`every tab stop in the ${builder} builder shows a focus ring`, async ({ page }) => {
+    await openPage(page, '/playground');
+    await page.getByRole('group', { name: 'Building' }).getByText(builder, { exact: true }).click();
+    await walk(page);
+  });
+}
+
+async function walk(page: Page) {
     const seen: string[] = [];
     for (let stop = 0; stop < maxStops; stop++) {
       await page.keyboard.press('Tab');
@@ -14,7 +27,8 @@ for (const path of auditedPaths) {
         if (!el || el === document.body) return null;
         const style = getComputedStyle(el);
         const box = el.getBoundingClientRect();
-        const label = el.getAttribute('aria-label') ?? el.textContent?.trim().slice(0, 40) ?? '';
+        const labelled = el instanceof HTMLInputElement ? `${el.name} ${el.labels?.[0]?.textContent?.trim() ?? ''}` : null;
+        const label = el.getAttribute('aria-label') ?? labelled ?? el.textContent?.trim().slice(0, 40) ?? '';
         return {
           id: `${el.tagName.toLowerCase()} "${label}"`,
           visibleFocus: el.matches(':focus-visible'),
@@ -30,5 +44,4 @@ for (const path of auditedPaths) {
       expect.soft(focus.onScreen, `${focus.id} has a size`).toBe(true);
     }
     expect(seen.length).toBeGreaterThan(5);
-  });
 }

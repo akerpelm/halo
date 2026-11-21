@@ -1,4 +1,4 @@
-import { Swipe } from 'halo-ui-react/swipe';
+import { Swipe, type SwipeGroupProps, type SwipeRootProps } from 'halo-ui-react/swipe';
 import { toast } from 'halo-ui-react/toast';
 import { useState } from 'react';
 import { useSettings } from '../lib/settings';
@@ -13,10 +13,23 @@ const invoices: readonly Invoice[] = [
   { id: 1045, client: 'Okafor Design', amount: '$2,075', due: 'Due Dec 2' },
 ];
 
-export function DemoSwipe({ hint = false, fullSwipe = true }: { hint?: boolean; fullSwipe?: boolean }) {
+type DemoSwipeProps = Pick<SwipeGroupProps, 'hint' | 'fullSwipe' | 'density' | 'radius'> & {
+  spring?: SwipeRootProps['spring'];
+  actions?: 'end' | 'start' | 'both';
+};
+
+const toggled = (set: ReadonlySet<number>, id: number) => {
+  const next = new Set(set);
+  if (next.has(id)) next.delete(id);
+  else next.add(id);
+  return next;
+};
+
+export function DemoSwipe({ spring, actions = 'end', ...group }: DemoSwipeProps) {
   const { world, theme } = useSettings();
   const [items, setItems] = useState(invoices);
   const [flagged, setFlagged] = useState<ReadonlySet<number>>(new Set());
+  const [paid, setPaid] = useState<ReadonlySet<number>>(new Set());
 
   const archive = (invoice: Invoice) => {
     setItems((all) => all.filter((other) => other.id !== invoice.id));
@@ -25,13 +38,8 @@ export function DemoSwipe({ hint = false, fullSwipe = true }: { hint?: boolean; 
     });
   };
 
-  const toggleFlag = (invoice: Invoice) =>
-    setFlagged((current) => {
-      const next = new Set(current);
-      if (next.has(invoice.id)) next.delete(invoice.id);
-      else next.add(invoice.id);
-      return next;
-    });
+  const toggleFlag = (invoice: Invoice) => setFlagged((current) => toggled(current, invoice.id));
+  const togglePaid = (invoice: Invoice) => setPaid((current) => toggled(current, invoice.id));
 
   if (items.length === 0) {
     return (
@@ -45,11 +53,12 @@ export function DemoSwipe({ hint = false, fullSwipe = true }: { hint?: boolean; 
   }
 
   return (
-    <Swipe.Group aria-label="Invoices" hint={hint} fullSwipe={fullSwipe} world={world} theme={theme}>
+    <Swipe.Group aria-label="Invoices" {...group} world={world} theme={theme}>
       {items.map((invoice) => {
         const isFlagged = flagged.has(invoice.id);
+        const isPaid = paid.has(invoice.id);
         return (
-          <Swipe.Root key={invoice.id}>
+          <Swipe.Root key={invoice.id} spring={spring}>
             <Swipe.Content className="flex items-center gap-3">
               <div className="min-w-0 flex-1">
                 <p className="m-0 flex items-center gap-2 text-ui font-medium">
@@ -57,11 +66,19 @@ export function DemoSwipe({ hint = false, fullSwipe = true }: { hint?: boolean; 
                   {isFlagged && <span className="flex-none rounded-full bg-[color-mix(in_oklch,var(--halo-fg)_9%,transparent)] px-2 text-caption">Flagged</span>}
                 </p>
                 <p className="m-0 mt-0.5 text-label text-[var(--halo-fg-muted)]">
-                  Invoice {invoice.id} · {invoice.due}
+                  Invoice {invoice.id} · {isPaid ? 'Paid' : invoice.due}
                 </p>
               </div>
               <span className="flex-none font-mono text-label tabular-nums">{invoice.amount}</span>
             </Swipe.Content>
+            {actions !== 'end' && (
+              <Swipe.Actions side="start">
+                <Swipe.Action aria-label={`Mark invoice ${invoice.id} ${isPaid ? 'unpaid' : 'paid'}`} announce={`Invoice ${invoice.id} marked ${isPaid ? 'unpaid' : 'paid'}`} onClick={() => togglePaid(invoice)}>
+                  {isPaid ? 'Unpaid' : 'Paid'}
+                </Swipe.Action>
+              </Swipe.Actions>
+            )}
+            {actions !== 'start' && (
             <Swipe.Actions side="end">
               <Swipe.Action aria-label={`${isFlagged ? 'Unflag' : 'Flag'} invoice ${invoice.id}`} announce={`Invoice ${invoice.id} ${isFlagged ? 'unflagged' : 'flagged'}`} onClick={() => toggleFlag(invoice)}>
                 {isFlagged ? 'Unflag' : 'Flag'}
@@ -70,6 +87,7 @@ export function DemoSwipe({ hint = false, fullSwipe = true }: { hint?: boolean; 
                 Archive
               </Swipe.Action>
             </Swipe.Actions>
+            )}
           </Swipe.Root>
         );
       })}

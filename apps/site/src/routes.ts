@@ -136,8 +136,8 @@ export const docGroups = docsRoutes.reduce<{ group: DocGroup; routes: DocRoute[]
 
 export const playgroundRoute: Route = {
   path: '/playground',
-  title: 'Playground: build a toast or drawer · Halo',
-  description: 'Start from a plain toast or drawer, layer on worlds, springs, timers and entrances, and copy the code or an agent prompt.',
+  title: 'Playground: build a toast, drawer, popover or swipe row · Halo',
+  description: 'Build a toast, drawer, popover or swipe actions: layer on worlds, springs and placement, then copy the code or an agent prompt.',
   ogImage: '/og/playground.png',
   ogAlt: 'The Halo playground',
 };
