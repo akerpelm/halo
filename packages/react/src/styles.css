@@ -66,7 +66,7 @@
   color-scheme: dark;
   --halo-blur: 18px;
   --halo-saturate: 1.25;
-  --halo-surface: light-dark(oklch(25% 0.022 55 / 0.7), oklch(19% 0.018 55 / 0.72));
+  --halo-surface: oklch(15% 0.02 55 / 0.9);
   --halo-surface-solid: oklch(22% 0.018 55);
   --halo-fg: oklch(96.5% 0.008 75);
   --halo-fg-muted: oklch(80% 0.016 70);

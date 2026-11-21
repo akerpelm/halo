@@ -40,7 +40,7 @@ export function AppearanceMenu() {
       )}
     >
       <input type="radio" name={`${panelId}-world`} value={w.value} checked={world === w.value} onChange={() => setWorld(w.value)} className="sr-only" />
-      <span data-halo-world={w.value} data-theme={theme} aria-hidden className="halo halo-surface block h-4 w-8 [--halo-radius:6px]" />
+      <span data-halo-world={w.value} data-theme={themeFor(w.value, theme)} aria-hidden className="halo halo-surface block h-4 w-8 [--halo-radius:6px]" />
       {w.name}
     </label>
   );
