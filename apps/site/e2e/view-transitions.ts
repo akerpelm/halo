@@ -13,12 +13,14 @@ export type TransitionRecord = {
 declare global {
   interface Window {
     viewTransitions: TransitionRecord[];
+    viewTransitionsRead: number;
   }
 }
 
 export async function recordViewTransitions(page: Page) {
   await page.addInitScript(() => {
     window.viewTransitions = [];
+    window.viewTransitionsRead = 0;
     const start = Document.prototype.startViewTransition;
     const names = () =>
       [...document.querySelectorAll('*')].map((el) => getComputedStyle(el).viewTransitionName).filter((name) => name !== 'none');
@@ -57,10 +59,14 @@ export async function recordViewTransitions(page: Page) {
   });
 }
 
+/** The transition started since the previous call, once it has finished and been recorded. */
 export async function lastTransition(page: Page) {
   await page.waitForFunction(() => {
     const last = window.viewTransitions.at(-1);
-    return last?.afterRecorded;
+    return window.viewTransitions.length > window.viewTransitionsRead && last?.afterRecorded;
   });
-  return page.evaluate(() => window.viewTransitions.at(-1));
+  return page.evaluate(() => {
+    window.viewTransitionsRead = window.viewTransitions.length;
+    return window.viewTransitions.at(-1);
+  });
 }
