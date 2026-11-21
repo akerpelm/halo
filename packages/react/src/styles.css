@@ -907,7 +907,8 @@ dialog.halo-drawer::backdrop {
   --halo-edge: var(
     --halo-world-edge,
     conic-gradient(
-      from var(--halo-attach-angle, 0deg) at var(--halo-attach-x, 50%) var(--halo-attach-y, 0%),
+      from var(--halo-attach-angle, 0deg) at calc(var(--halo-attach-x, 50%) + var(--halo-attach-dx))
+        calc(var(--halo-attach-y, 0%) + var(--halo-attach-dy)),
       var(--halo-coat-c) 22%,
       var(--halo-coat-a) 36%,
       var(--halo-coat-b) 50%,
@@ -916,6 +917,8 @@ dialog.halo-drawer::backdrop {
     )
   );
   --halo-edge-width: 1.25px;
+  --halo-attach-dx: 0px;
+  --halo-attach-dy: 16px;
   position: fixed;
   inset: auto;
   z-index: 2147483000;
@@ -997,12 +1000,17 @@ dialog.halo-drawer::backdrop {
 }
 .halo-popover[data-side='top'] {
   --halo-attach-angle: 180deg;
+  --halo-attach-dy: -16px;
 }
 .halo-popover[data-side='right'] {
   --halo-attach-angle: 270deg;
+  --halo-attach-dx: 16px;
+  --halo-attach-dy: 0px;
 }
 .halo-popover[data-side='left'] {
   --halo-attach-angle: 90deg;
+  --halo-attach-dx: -16px;
+  --halo-attach-dy: 0px;
 }
 
 .halo-popover:focus-visible {
