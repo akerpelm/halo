@@ -21,7 +21,7 @@ function card(title: string, eyebrow: string) {
       <p style="margin:0;max-width:20ch;font-family:var(--font-display);font-weight:600;font-size:68px;line-height:1.02;letter-spacing:-0.035em;color:var(--ink);text-wrap:balance">${escape(title)}</p>
     </div>
     <div style="position:absolute;left:72px;right:72px;bottom:52px;display:flex;justify-content:space-between;font-size:24px;color:var(--ink-soft)">
-      <span>Spring-physics toast and drawer for React</span>
+      <span>Spring-physics components for React</span>
       <span style="font-family:var(--font-mono)">haloui.dev</span>
     </div>
   </div>`;
@@ -33,7 +33,7 @@ for (const route of routes) {
   test(`og image for ${route.path}`, async ({ page }) => {
     await page.addInitScript(() => localStorage.setItem('halo-site', JSON.stringify({ world: 'dichroic', theme: 'light' })));
     await page.goto('/404.html');
-    const title = route === homeRoute ? 'Toasts and drawers that keep the speed of your flick.' : route.ogAlt;
+    const title = route === homeRoute ? 'Components that keep the speed of your flick.' : route.ogAlt;
     const eyebrow = route.path.startsWith('/docs') ? `haloui.dev${route.path}` : 'npm i halo-ui-react';
     await page.evaluate((html) => {
       document.body.innerHTML = html;

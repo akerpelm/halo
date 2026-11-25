@@ -1,11 +1,10 @@
 import { buttonClass } from '../components/button';
-import { DemoDrawer } from '../components/demo-drawer';
 import { Link } from '../components/link';
 import { cn } from '../lib/cn';
 
 const doors = [
-  { title: 'Build your own', body: 'Start from the plainest toast and layer it up. Take the code or an agent prompt.', href: '/playground', cta: 'Open the playground' },
-  { title: 'The drawer', body: 'A sheet from any edge on the native dialog, with projected detents.', href: '/docs/drawer', cta: 'Drawer docs' },
+  { title: 'Build your own', body: 'Pick any of the four, layer it up, and take the code or an agent prompt.', href: '/playground', cta: 'Open the playground' },
+  { title: 'Pick a world', body: 'Nine glass worlds, each in light and dark, or write your own in CSS.', href: '/docs/worlds', cta: 'Worlds' },
   { title: 'Hand it to an agent', body: 'One plain-text file with the whole API, plus recipes for migrating from Sonner and Vaul.', href: '/docs/agents', cta: 'For agents' },
 ] as const;
 
@@ -31,7 +30,6 @@ export function NextSteps() {
                 <Link href={door.href} className={buttonClass({ tone: 'outline', size: 'sm' })}>
                   {door.cta}
                 </Link>
-                {door.href === '/docs/drawer' && <DemoDrawer trigger="Open one" size="sm" />}
               </div>
             </li>
           ))}

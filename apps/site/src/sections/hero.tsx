@@ -14,12 +14,12 @@ export function Hero() {
 
       <div className="relative z-[15] mx-auto flex max-w-[1240px] flex-col px-4 pt-28 sm:px-8 md:pt-32 lg:min-h-[min(100svh,980px)] lg:justify-end lg:pb-24">
         <p className="m-0 mb-5 text-ui font-medium text-ink-soft">An alternative to Sonner and Vaul</p>
-        <h1 id="hero-heading" className="m-0 max-w-[15ch] text-[clamp(3rem,7.6vw,6rem)] leading-[0.94] font-semibold tracking-[-0.035em]">
-          Toasts and drawers that keep the speed of your flick.
+        <h1 id="hero-heading" className="m-0 max-w-[12ch] text-[clamp(3rem,7.6vw,6rem)] leading-[0.94] font-semibold tracking-[-0.035em]">
+          Components that keep the speed of your flick.
         </h1>
         <p className="mt-7 mb-0 max-w-[44ch] text-[clamp(17px,1.5vw,19px)] leading-[1.55] text-ink-soft">
-          A spring-physics toast and drawer for React. The toast takes Sonner’s calls, the drawer keeps Vaul’s part names on a native dialog, and
-          both work by keyboard and screen reader.
+          A spring-physics toast, drawer, popover and swipe actions for React. The toast takes Sonner’s calls, the drawer keeps Vaul’s part names on a
+          native dialog, and all four work by keyboard and screen reader.
         </p>
         <div className="mt-9 flex flex-wrap items-center gap-3">
           <Magnet>
@@ -44,7 +44,7 @@ export function Hero() {
             </a>
           </li>
           <li>
-            Toast {sizes.toast} kB, Drawer {sizes.drawer} kB <span className="sr-only">minified and gzipped</span>
+            Toast {sizes.toast} kB, Drawer {sizes.drawer} kB, Popover {sizes.popover} kB, Swipe {sizes.swipe} kB <span className="sr-only">minified and gzipped</span>
             <span aria-hidden>min+gzip</span>
           </li>
           <li>No dependencies</li>

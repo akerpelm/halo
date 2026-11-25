@@ -22,7 +22,7 @@ export function Footer() {
             <Mark className="mt-1 h-[9px] w-6" />
             <span className="font-medium">Halo {version}</span>
           </p>
-          <p className="m-0 text-ink-faint">Spring-physics toast and drawer for React.</p>
+          <p className="m-0 text-ink-faint">Spring-physics toast, drawer, popover and swipe actions for React.</p>
         </div>
         <ul className="m-0 grid list-none gap-1.5 p-0">
           {docsRoutes.map((p) => (

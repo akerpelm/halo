@@ -27,10 +27,10 @@ const doc = (group: DocGroup, slug: string, name: string, title: string, descrip
 
 export const homeRoute: Route = {
   path: '/',
-  title: 'Halo: spring-physics toast and drawer for React',
-  description: `A spring-physics toast and drawer for React. Takes Sonner's toast() calls, keeps Vaul's part names on a native dialog. Toast ${sizes.toast} kB, no dependencies.`,
+  title: 'Halo: spring-physics toast, drawer, popover and swipe actions for React',
+  description: `Spring-physics toast, drawer, popover and swipe actions for React. Takes Sonner's toast() calls, keeps Vaul's part names on a native dialog, no dependencies.`,
   ogImage: '/og/home.png',
-  ogAlt: 'Halo: a spring-physics toast and drawer for React',
+  ogAlt: 'Halo: spring-physics toast, drawer, popover and swipe actions for React',
 };
 
 export const docsRoutes: readonly DocRoute[] = [
@@ -95,7 +95,7 @@ export const docsRoutes: readonly DocRoute[] = [
     'worlds',
     'Worlds',
     'Worlds: frosted-glass themes · Halo',
-    'Nine glass themes for the toast and drawer, each in light and dark. Pick one with a prop, colour toasts by type, or recolour the edge.',
+    'Nine glass themes for every Halo component, each in light and dark. Pick one with a prop, colour toasts by type, or recolour the edge.',
   ),
   doc(
     'Style and motion',
