@@ -22,7 +22,7 @@ packages/react   halo-ui-react, the library (tsup, no runtime dependencies besid
   src/styles.css   the material and all worlds as CSS custom properties
   test/            vitest + jsdom
 apps/site        haloui.dev (Vite, React 19, Tailwind v4)
-  src/sections/    home and playground
+  src/sections/    home (hero, toast, components, directions, next steps) and the playground's four builders
   src/docs/        docs pages, search, prop tables, the mobile docs menu
   src/components/  hanging-pane (the signature), drawer-stage, nav, and the rest
   src/lib/         router, settings (world and theme), build config, cable simulation
@@ -32,17 +32,17 @@ apps/site        haloui.dev (Vite, React 19, Tailwind v4)
 wrangler.jsonc   Cloudflare deploy config (static assets, 404.html for unknown paths)
 ```
 
-Entry points: `halo-ui-react`, `halo-ui-react/toast`, `halo-ui-react/drawer`, `halo-ui-react/popover`, `halo-ui-react/swipe`, `halo-ui-react/spring`, `halo-ui-react/styles.css`. The public API is `toast()`, `<Toaster>`, the `Drawer`, `Popover` and `Swipe` namespaces (plus named exports for popover and swipe parts), `useDrawer`, and the spring helpers. Do not change it without a version bump and a docs update.
+Entry points: `halo-ui-react`, `halo-ui-react/toast`, `halo-ui-react/drawer`, `halo-ui-react/popover`, `halo-ui-react/swipe`, `halo-ui-react/spring`, `halo-ui-react/styles.css`. The public API is `toast()`, `<Toaster>`, the `Drawer`, `Popover` and `Swipe` namespaces (plus a named export for every drawer, popover and swipe part, which is what works from a React Server Component), `useDrawer`, and the spring helpers. Do not change it without a version bump and a docs update.
 
 ## Commands
 
 ```sh
 pnpm install
 pnpm dev         # builds the library, then runs the site with library source aliased in
-pnpm test        # 78 library tests (vitest)
+pnpm test        # 92 library tests (vitest)
 pnpm typecheck
 pnpm build
-pnpm --filter haloui-site test:e2e   # 84 Playwright checks against a prerendered preview build
+pnpm --filter haloui-site test:e2e   # 150 Playwright checks against a prerendered preview build
 pnpm --filter halo-ui-react size     # after a library build: rewrite sizes.json and the size tables in both READMEs
 pnpm --filter haloui-site og         # regenerate public/og/*.png after changing a route title
 ```
@@ -65,10 +65,10 @@ pnpm 10, Node 22 (`.node-version`; the publish workflow uses Node 24 because tru
 
 ## Verifying a change
 
-Typecheck, test and build before every commit. CI runs those plus the Playwright checks (`apps/site/e2e`) on every pull request and every push to `main`. The Playwright suite covers axe, overflow, the keyboard walk, page transitions and reduced motion in Chromium; for anything visual, still open the page in a browser and check:
+Typecheck, test and build before every commit. CI runs those plus the Playwright checks (`apps/site/e2e`) on every pull request and every push to `main`. The Playwright suite covers axe, overflow, the keyboard walk (including each playground builder), page transitions, reduced motion, every builder at six widths, and text contrast on glass in all ten worlds and both themes (`e2e/worlds.spec.ts`, because axe skips text on translucent, blurred backgrounds) in Chromium. For anything visual, still open the page in a browser and check:
 
 - widths 320, 375, 640, 768, 1024, 1440: no horizontal overflow, nothing clipped;
-- light and dark, in Dichroic and at least one other world (Ink and Midnight catch the most bugs);
+- light and dark, in Dichroic and at least one other world (Ink, Smoked and Midnight catch the most bugs);
 - axe with zero violations on `/`, `/playground`, and a docs page;
 - a keyboard walk where every stop shows a focus ring;
 - page transitions between Home, Docs and Playground, and between docs pages, with nothing flickering;
@@ -88,22 +88,26 @@ Bring a library change's behaviour under test: break the code on purpose and con
 - A new page needs an entry in `src/routes.ts`. Docs pages also need a `docPages` entry with the same slug.
 
 - A `view-transition-name` makes its element a backdrop root, so frosted glass inside stops blurring the page. Persistent chrome is named only during transitions: `html:active-view-transition [style*='--vt-name']` in `apps/site/src/styles.css`.
+- Text inside a Halo pane uses `--halo-fg` and `--halo-fg-muted`, never the site's `text-ink*` tokens: those follow the page theme, while dark-only worlds (Smoked, Midnight) stay dark on a light page.
+- A world that sets `color-scheme: dark` (Smoked, Midnight) resolves every `light-dark()` inside it to the dark value, so it cannot vary by page theme that way; Midnight's light-page override is a site selector on `html[data-theme='light']`.
+- e2e helpers: `openPage` waits for the saved world and for CSS transitions to finish, and `lastTransition` waits for a transition newer than the last one it returned. Both fixed real flakes; keep them.
 - Never define a world's `--halo-surface-solid` as `var(--halo-surface)`. Overrides built from it become a cycle and the pane turns transparent.
 - Measure layout in `useLayoutEffect`, not `useEffect`, or view-transition snapshots capture unplaced elements.
 - `apps/site/vite.config.ts` aliases `halo-ui-react/*` to library source, and `apps/site/tsconfig.json` `paths` does the same for types. A new or moved library entry needs both, or CI's typecheck (which runs before any build) cannot find it.
 - `lib/cable.ts` is a Verlet simulation: cables are 0.994 of the rest gap so they stay taut, tension straightens them, and the pane's top edge is a surface slack can rest on. A zero-length cable must not be stepped (guarded).
 - The domain is `haloui.dev` but the package is `halo-ui-react`. When renaming, never touch `haloui.dev`.
 
-## Current state (2026-11-16)
+## Current state (2026-11-25)
 
 Live at haloui.dev, `main` at the latest commit, all checks green.
 
-- Every route is prerendered (`docs/toast.html`, served without a trailing slash) with its own title, description, canonical, Open Graph tags and a 1200x630 image (`public/og/`). Real 404s, `robots.txt`, `sitemap.xml`, `/docs` 301s to `/docs/getting-started`, every docs page has a `.md` twin, and `/llms.txt` follows the llms.txt spec. Verified with curl on production.
-- Docs and Playground are lazy chunks; home JS is about 115 kB gzipped.
-- Home: eyebrow "An alternative to Sonner and Vaul", headline "Toasts and drawers that keep the speed of your flick.", a facts strip read from the package, Why springs (a throw-and-retarget demo with a live speed graph, `components/why-springs.tsx`), four extra toast types, Worlds as one sample and a switcher, and a "Get started" close.
-- Docs (11 pages, grouped): Getting started, Next.js and SSR, Migrate from Sonner, Migrate from Vaul, Toast, Drawer, Worlds, Motion, Customize, Accessibility, For agents.
+- Four components: Toast, Drawer, Popover (native `popover` attribute, CSS anchor positioning with a measured fallback) and Swipe actions (rows over real buttons; a full swipe clicks the commit button). Sizes come from `sizes.json`.
+- Every route is prerendered (`docs/toast.html`, served without a trailing slash) with its own title, description, canonical, Open Graph tags and a 1200x630 image (`public/og/`). Real 404s, `robots.txt`, `sitemap.xml`, `/docs` 301s to `/docs/getting-started`, every docs page has a `.md` twin, and `/llms.txt` follows the llms.txt spec.
+- Home: eyebrow "An alternative to Sonner and Vaul", headline "Components that keep the speed of your flick.", a facts strip read from the package, the toast section (Why springs, four extra toast types, the spec card), "Three more on the same spring" (live drawer, popover and swipe demos), Worlds, and a "Get started" close.
+- Docs (13 pages, grouped): Getting started, Next.js and SSR, Migrate from Sonner, Migrate from Vaul, Toast, Drawer, Popover, Swipe actions, Worlds, Motion, Customize, Accessibility, For agents. The Accessibility page still covers only the toast and drawer.
+- Playground: Toast, Drawer, Popover and Swipe builders, each with live preview and code or an agent prompt.
 - CI on pull requests and pushes to `main`: typecheck, tests, build, the size check, and the Playwright suite. Tag pushes (`v*`) run `publish.yml`.
-- npm: 0.1.0 is `latest`. The README, description and keywords changed since, so they reach npm only with 0.1.1 (`CHANGELOG.md` has them under Unreleased). The 291 downloads on launch day were registry mirrors and scanners: 148 were for the `0.0.0-stage` placeholder.
+- npm: 0.1.0 is `latest`, without Popover, Swipe or the named drawer exports. `CHANGELOG.md` has them under Unreleased; the next release is 0.2.0.
 
 ## Decisions not to undo
 
@@ -112,24 +116,26 @@ Live at haloui.dev, `main` at the latest commit, all checks green.
 - The old flick test was replaced because both sides looked the same on any normal drag. Why springs uses the drawer's default spring (0.5 s, bounce 0.12) and docks at plus or minus 20% of the lane; longer trips or the stiffer toast spring made the two lines look alike again.
 - Sizes are measured by `packages/react/scripts/size.mjs` (esbuild minify, React external, gzip -9, 1 kB = 1000 bytes). Toast is 8.5 kB, not the 8.4 once typed by hand.
 - The Next.js guide is verified against Next.js 16.4.3: `<Drawer.Root>` in a server component fails the build ("Element type is invalid ... got: undefined") because a namespace cannot cross the `'use client'` boundary. The named drawer parts (`DrawerRoot`, `DrawerTrigger` and so on) do: a server-component `app/page.tsx` rendering them passed `next build` on 16.4.3 against the packed library. Keep both the namespace and the named exports.
+- No popover arrow. One was built as a separate top-layer element (the popup's `backdrop-filter` makes it a backdrop root, so an arrow inside it cannot blur the page) and removed: keeping it in step with the popup's open, close and animation was fragile, and the owner prefers none to a janky one. A correct arrow would have to be part of the popup's own shape. DESIGN.md has the detail.
+- Smoked and Midnight are dense (about 0.9 alpha) so they look the same on light and dark pages; at 0.7 a light page turned them muddy and pulled muted text under AA.
 - The SEO brief (from a copy and SEO consultant) was applied with corrections: its flick-test verdict had Sonner backwards, it assumed Cloudflare Pages rather than Workers, and its `index.html`-per-route layout would add trailing-slash redirects.
 
 ## Waiting on the owner
 
-1. Run `npm login`, then `npm deprecate halo-ui-react@0.0.0-stage "Placeholder from staged publishing; install halo-ui-react@latest"` (it failed with a 404 because npm was logged out).
-2. Add the trusted publisher on npmjs.com: user `akerpelm`, repository `halo`, workflow `publish.yml`, no environment, allow `npm publish`. Then an agent prepares 0.1.1 and the owner pushes the tag.
-3. Test on a real iPhone in Safari, and in Firefox. Nothing has been checked on a real device.
+1. Add the trusted publisher on npmjs.com: user `akerpelm`, repository `halo`, workflow `publish.yml`, no environment, allow `npm publish`. Then an agent prepares 0.2.0 and the owner pushes the `v0.2.0` tag.
+2. Run `npm login`, then `npm deprecate halo-ui-react@0.0.0-stage "Placeholder from staged publishing; install halo-ui-react@latest"`.
+3. Test on a real iPhone in Safari (swipe versus scroll, popover placement, typing in a popover with the keyboard open) and in Firefox (no anchor positioning, so the popover's fallback placement; no exit animation). Nothing has been checked on a real device.
 4. Cloudflare AI crawler settings (allow search and agent bots; decide on training bots), Search Console and Bing verification with the sitemap, GitHub topics, description and social preview image.
 5. Decide: on phones the hero's pane sits below the facts strip, so the headline's claim has nothing to touch near it. Move the pane up, or change the button to "Fire a toast, then flick it".
-6. Decide: grow beyond Toast and Drawer, or stay at two until launch traction (recommended).
-7. Decide: keep or soften "Accessibility bugs are fixed first" on the Accessibility page.
+6. Decide: keep or soften "Accessibility bugs are fixed first" on the Accessibility page.
 
 ## Next for agents, in priority order
 
-1. Once item 2 above is done, prepare 0.1.1: move Unreleased to `## 0.1.1 (date)`, bump the version, run the checks, commit, and ask the owner to push `v0.1.1`.
-2. Docs P2: guides (custom content, async and promises, streaming, undo, multiple toasters, a drawer with a form, nested drawers, testing) and reference pages (types, browser support, troubleshooting, the spring engine, a worlds comparison with render cost). Each needs a `routes.ts` entry, a `docPages` entry and an OG image (`pnpm --filter haloui-site og`).
-3. If Why springs still doesn't land for the owner: a fading trail of recent positions on both panes, so the difference shows without reading the graph.
-4. A demo GIF for the README and a short loop of Why springs.
-5. Publish the shadcn registry (`/r/toast.json`, `/r/drawer.json`), then submit to the shadcn directory and 21st.dev.
-6. Analytics events need a tool choice first: Cloudflare Web Analytics has no custom events.
-7. Consider trimming the toast bundle.
+1. Once item 1 above is done, prepare 0.2.0: move Unreleased to `## 0.2.0 (date)`, bump the version, run the checks, commit, and ask the owner to push `v0.2.0`.
+2. Accessibility page: add what the popover and swipe actions do for keyboard, screen-reader and reduced-motion users, and how it is tested.
+3. The rest of the 0.2 plan: drawer handling when the on-screen keyboard opens (`visualViewport`), nested and non-modal drawers, `toast.custom()` and a toast `cancel` button, `halo-ui-react/testing`.
+4. Docs P2: guides (custom content, async and promises, streaming, undo, multiple toasters, a drawer with a form, nested drawers, testing) and reference pages (types, browser support, troubleshooting, the spring engine, a worlds comparison with render cost). Each needs a `routes.ts` entry, a `docPages` entry and an OG image (`pnpm --filter haloui-site og`).
+5. Publish the shadcn registry (`/r/toast.json`, `/r/drawer.json`, and popover and swipe), then submit to the shadcn directory and 21st.dev.
+6. A demo GIF for the README and a short loop of Why springs.
+7. Analytics events need a tool choice first: Cloudflare Web Analytics has no custom events.
+8. Consider trimming the toast bundle.
